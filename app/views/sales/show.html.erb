@@ -31,3 +31,12 @@
     });
   });
 </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('reload')) {
+      location.reload();
+    }
+  });
+</script>

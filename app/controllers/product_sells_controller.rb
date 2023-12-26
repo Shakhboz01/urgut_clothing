@@ -60,7 +60,7 @@ class ProductSellsController < ApplicationController
   def destroy
     @product_sell.destroy
     respond_to do |format|
-      format.html { redirect_to request.referrer }
+      format.html { redirect_to "#{request.referrer}?reload=true" }
       format.json { head :no_content }
     end
   end
