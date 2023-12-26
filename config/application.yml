@@ -6,3 +6,4 @@ TELEGRAM_CHAT_ID: -4004645147
 HOST_URL: http://localhost:3000
 TELEGRAM_WARNING_CHAT_ID: -4031454161
 RAILS_BUILD: false
+HOST_URL: web-production-b7ee.up.railway.app
