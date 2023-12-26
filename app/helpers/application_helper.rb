@@ -17,6 +17,7 @@ module ApplicationHelper
     link_to icon.blank? ? title : content_tag(:i, "", class: %i[fa fa-fw].push(icon)),
             link,
             title: title,
+            style: 'color: blue; cursor: pointer',
             method: :delete, data: { confirm: strip_tags(confirm_text) }
   end
 
