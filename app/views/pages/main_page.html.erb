@@ -1,18 +1,18 @@
 <div>
   <div class='row'>
-    <div class='col-sm-3 main-page-header'>
+    <div class='col-sm-3 main-page-header' style = "max-width: 400px; overflow: auto">
       <div>
         <h4 class='text-center'>Покупатели</h4>
         <%= render 'buyers/buyers', buyers: @buyers, shrink: true %>
       </div>
     </div>
-    <div class='col-sm-4 main-page-header'>
+    <div class='col-sm-4 main-page-header' style = "max-width: 400px; overflow: auto">
       <div>
         <h4 class='text-center'>Поставщики</h4>
         <%= render 'providers/providers', providers: @providers, shrink: true %>
       </div>
     </div>
-    <div class='col-sm-5 main-page-header'>
+    <div class='col-sm-5 main-page-header' style = "max-width: 400px; overflow: auto">
       <div>
         <h4 class='text-center'>Касса</h4>
         <%= search_form_for @q, url: request.path, html: { class: 'form form-horizontal filter-form'} do |f| %>
@@ -82,7 +82,7 @@
   </div>
   <br><br><br><br>
   <div class='row'>
-    <div class='col-sm-6 main-page-body'>
+    <div class='col-sm-6 main-page-body', style='max-height: 950px; overflow: auto'>
       <h4 class='text-center'>Продажи</h4>
       <%= render 'sales/sales', sales: @sales, shrink: true %>
     </div>
