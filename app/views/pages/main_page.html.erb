@@ -1,15 +1,19 @@
 <div>
   <div class='row'>
-    <div class='col-sm-3 main-page-header' style = "max-width: 400px; overflow: auto">
+    <div class='col-sm-3 main-page-header'>
       <div>
         <h4 class='text-center'>Покупатели</h4>
-        <%= render 'buyers/buyers', buyers: @buyers, shrink: true %>
+        <div style="max-height: 420px; overflow: auto">
+          <%= render 'buyers/buyers', buyers: @buyers, shrink: true %>
+        </div>
       </div>
     </div>
-    <div class='col-sm-4 main-page-header' style = "max-width: 400px; overflow: auto">
+    <div class='col-sm-4'>
       <div>
         <h4 class='text-center'>Поставщики</h4>
-        <%= render 'providers/providers', providers: @providers, shrink: true %>
+        <div style="max-height: 420px; overflow: auto">
+          <%= render 'providers/providers', providers: @providers, shrink: true %>
+        </div>
       </div>
     </div>
     <div class='col-sm-5 main-page-header' style = "max-width: 400px; overflow: auto">
