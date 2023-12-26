@@ -15,18 +15,16 @@
       <div class='col-sm-3 col-md-2'>
         <%= f.input :amount, label: 'Количество', input_html: {value: ''} %>
       </div>
-      <% if current_user.бухгалтер? %>
-        <div class='col-sm-3 col-md-3 align-self-center'>
-          <a style='cursor: pointer; color: blue' id='manual-price'>Указать цену продажу вручную</a>
-          <div style='display: none' id='price-fields'>
-            <%= f.input :sell_price, label: 'Цена продажи в $' %>
-          </div>
+      <div class='col-sm-3 col-md-3 align-self-center'>
+        <a style='cursor: pointer; color: blue' id='manual-price'>Указать цену продажу вручную</a>
+        <div style='display: none' id='price-fields'>
+          <%= f.input :sell_price, label: 'Цена продажи в $' %>
         </div>
-      <% end %>
+      </div>
       <div class='col-sm-3 col-md-3 d-flex align-self-center'>
-        <% unless [product_sell.combination_of_local_product, product_sell.sale_from_service, product_sell.sale_from_local_service].any?(&:present?) %>
-          <%= button_tag 'Предпросмотр цену', type: 'button', id: 'custom-action-button', class: 'btn btn-warning custom-action-button' %>
-        <% end %>
+        <%# <% unless [product_sell.combination_of_local_product, product_sell.sale_from_service, product_sell.sale_from_local_service].any?(&:present?) %>
+          <%# <%= button_tag 'Предпросмотр цену', type: 'button', id: 'custom-action-button', class: 'btn btn-warning custom-action-button' %>
+        <%# <% end %>
         <%= f.submit "Создать", class: 'btn btn-primary'%>
       </div>
     </div>
