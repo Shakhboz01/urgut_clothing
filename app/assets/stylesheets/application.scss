@@ -35,6 +35,21 @@
   border: 1px solid #ddd;
   border-radius: 9px;
 }
+.category-element{
+  border: 1px solid black;
+  padding: 6px;
+  background-color: rgb(204, 205, 206);
+}
+
+.main-page-header{
+  max-height: 400px;
+  overflow: auto
+}
+
+.main-page-body{
+  max-height: 950px;
+  overflow: auto
+}
 .navbar-nav{
   float:left;
   margin:0
