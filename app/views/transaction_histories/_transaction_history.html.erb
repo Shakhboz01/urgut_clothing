@@ -1,7 +1,22 @@
 <div id="<%= dom_id transaction_history %>">
   <p>
-    <strong>Income:</strong>
-    <%= transaction_history.income_id %>
+    <strong>Sale:</strong>
+    <%= transaction_history.sale_id %>
+  </p>
+
+  <p>
+    <strong>Sale from service:</strong>
+    <%= transaction_history.sale_from_service_id %>
+  </p>
+
+  <p>
+    <strong>Sale from local service:</strong>
+    <%= transaction_history.sale_from_local_service_id %>
+  </p>
+
+  <p>
+    <strong>Delivery from counterparty:</strong>
+    <%= transaction_history.delivery_from_counterparty_id %>
   </p>
 
   <p>
@@ -10,8 +25,8 @@
   </p>
 
   <p>
-    <strong>Amount:</strong>
-    <%= transaction_history.amount %>
+    <strong>Price:</strong>
+    <%= transaction_history.price %>
   </p>
 
 </div>

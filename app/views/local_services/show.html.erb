@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @local_service %>
+
+<div>
+  <%= link_to "Edit this local service", edit_local_service_path(@local_service) %> |
+  <%= link_to "Back to local services", local_services_path %>
+
+  <%= button_to "Destroy this local service", @local_service, method: :delete %>
+</div>

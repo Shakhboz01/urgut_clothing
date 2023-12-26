@@ -1,0 +1,26 @@
+<div class='card-header shadow-lg'>
+  <%= simple_form_for(team_service, html: {class: 'form-vertical'}) do |f| %>
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+    <%= f.association :sale_from_service, as: :hidden %>
+    <div class='row'>
+      <div class='col-sm-4 col-md-2'>
+        <%= f.association :team, collection: Team.active.pluck(:name, :id), label: 'Бригада', include_blank: false %>
+      </div>
+      <div class='col-sm-4 col-md-2'>
+        <%= f.input :total_price, label: 'итого цена в $' %>
+      </div>
+      <div class='col-sm-4 col-md-2'>
+        <%= f.input :team_fee, label: 'доля бригадера в %' %>
+      </div>
+      <div class='col-sm-4 col-md-2'>
+        <%= f.input :comment, label: 'Коммент' %>
+      </div>
+      <div class='col-sm-4 col-md-2 align-self-center'>
+        <div class="form-actions">
+          <%= f.button :submit, 'Создать' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

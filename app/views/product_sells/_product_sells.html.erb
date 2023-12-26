@@ -1,0 +1,23 @@
+<%= turbo_frame_tag 'product_sells' do %>
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Покупатель</th>
+        <th>Товар</th>
+        <th>Количество</th>
+        <th>Цена</th>
+        <th>Итого цена</th>
+        <th>Итого доход</th>
+        <th>Оформлено в</th>
+        <th>Исполнитель</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+      <tbody>
+        <% product_sells.each do |product_sell| %>
+          <%= render 'product_sells/product_sell_turbo', product_sell: product_sell %>
+        <% end %>
+      </tbody>
+  </table>
+<% end %>

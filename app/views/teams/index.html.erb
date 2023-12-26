@@ -1,0 +1,40 @@
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-title font-weight-bold">Бригады</h3>
+      <%= link_to 'Добавить новый', new_team_path, class: "btn btn-success min-width-btn" %>
+    </div>
+
+    <div class="card-body">
+      <table class="table table-hover table-bordered table-striped">
+        <thead>
+          <tr>
+            <th><%= sort_link @q, :id, 'ID' %></th>
+            <th><%= sort_link @q, :name, 'Название' %></th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @teams.each do |team| %>
+            <tr class="<%= active_tr(team.active) %>">
+              <td><%= team.id %></td>
+              <td><%= team.name %></td>
+              <td>
+                <%= clink_to 'посмотреть историю зарплат/аванс', salaries_path(q: {team_id_eq: team.id}), 'fa-money' %>
+                <%= clink_to 'посмотреть историю выполненных работ', team_services_path(q: {team_id_eq: team.id}), 'fa-hammer' %>
+                <%= clink_to 'Оформить зарплату/аванс', new_salary_path(team_id: team.id), 'fa-plus' %>
+                <%= clink_to 'Редактировать', edit_team_path(team), 'fa-edit' %>
+                <% if team.active %>
+                  <%= clink_to 'Деактивировать', toggle_active_team_path(team), 'fa-ban', :post %>
+                <% else %>
+                  <%= clink_to 'Активировать', toggle_active_team_path(team), 'fa-chart-line', :post %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <%= paginate @teams %>
+  </div>
+</div>

@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   def index
     authorize User, :manage?
 
-    @users = User.all.order(active_user: :desc).order(:name)
+    @users = User.all.order(active: :desc).order(:name)
   end
 
   def show
@@ -17,11 +17,11 @@ class UsersController < ApplicationController
 
   def auto_user_creation
     user = User.new(user_params)
-    user.email = user.name.split(' ').join + '@gmail.com'
+    user.email = user.name.split(" ").join + "@gmail.com"
     if user.save
-      redirect_to users_path, notice: 'Успешно создано.'
+      redirect_to users_path, notice: "Успешно создано."
     else
-      redirect_to auto_user_creation_users_path, notice: 'error'
+      redirect_to auto_user_creation_users_path, notice: "error"
     end
   end
 
@@ -31,10 +31,10 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    @user.email = user_params.name + '@gmail.com'
-    @user.password = '1111'
+    @user.email = user_params.name + "@gmail.com"
+    @user.password = "1111"
     if @user.save
-      redirect_to users_path, notice: 'Успешно создано.'
+      redirect_to users_path, notice: "Успешно создано."
     else
       render :new
     end
@@ -47,9 +47,20 @@ class UsersController < ApplicationController
 
   def update
     authorize User, :manage?
+
+    if params[:id] == "auto_user_creation"
+      user = User.new(user_params)
+      user.email = user.name.split(" ").join + "@gmail.com"
+      if user.save
+        return redirect_to users_path, notice: "Успешно создано."
+      else
+        return redirect_to auto_user_creation_users_path, notice: "error"
+      end
+    end
+
     @user = User.find(params[:id])
     if @user.update(user_params)
-      redirect_to users_path, notice: 'User was Успешно обновлено.'
+      redirect_to users_path, notice: "User was Успешно обновлено."
     else
       render :edit
     end
@@ -60,17 +71,17 @@ class UsersController < ApplicationController
 
     @user = User.find(params[:id])
     @user.destroy
-    redirect_to users_path, notice: 'User was успешно удален.'
+    redirect_to users_path, notice: "User was успешно удален."
   end
 
   def toggle_active_user
     authorize User, :manage?
 
     @user = User.find(params[:id])
-    if @user.update(active_user: !@user.active_user)
-      flash[:success] = 'Статус успешно обновлен'
+    if @user.update(active: !@user.active)
+      flash[:success] = "Статус успешно обновлен"
     else
-      flash[:error] = 'Не удалось обновить статус'
+      flash[:error] = "Не удалось обновить статус"
     end
     redirect_to users_path
   end
@@ -78,6 +89,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :allowed_to_use, :daily_payment, :password_confirmation, :role, :active_user)
+    params.require(:user).permit(:name, :email, :password, :allowed_to_use, :daily_payment, :password_confirmation, :role, :active)
   end
 end

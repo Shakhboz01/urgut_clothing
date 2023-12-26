@@ -1,0 +1,35 @@
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-title font-weight-bold">Редактированные остатки товары вручную</h3>
+    </div>
+    <%= render 'filter_form', q: @q, url: request.path %>
+    <div class="card-body">
+      <table class="table table-hover table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Товар</th>
+            <th>остаток до</th>
+            <th>остаток после</th>
+            <th>Причина</th>
+            <th>Кто?</th>
+            <th>Когда?</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @product_remaining_inequalities.each do |product_remaining_inequality| %>
+            <tr>
+              <td><%= product_remaining_inequality.product.name %></td>
+              <td><%= product_remaining_inequality.previous_amount %></td>
+              <td><%= product_remaining_inequality.amount %></td>
+              <td><%= product_remaining_inequality.reason %></td>
+              <td><%= product_remaining_inequality.user.name %></td>
+              <td><%= strf_datetime product_remaining_inequality.created_at %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

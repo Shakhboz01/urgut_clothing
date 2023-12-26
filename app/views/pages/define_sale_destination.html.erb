@@ -1,0 +1,24 @@
+<%= render 'layouts/progress', value: 25 %>
+<div class='container my-5'>
+  <div class='text-center'>
+    <span>Укажите директорию</span>
+  </div>
+  <br>
+  <div class='row'>
+    <div class='col-sm-4' style= 'width: 100%'>
+      <%= button_to default_create_sale_from_local_services_path, class: 'card shadow-lg text-center p-3 m-1', style: 'width: 250; height: 130px; color: wheat; font-size: large; font-weight: bold; background: gray', method: :post do %>
+        <span>Услуга</span>
+      <% end %>
+    </div>
+    <div class='col-sm-4'>
+      <%= button_to default_create_sales_path, class: 'card shadow-lg text-center p-3 m-1', style: 'width: 250; height: 130px; color: wheat; font-size: large; font-weight: bold; background: gray', method: :post do %>
+        <span>Продажа</span>
+      <% end %>
+    </div>
+    <div class='col-sm-4'>
+      <%= button_to default_create_sale_from_services_path, class: 'card shadow-lg text-center p-3 m-1', style: 'width: 250; height: 130px; color: wheat; font-size: large; font-weight: bold; background: gray', method: :post do %>
+        <span>Обьект</span>
+      <% end %>
+    </div>
+  </div>
+</div>

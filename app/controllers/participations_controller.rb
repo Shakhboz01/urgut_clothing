@@ -30,7 +30,7 @@ class ParticipationsController < ApplicationController
   def new
     authorize Participation, :manage?
 
-    @users = User.where(active_user: true)
+    @users = User.where(active: true)
   end
 
   def create

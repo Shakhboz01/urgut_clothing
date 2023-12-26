@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @product_remaining_inequality %>
+
+<div>
+  <%= link_to "Edit this product remaining inequality", edit_product_remaining_inequality_path(@product_remaining_inequality) %> |
+  <%= link_to "Back to product remaining inequalities", product_remaining_inequalities_path %>
+
+  <%= button_to "Destroy this product remaining inequality", @product_remaining_inequality, method: :delete %>
+</div>

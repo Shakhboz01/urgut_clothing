@@ -1,0 +1,24 @@
+<div class='card shadow-lg p-3 bg-white rounded mt-3'>
+  <%= simple_form_for(local_service) do |f| %>
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+    <div class="row">
+      <div class="col-sm-3">
+        <%= f.input :price, label: 'Цена в $' %>
+      </div>
+      <div class="col-sm-3">
+        <%= f.input :comment ,label: 'Комментарие', input_html: {placeholder: 'не обязательно'} %>
+      </div>
+      <div class="col-sm-3">
+        <%= f.association :user, colection: User.active, label: 'Выполнил', input_html: { placeholder: 'Выберите работника который выполнил эу услугу' } %>
+      </div>
+      <div class="col-sm-3 align-self-center">
+        <div class="form-actions">
+          <%= f.button :submit, 'Завершить' %>
+        </div>
+      </div>
+      <%= f.association :sale_from_local_service, as: :hidden %>
+    </div>
+  <% end %>
+</div>

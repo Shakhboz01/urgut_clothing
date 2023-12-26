@@ -1,38 +1,47 @@
 <div class="container">
-  <div class='d-flex align-items-center justify-content-between'>
-    <h1>Список работников</h1>
-    <div>
-      <%= link_to 'добавить нового работника', new_user_form_users_path, class: 'btn btn-primary' %>
+  <div class='card shadow-lg'>
+    <div class='d-flex align-items-center justify-content-between card-header'>
+      <h1>Список работников</h1>
+      <div>
+        <%= link_to 'добавить нового работника', new_user_form_users_path, class: 'btn btn-primary' %>
+      </div>
     </div>
+    <hr>
+    <div class='card-body'>
+      <table class="table table-bordered table-hover shadow-lg table-striped">
+        <thead>
+          <tr>
+            <th>Имя</th>
+            <th>Роль</th>
+            <th>Ежедневный платеж</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr class="<%= !user.active && 'table-dark'  %>">
+              <td><%= user.name %></td>
+              <td><%= user.role.capitalize %></td>
+              <td><%= number_to_currency(user.daily_payment) %></td>
+              <td>
+                <%= clink_to 'посмотреть историю зарплат/аванс', salaries_path(q: {user_id_eq: user.id}), 'fa-money' %>
+                <% unless %w[бухгалтер менеджер].include?(user.role) %>
+                  <%= clink_to 'История выполненных работ', local_services_path(q: {user_id_eq: user.id}), 'fa-hammer' %>
+                <% end %>
+                <%= clink_to 'Оформить зарплату/аванс', new_salary_path(team_id: user.id), 'fa-plus' %>
+                <%= clink_to 'Редактировать', edit_user_path(user), 'fa-edit' %>
+                <%= clink_to 'Изменить пароль', edit_user_path(user, password_change: true), 'fa-lock-open' %>
+                <% if  user.active %>
+                  <%= clink_to 'Деактивировать работника! (работник не будет получать оплату и не может использовать это приложение)', toggle_active_user_user_path(user), 'fa-ban' %>
+                <% else %>
+                  <%= clink_to 'активировать работника! (работник может быть оплачен и может использовать это приложение)', toggle_active_user_user_path(user), 'fa-arrow-rotate-right' %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <br>
   </div>
-  <hr>
-  <table class="table table-hover shadow table-striped">
-    <thead>
-      <tr>
-        <th>Имя</th>
-        <th>Роль</th>
-        <th>Ежедневный платеж</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @users.each do |user| %>
-        <tr class="<%= !user.active_user && 'table-dark'  %>">
-          <td><%= user.name %></td>
-          <td><%= user.role.capitalize %></td>
-          <td><%= num_to_usd(user.daily_payment) %></td>
-          <td>
-            <%= clink_to 'Редактировать', edit_user_path(user), 'fa-edit' %>
-            <%= clink_to 'Изменить пароль', edit_user_path(user, password_change: true), 'fa-lock-open' %>
-            <% if  user.active_user %>
-              <%= clink_to 'Деактивировать работника! (работник не будет получать оплату и не может использовать это приложение)', toggle_active_user_user_path(user), 'fa-ban' %>
-            <% else %>
-              <%= clink_to 'активировать работника! (работник может быть оплачен и может использовать это приложение)', toggle_active_user_user_path(user), 'fa-arrow-rotate-right' %>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <br>
 </div>

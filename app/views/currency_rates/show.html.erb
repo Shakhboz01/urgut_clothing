@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @currency_rate %>
+
+<div>
+  <%= link_to "Edit this currency rate", edit_currency_rate_path(@currency_rate) %> |
+  <%= link_to "Back to currency rates", currency_rates_path %>
+
+  <%= button_to "Destroy this currency rate", @currency_rate, method: :delete %>
+</div>

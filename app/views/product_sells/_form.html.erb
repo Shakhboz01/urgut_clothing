@@ -1,0 +1,81 @@
+<div class='card-header shadow-lg'>
+  <%= simple_form_for(product_sell) do |f| %>
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+    <%= f.association :combination_of_local_product, as: :hidden %>
+    <%= f.association :sale_from_service, as: :hidden %>
+    <%= f.association :sale_from_local_service, as: :hidden %>
+    <%= f.association :sale, as: :hidden %>
+
+    <div class='row'>
+      <div class='col-sm-3 col-md-2'>
+        <%= f.association :product, label: 'товар', collection: products.order('LOWER(name) ASC'), include_blank: false %>
+      </div>
+      <div class='col-sm-3 col-md-2'>
+        <%= f.input :amount, label: 'Количество', input_html: {value: ''} %>
+      </div>
+      <% if current_user.бухгалтер? %>
+        <div class='col-sm-3 col-md-3 align-self-center'>
+          <a style='cursor: pointer; color: blue' id='manual-price'>Указать цену продажу вручную</a>
+          <div style='display: none' id='price-fields'>
+            <%= f.input :sell_price, label: 'Цена продажи в $' %>
+          </div>
+        </div>
+      <% end %>
+      <div class='col-sm-3 col-md-3 d-flex align-self-center'>
+        <% unless [product_sell.combination_of_local_product, product_sell.sale_from_service, product_sell.sale_from_local_service].any?(&:present?) %>
+          <%= button_tag 'Предпросмотр цену', type: 'button', id: 'custom-action-button', class: 'btn btn-warning custom-action-button' %>
+        <% end %>
+        <%= f.submit "Создать", class: 'btn btn-primary'%>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
+<script>
+  $(document).ready(function() {
+
+    document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('custom-action-button').addEventListener('click', function(e) {
+    e.preventDefault();
+    var product_id = document.querySelector('#product_sell_product_id').value;
+    var amount = document.querySelector('#product_sell_amount').value;
+    var customActionURL = '/product_sells/ajax_sell_price_request';
+    var data = {
+      product_id: product_id,
+      amount: amount
+    };
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    fetch(customActionURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken, // Include the CSRF token in the request headers
+      },
+      body: JSON.stringify(data)
+    })
+    .then(function(response) {
+      if (response.ok) {
+        return response.text();
+      } else {
+        throw new Error('Error: ' + response.status);
+      }
+    })
+    .then(function(responseText) {
+      alert(responseText);
+    })
+    .catch(function(error) {
+      console.error(error);
+    });
+    });
+    });
+
+    $('#manual-price').click(function() {
+    $('#price-fields').toggle();
+    $('#custom-action-button').toggle();
+    $('#manual-price').hide();
+    });
+  })
+</script>

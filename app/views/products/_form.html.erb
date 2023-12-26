@@ -1,19 +1,23 @@
-<%= simple_form_for(@product, html: { class: 'form-horizontal' }) do |f| %>
+<%= simple_form_for(product) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-  <div class="form-group">
-    <%= f.label :amount_left, 'Количество оставшегося товара' %>
-    <%= f.number_field :amount_left, class: 'form-control' %>
+  <div class="form-inputs">
+    <%= f.input :name, label: 'Название' %>
+    <%= f.input :code, input_html: {value: random_code}, label: 'код' %>
+    <%= f.input :price_in_usd, label: 'Цена в $' %>
+    <%= f.input :buy_price, label: 'Цена прихода' %>
+    <%= f.input :sell_price, label: 'Цена продажи' %>
+    <%= f.association :product_category, label: 'Категория товара', include_blank: false %>
+
+    <% unless product.persisted? %>
+      <%= f.input :initial_remaining, label: 'остаток' %>
+    <% end %>
+
+    <%= f.input :unit, label: 'Единица измерение', collection: Product.units.keys.map { |unit| [Product.human_attribute_name("unit.#{unit}"), unit] }, include_blank: false %>
   </div>
 
-  <div class="form-group">
-    <%= f.label :name, 'Название' %>
-    <%= f.text_field :name, class: 'form-control' %>
-  </div>
-
-  <div class="form-group">
-    <%= f.button :submit,'совершить', class: 'btn btn-primary' %>
-    <%= link_to "Отмена", products_path, class: 'btn btn-secondary' %>
+  <div class="form-actions">
+    <%= f.button :submit, 'Завершить' %>
   </div>
 <% end %>

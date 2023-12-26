@@ -1,6 +1,6 @@
 class UserPolicy < ApplicationPolicy
   def access?
-    user_is_admin?
+    user_is_manager?
   end
 
   def manage?

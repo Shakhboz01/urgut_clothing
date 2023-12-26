@@ -1,29 +1,37 @@
-<h2>Регистрация</h2>
-
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= f.error_notification %>
-
-  <div class="form-inputs">
-    <%= f.input :name, autofocus: true, autocomplete: "name",label: 'имя' %>
-    <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" },
-                label: "Электронная почта" %>
-    <%= f.input :password,
-                required: true,
-                hint: ("минимум #{@minimum_password_length} символов" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" },
-                label: "Пароль" %>
-    <%= f.input :password_confirmation,
-                required: true,
-                input_html: { autocomplete: "new-password" },
-                label: "Подтверждение пароля" %>
+<div class="container shadow-lg-lg">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header"><h2>Регистрация</h2></div>
+        <div class="card-body">
+          <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'form' }) do |f| %>
+            <%= f.error_notification %>
+            <div class="form-group">
+              <%= f.input :name, autofocus: true, autocomplete: "name", label: 'Название', input_html: { autocomplete: "email", class: 'form-control' } %>
+              <%= f.input :email,
+                          required: true,
+                          autofocus: true,
+                          input_html: { autocomplete: "email", class: 'form-control' }%>
+            </div>
+            <div class="form-group">
+              <%= f.input :password,
+                          required: true,
+                          hint: ("Минимум #{@minimum_password_length} символов" if @minimum_password_length),
+                          input_html: { autocomplete: "new-password", class: 'form-control' } %>
+            </div>
+            <div class="form-group">
+              <%= f.input :password_confirmation,
+                          required: true,
+                          input_html: { autocomplete: "new-password", class: 'form-control' } %>
+            </div>
+            <div class="form-group">
+            </div>
+          <% end %>
+        </div>
+        <div class="card-footer">
+          <%= link_to 'Войти', new_session_path(resource_name) %>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Зарегистрироваться" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>

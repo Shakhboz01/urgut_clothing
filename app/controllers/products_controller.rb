@@ -1,16 +1,11 @@
 class ProductsController < ApplicationController
-  include Pundit::Authorization
-
-  before_action :set_product, only: %i[ show edit update destroy ]
+  before_action :set_product, only: %i[ toggle_active show edit update destroy ]
 
   # GET /products or /products.json
   def index
-    @products =
-      if params[:end_product].present?
-        Product.where(weight: 3)
-      else
-        Product.where.not(weight: 3)
-      end.order(:id)
+    @q = Product.ransack(params[:q])
+    @products = @q.result.order(active: :desc).order(name: :asc).page(params[:page]).per(40)
+    @product_categories = ProductCategory.all
   end
 
   # GET /products/1 or /products/1.json
@@ -19,14 +14,12 @@ class ProductsController < ApplicationController
 
   # GET /products/new
   def new
-    authorize Product, :manage?
-
-    @product = Product.new
+    @random_code = Product.generate_code
+    @product = Product.new(product_category_id: params[:product_category_id])
   end
 
   # GET /products/1/edit
   def edit
-    authorize Product, :admin?
   end
 
   # POST /products or /products.json
@@ -35,10 +28,10 @@ class ProductsController < ApplicationController
 
     respond_to do |format|
       if @product.save
-        format.html { redirect_to product_url(@product), notice: "Product was Успешно создано." }
+        format.html { redirect_to request.referrer, notice: "Product was successfully created." }
         format.json { render :show, status: :created, location: @product }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { render :new, product: @product, status: :unprocessable_entity }
         format.json { render json: @product.errors, status: :unprocessable_entity }
       end
     end
@@ -46,11 +39,9 @@ class ProductsController < ApplicationController
 
   # PATCH/PUT /products/1 or /products/1.json
   def update
-    authorize Product, :admin?
-
     respond_to do |format|
       if @product.update(product_params)
-        format.html { redirect_to products_path, notice: "успешно обновлено." }
+        format.html { redirect_to request.referrer, notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -61,24 +52,28 @@ class ProductsController < ApplicationController
 
   # DELETE /products/1 or /products/1.json
   def destroy
-    authorize Product, :admin?
-
     @product.destroy
 
     respond_to do |format|
-      format.html { redirect_to products_url, notice: "Product was успешно удален." }
+      format.html { redirect_to products_url, notice: "Product was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_product
-      @product = Product.find(params[:id])
-    end
+  def toggle_active
+    @product.toggle(:active).save
+    redirect_to products_url, notice: "Successfully updated"
+  end
 
-    # Only allow a list of trusted parameters through.
-    def product_params
-      params.require(:product).permit(:name, :amount_left)
-    end
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_product
+    @product = Product.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def product_params
+    params.require(:product).permit(:name, :local, :price_in_usd, :sell_price, :buy_price, :unit, :product_category_id, :initial_remaining, :code)
+  end
 end

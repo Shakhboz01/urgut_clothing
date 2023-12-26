@@ -1,17 +1,14 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  enum role: %i[другой админ менеджер продавец упаковщик оператор дробильщик приёмщик заготовщик механик резчик]
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  has_many :billets
-  has_many :incomes
-  has_many :sausages
-  has_many :expenditures
+
   has_many :participations
-  has_many :packages
-  has_one :machine_size
+  enum role: %i[руководитель бухгалтер менеджер сотрудник другой складчик кассир]
   validates :name, uniqueness: true
+
+  scope :active, -> { where(:active => true) }
 
   def self.devise_parameter_sanitizer
     super.tap do |sanitizer|

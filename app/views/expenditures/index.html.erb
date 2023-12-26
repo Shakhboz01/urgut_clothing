@@ -1,47 +1,31 @@
 <div class="container my-5">
-  <div class="card shadow">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h3 class="card-title font-weight-bold">расходы</h3>
-
-      <%= link_to 'Добавить новый', new_expenditure_path, class: 'btn btn-primary' %>
-    </div>
-
-    <%= render 'index_filter_form', url: request.path, q: @q, type: 'other' %>
-
-    <div class="card-body">
-        <div class="sum-of-prices mb-3">
-          <strong>Общая сумма: <%= num_to_usd(@sum) %></strong>
-        </div>
-        <table class="table table-bordered table-striped table-hover">
-          <thead>
-            <tr>
-              <th><%= sort_link @q, :id, 'ID' %></th>
-              <th><%= sort_link @q, :expenditure_type, 'Тип расхода' %></th>
-              <th><%= sort_link @q, :price, 'Цена' %></th>
-              <th><%= sort_link @q, :comment, 'Комментарий' %></th>
-              <th><%= sort_link @q, :executor, 'Исполнитель' %></th>
-              <th><%= sort_link @q, :created_at, 'Создано в' %></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @expenditures.each do |expenditure| -%>
-              <tr>
-                <td><%= expenditure.id %></td>
-                <td><%= expenditure.expenditure_type %></td>
-                <td><%= num_to_usd(expenditure.price) %></td>
-                <td><%= expenditure.comment %></td>
-                <td><%= User.find(expenditure.executor_id)&.name %></td>
-                <td><%= expenditure.created_at.strftime('%Y-%m-%d %H:%M') %></td>
-                <td>
-                  <%= clink_to 'редактировать', edit_expenditure_path(expenditure), 'fa-edit' %>
-                  <%= cdlink_to 'удалить', expenditure %>
-                </td>
-              </tr>
-            <% end -%>
-          </tbody>
-        </table>
-        <%= paginate @expenditures %>
-    </div>
+  <%= render 'filter_form', q: @q, url: request.path %>
+  <div class="card shadow-lg">
+    <%= render 'expenditures', expenditures: @expenditures, expenditures_data: @expenditures_data %>
+    <%= paginate @expenditures %>
+    <table class='table-bordered'>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Итого цена</th>
+            <th>Итого оплачено</th>
+            <th>Разница</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>В долларах </th>
+            <td><%= number_to_currency @expenditures_data.price_in_usd.sum(:price) %></td>
+            <td><%= number_to_currency @expenditures_data.price_in_usd.sum(:total_paid) %></td>
+            <td><%= number_to_currency(@expenditures_data.price_in_usd.sum(:price) - @expenditures_data.price_in_usd.sum(:total_paid)) %></td>
+          </tr>
+          <tr>
+            <th>В сумах </th>
+            <td><%= num_to_usd(@expenditures_data.price_in_uzs.sum(:price)) %></td>
+            <td><%= num_to_usd @expenditures_data.price_in_uzs.sum(:total_paid) %></td>
+            <td><%= num_to_usd(@expenditures_data.price_in_uzs.sum(:price) - @expenditures_data.price_in_uzs.sum(:total_paid)) %></td>
+          </tr>
+        </tbody>
+      </table>
   </div>
 </div>

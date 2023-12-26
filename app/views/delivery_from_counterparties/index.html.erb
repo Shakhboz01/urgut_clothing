@@ -1,0 +1,39 @@
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary">Приход от поставщиков</button>
+        <%= link_to 'Посмотреть детально', product_entries_path, class: 'btn btn-secondary' %>
+      </div>
+    </div>
+    <%= render 'filter_form', q: @q, url: request.path %>
+    <div class="card-body">
+      <%= render 'delivery_from_counterparties', delivery_from_counterparties: @delivery_from_counterparties %>
+      <%= paginate @delivery_from_counterparties %>
+      <table class='table-bordered'>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Итого цена</th>
+            <th>Итого оплачено</th>
+            <th>Разница</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>В долларах </th>
+            <td><%= number_to_currency @delivery_from_counterparties_data.price_in_usd.sum(:total_price) %></td>
+            <td><%= number_to_currency @delivery_from_counterparties_data.price_in_usd.sum(:total_paid) %></td>
+            <td><%= number_to_currency(@delivery_from_counterparties_data.price_in_usd.sum(:total_price) - @delivery_from_counterparties_data.price_in_usd.sum(:total_paid)) %></td>
+          </tr>
+          <tr>
+            <th>В сумах </th>
+            <td><%= num_to_usd(@delivery_from_counterparties_data.price_in_uzs.sum(:total_price)) %></td>
+            <td><%= num_to_usd @delivery_from_counterparties_data.price_in_uzs.sum(:total_paid) %></td>
+            <td><%= num_to_usd(@delivery_from_counterparties_data.price_in_uzs.sum(:total_price) - @delivery_from_counterparties_data.price_in_uzs.sum(:total_paid)) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

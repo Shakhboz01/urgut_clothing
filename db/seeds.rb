@@ -1,31 +1,15 @@
-product_names = [
-  ['Картон', 0],
-  ['Серый',0],
-  ['Белый', 0],
-  ['Целлофан', 1],
-  ['Этикетка', 2],
-  ['Rolli', 3],
-  ['Ишонч', 3],
-  ['Без этикетка Rolli', 3],
-]
-
-product_names.each do |product|
-  Product.create(name: product[0], amount_left: 0, weight: product[1])
-end
-
-Product.find_by(weight: 1).product_prices.create(price: 400)
-
-3.times do
-  WastePaperProportion.create
-end
-
-paper_details = [[50, 'Картон', 1], [50, 'Белый', 1], [30, 'Картон', 2], [70, 'Серый', 2], [60, 'Серый', 3], [40, 'Картон', 3]]
-
-
-paper_details.each do |paper|
-  ProportionDetail.create(
-    percentage: paper[0],
-    product: Product.find_by_name(paper[1]),
-    waste_paper_proportion_id: paper[2]
-  )
-end
+CurrencyRate.create(rate: 12000.00, finished_at: nil)
+ProductCategory.create(name: "Прочие")
+Provider.create(name: "Клиент", weight: 1)
+Buyer.create(name: "Клиент", weight: 1)
+Storage.create(name: "global")
+Storage.create(name: "GM")
+Storage.create(name: "PARTS LINE")
+User.create(name: 'Хусенов Азиз', role: 2, password: 'aziz_1001', email: 'aziz@gmail.com')
+User.create(name: 'Раббимов Далер', role: 5, password: 'daler_1754', email: 'daler@gmail.com')
+User.create(name: 'Мирзаев Журабек', role: 3, password: 'jorabek_5474', email: 'jorabek@gmail.com')
+User.create(name: 'Рахимов Бобиршох',  role:	6, password: 'shokh_7984', email: 'shokh@gmail.com')
+User.create(name: 'Суннат',	 role: 3, password: 'sunnat_2322', email: 'sunnat@gmail.com')
+User.create(name: 'Пулатов Алишер',  role: 0, password: 'alisher_0546', email: 'alisher@gmail.com')
+User.create(name: "Пулатов Улугбек",	 role: 0, password: 'bek_3565', email: 'ulugbek@gmail.com')
+User.create(name: "Назаров Алижон",	 role: 1, password: 'alijon_9171', email: 'alijon@gmail.com')

@@ -1,0 +1,45 @@
+<div class="card-body">
+  <table class="table table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <% unless defined?(shrink) %>
+          <th>ID</th>
+        <% end %>
+        <th>Цена</th>
+        <th>Оплачено</th>
+        <% unless defined?(shrink) %>
+          <th>Тип оплаты</th>
+        <% end %>
+        <th>Тип расхода</th>
+        <th>Комментарие</th>
+        <th>Дата создания</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% expenditures.each do |expenditure| %>
+        <tr>
+          <% unless defined?(shrink) %>
+            <td class="<%= detect_danger_row(expenditure.price, expenditure.total_paid) %>"><%= expenditure.id %></td>
+          <% end %>
+          <td><%= currency_convert(expenditure.price_in_usd, expenditure.price) %></td>
+          <td><%= currency_convert(expenditure.price_in_usd, expenditure.total_paid) %></td>
+          <% unless defined?(shrink) %>
+            <td><%= expenditure.payment_type %></td>
+          <% end %>
+          <td><%= expenditure.expenditure_type %></td>
+          <td><%= expenditure.comment %></td>
+          <td><%= strf_datetime(expenditure.created_at) %></td>
+          <td>
+            <% unless expenditure.sale_ids.nil? %>
+              <%= clink_to 'Посмотреть от каких продаж взяты деньги', expenditure, 'fa-search' %>
+            <% end %>
+
+            <%= cdlink_to 'Удалить', expenditure %>
+            <%= render 'expenditures/expenditures_transaction', expenditure: expenditure %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

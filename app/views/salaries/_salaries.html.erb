@@ -1,0 +1,40 @@
+<div class="card container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-title font-weight-bold">Зарплаты/Аванс</h3>
+      <%= link_to 'Добавить новый', new_salary_path, class: "btn btn-success min-width-btn" %>
+    </div>
+
+    <div class="card-body">
+      <table class="table table-hover table-striped">
+        <thead>
+          <%= render 'salary_data' %>
+          <tr>
+            <th><%= sort_link @q, :id, 'ID' %></th>
+            <th><%= sort_link @q, :month, 'Дата' %></th>
+            <th>Кому</th>
+            <th><%= sort_link @q, :prepayment, 'Аванс' %></th>
+            <th><%= sort_link @q, :price, 'Цена' %></th>
+            <th><%= sort_link @q, :payment_type, 'тип оплаты' %></th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @salaries.each do |salary| %>
+            <tr>
+              <td><%= salary.id %></td>
+              <td><%= salary.month %></td>
+              <td><%= salary.team&.name || salary.user&.name %></td>
+              <td><%= active_check(salary.prepayment) %></td>
+              <td><%= number_to_currency(salary.price) %></td>
+              <td><%= salary.payment_type %></td>
+              <th><%= clink_to 'Редактировать', edit_salary_url(salary), 'fa-edit' %></th>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <%= page_entries_info @salaries, entry_name: "Зарплат/Аванс" %>
+    <%= paginate @salaries %>
+  </div>
+</div>

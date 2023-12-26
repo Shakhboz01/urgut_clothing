@@ -1,0 +1,34 @@
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <%= link_to 'Продажа', sales_url(params.permit!), class: 'btn btn-secondary' %>
+        <button type="button" class="btn btn-primary">Услуга</button>
+        <%= link_to 'Обьекты', sale_from_services_url(params.permit!), class: 'btn btn-secondary' %>
+      </div>
+      <%= link_to 'Добавить новый', new_sale_from_local_service_path, class: "btn btn-success min-width-btn" %>
+    </div>
+
+    <div class="card-body">
+      <%= render 'filter_form', q: @q, url: request.path %>
+      <%= render 'sale_from_local_services', sale_from_local_services: @sale_from_local_services %>
+      <%= paginate @sale_from_local_services %>
+      <table class='table-bordered'>
+        <thead>
+          <tr>
+            <th>Итого цена</th>
+            <th>Итого оплачено</th>
+            <th>Разница</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= number_to_currency(@all_sale_from_local_services.sum(:total_price)) %></td>
+            <td><%= number_to_currency @all_sale_from_local_services.sum(:total_paid) %></td>
+            <td><%= @all_sale_from_local_services.sum(:total_price) - @all_sale_from_local_services.sum(:total_paid) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

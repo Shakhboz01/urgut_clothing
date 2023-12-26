@@ -1,0 +1,55 @@
+<!-- Button trigger modal -->
+<button accesskey='1' style='display: none' type="button" class="btn btn-primary" data-toggle="modal" data-target="#productModal">
+  create a product
+</button>
+
+<button accesskey='0' style='display: none' type="button" class="btn btn-primary" data-toggle="modal" data-target="#expenditureModal">
+  create an expenditure
+</button>
+
+
+<%= button_to default_create_sales_path, style: 'display: none', accesskey: '2', method: :post do %>
+  <span>продажа</span>
+<% end %>
+
+<%= button_to default_create_delivery_from_counterparties_path, style: 'display: none', accesskey: '5', method: :post do %>
+  <span>Приход от поставщика</span>
+<% end %>
+<!-- Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= render 'products/form', product: Product.new, random_code: Product.generate_code %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="expenditureModal" tabindex="-1" role="dialog" aria-labelledby="expenditureModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= render 'expenditures/form', expenditure: Expenditure.new %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $("input").focus(function() {
+      $(this).select();
+    });
+  });
+</script>

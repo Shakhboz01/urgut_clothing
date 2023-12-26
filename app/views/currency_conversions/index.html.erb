@@ -1,0 +1,76 @@
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <%= render 'filter_form', q: @q, url: request.path %>
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-title font-weight-bold">Конвертации</h3>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Добавить новый
+      </button>
+    </div>
+
+    <div class="card-body">
+      <table class="table table-hover table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Курс</th>
+            <th>От $ на сум</th>
+            <th>Исполнитель</th>
+            <th>Цена в $</th>
+            <th>Цена в сум</th>
+            <th>Дата создания</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @currency_conversions.each do |currency_conversion| %>
+            <tr>
+              <td><%= currency_conversion.id %></td>
+              <td><%= num_to_usd currency_conversion.rate %></td>
+              <td><%= active_check currency_conversion.to_uzs %></td>
+              <td><%= currency_conversion.user.name %></td>
+              <td><%= num_to_usd currency_conversion.price_in_uzs %></td>
+              <td><%= num_to_usd currency_conversion.price_in_usd %></td>
+              <td><%= strf_datetime currency_conversion.created_at %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= paginate @currency_conversions %>
+      <table class='table-bordered'>
+        <thead>
+          <tr>
+            <th>Итого цена в $</th>
+            <th>Итого цена в сум</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= number_to_currency @all_currency_conversions.sum(:price_in_usd) %></td>
+            <td><%= num_to_usd @all_currency_conversions.sum(:price_in_uzs) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= render 'form', currency_conversion: CurrencyConversion.new(rate: @rate) %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary">Создать</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<%= render 'filter_form', q: @q, url: request.path %>
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-title font-weight-bold">Покупатели</h3>
+      <%= link_to 'Добавить новый', new_buyer_path, class: "btn btn-success min-width-btn" %>
+    </div>
+
+    <div class="card-body">
+      <%= render 'buyers', buyers: @buyers %>
+    </div>
+    <%= paginate @buyers %>
+  </div>
+</div>

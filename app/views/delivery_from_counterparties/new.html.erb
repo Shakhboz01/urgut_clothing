@@ -1,0 +1,11 @@
+<div style='background-color: #80d3ff87;' class="container shadow-lg">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <%= render 'layouts/progress', value: '47' %>
+
+      <h1 class="text-center mb-4">Добавить новый</h1>
+      <%= render 'form', delivery_from_counterparty: @delivery_from_counterparty %>
+      <%= link_to 'назад', delivery_from_counterparties_path, class: "btn btn-light min-width-btn" %>
+    </div>
+  </div>
+</div>

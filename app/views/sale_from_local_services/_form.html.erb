@@ -1,0 +1,28 @@
+<div class='card-header shadow-lg'>
+  <%= simple_form_for(sale_from_local_service) do |f| %>
+    <%= f.error_notification %>
+    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+    <%= f.input :status, as: :hidden, input_html: { value: 1 } %>
+
+    <div class="row">
+      <div class="col-sm-3 col-md-2">
+        <%= f.input :total_price, label: 'Договор' %>
+      </div>
+      <div class="col-sm-3 col-md-2">
+        <%= f.input :total_paid, label: 'Итого оплачено в $', input_html: {placeholder: 'Пропустите этот поле если клиент оплатили полностью'} %>
+      </div>
+      <div class="col-sm-3 col-md-2">
+        <%= f.association :buyer, label: 'Покупатель', collection: Buyer.active.order(weight: :desc), include_blank: false %>
+      </div>
+      <div class="col-sm-3 col-md-2">
+        <%= f.input :payment_type, label: 'Тип оплаты', collection: SaleFromLocalService.payment_types.keys.map { |unit| [SaleFromLocalService.human_attribute_name("unit.#{unit}"), unit] }, include_blank: false %>
+      </div>
+      <div class="col-sm-3 col-md-2">
+        <%= f.input :coment, label: 'Комментарие' %>
+      </div>
+      <div class="col-sm-3 col-md-2 align-self-center">
+        <%= f.button :submit, 'Завершить' %>
+      </div>
+    </div>
+  <% end %>
+</div>

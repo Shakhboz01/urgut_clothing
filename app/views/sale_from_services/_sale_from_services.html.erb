@@ -1,0 +1,44 @@
+<table class="table table-hover table-bordered table-striped">
+  <thead>
+    <tr>
+      <% unless defined?(shrink) %>
+        <td></td>
+        <th>ID</th>
+      <% end %>
+      <th>Покупатель</th>
+      <th>Итого цена</th>
+      <th>Оплачено</th>
+      <% unless defined?(shrink) %>
+        <th>Тип оплаты</th>
+        <th>Комментарие</th>
+        <th>Оформлено в</th>
+      <% end %>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% sale_from_services.each do |sale_from_service| %>
+      <tr>
+        <% unless defined?(shrink) %>
+          <td><%= active_check(sale_from_service.closed?) %></td>
+          <td class="<%= detect_danger_row(sale_from_service.total_price, sale_from_service.total_paid) %>"><%= sale_from_service.id %></td>
+        <% end %>
+
+        <td><%= sale_from_service.buyer.name %></td>
+        <td><%= number_to_currency sale_from_service.total_price %></td>
+        <td><%= number_to_currency sale_from_service.total_paid %></td>
+        <% unless defined?(shrink) %>
+          <td><%= sale_from_service.payment_type %></td>
+          <td><%= sale_from_service.comment %></td>
+          <td><%= strf_datetime sale_from_service.created_at %></td>
+        <% end %>
+        <td>
+          <%= clink_to 'Посмотреть', sale_from_service_path(sale_from_service), 'fa-search' %>
+          <% if sale_from_service.closed? %>
+            <%= render 'sale_from_services/sale_from_service_transaction', sale_from_service: sale_from_service %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

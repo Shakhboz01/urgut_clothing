@@ -1,0 +1,43 @@
+<table class="table table-hover table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <% unless defined?(shrink) %>
+        <th>Проводка<br>закрыто</th>
+      <% end %>
+      <th>Поставщик</th>
+      <th>Итого цена</th>
+      <th>Оплачено</th>
+      <% unless defined?(shrink) %>
+        <th>тип оплаты</th>
+        <th>Коммент</th>
+      <% end %>
+      <th>дата прихода</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% delivery_from_counterparties.each do |delivery_from_counterparty| %>
+      <tr>
+        <td class="<%= detect_danger_row(delivery_from_counterparty.total_price, delivery_from_counterparty.total_paid) %>"><%= delivery_from_counterparty.id %></td>
+        <% unless defined?(shrink) %>
+          <td><%= active_check(delivery_from_counterparty.closed?) %></td>
+        <% end %>
+        <td><%= delivery_from_counterparty.provider.name %></td>
+        <td><%= currency_convert(delivery_from_counterparty.price_in_usd, delivery_from_counterparty.total_price) %></td>
+        <td><%= currency_convert(delivery_from_counterparty.price_in_usd, delivery_from_counterparty.total_paid) %></td>
+        <% unless defined?(shrink) %>
+          <td><%= delivery_from_counterparty.payment_type %></td>
+          <td><%= delivery_from_counterparty.comment %></td>
+        <% end %>
+        <td><%= strf_datetime(delivery_from_counterparty.created_at) %></td>
+        <td>
+          <%= clink_to 'Посмотреть', delivery_from_counterparty_path(delivery_from_counterparty), 'fa-search' %>
+          <% if delivery_from_counterparty.closed? %>
+            <%= render 'delivery_from_counterparties/delivery_from_counterparty_transaction', delivery_from_counterparty: delivery_from_counterparty %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

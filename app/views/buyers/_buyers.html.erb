@@ -1,0 +1,47 @@
+<%= turbo_frame_tag 'buyers' do %>
+  <table class="table shadow table-hover table-bordered table-striped">
+    <thead>
+      <tr>
+        <% unless defined?(shrink) %>
+          <th>ID</th>
+        <% end %>
+
+        <th>имя</th>
+        <th>долг в $</th>
+        <th>долг в суме</th>
+
+        <% unless defined?(shrink) %>
+          <th>номер телефона</th>
+          <th>Коммент</th>
+          <th>Оформлено в</th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% buyers.each do |buyer| %>
+        <tr class="<%= active_tr(buyer.active) %>">
+          <% unless defined?(shrink) %>
+            <td><%= buyer.id %></td>
+          <% end %>
+          <td><%= buyer.name %></td>
+          <td><%= link_to number_to_currency(buyer.calculate_debt_in_usd), sales_url(q_other: {total_paid_less_than_price: '1'},q: {buyer_id_eq: buyer.id, price_in_usd_true: true}), method: :get %></td>
+          <td><%= link_to num_to_usd(buyer.calculate_debt_in_uzs), sales_url(q_other: {total_paid_less_than_price: '1'},q: {buyer_id_eq: buyer.id, price_in_usd_true: false}), method: :get %></td>
+          <% unless defined?(shrink) %>
+            <td><%= buyer.phone_number %></td>
+            <td><%= buyer.comment %></td>
+            <td><%= strf_datetime(buyer.created_at) %></td>
+            <td>
+              <%= clink_to 'Посмотреть история оказания услуги', sales_path, 'fa-history' %>
+              <%= clink_to 'Редактировать', edit_buyer_path(buyer), 'fa-edit' %>
+              <% if buyer.active %>
+                <%= clink_to 'Деактивировать', toggle_active_buyer_path(buyer), 'fa-ban', :post %>
+              <% else %>
+                <%= clink_to 'Активировать', toggle_active_buyer_path(buyer), 'fa-chart-line', :post %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

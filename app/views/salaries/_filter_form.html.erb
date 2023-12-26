@@ -1,0 +1,36 @@
+<br>
+<%= search_form_for @q, url: url, html: { class: 'form form-horizontal filter-form' } do |f| %>
+  <div class="container card shadow-lg">
+    <div class="row">
+      <div class="form-group col-xs-3 col-sm-2">
+        <%= f.label :month_gteq, 'Месяц от:', class: 'control-label' %>
+        <%= f.text_field :month_gteq, value: @q.month_gteq, class: 'datepicker form-control', autocomplete: :off %>
+      </div>
+      <div class="form-group col-xs-3 col-sm-2">
+        <%= f.label :month_lteq, 'Месяц до:', class: 'control-label' %>
+        <%= f.text_field :month_lteq, value: @q.month_lteq, class: 'datepicker form-control', autocomplete: :off %>
+      </div>
+      <div class="form-group col-xs-3 col-sm-2">
+        <%= f.label :user_id_eq, 'Работник:', class: 'control-label' %>
+        <%= f.select :user_id_eq, User.pluck(:name, :id), { include_blank: true }, class: 'form-control' %>
+      </div>
+      <div class="form-group col-xs-3 col-sm-2">
+        <%= f.label :payment_type_eq, 'Тип оплаты:', class: ' form-control' %>
+        <%= f.select :payment_type_eq, Salary.payment_types, include_blank: true %>
+      </div>
+      <div class="form-group col-xs-3 col-sm-2">
+        <%= f.label :prepayment_eq, 'Аванс:', class: ' form-control' %>
+        <%= f.check_box :prepayment_eq, {}, true, false %>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="form-group col-xs-12 col-sm-6">
+        <%= f.submit 'Фильтр', class: 'btn btn-primary' %>
+        <%= link_to 'Очистить поиск', request.path, class: 'btn btn-default' %>
+      </div>
+    </div>
+  </div>
+<% end %>
+<br>
+<script>$(function(){$(".datepicker").datepicker({dateFormat: 'dd-mm-yy'})})</script>

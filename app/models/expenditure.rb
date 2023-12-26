@@ -1,63 +1,63 @@
 class Expenditure < ApplicationRecord
-  attr_accessor :product_price
-  belongs_to :user, optional: true
-  belongs_to :outcomer, optional: true
-  belongs_to :product, optional: true
-  belongs_to :executor, class_name: 'User',
-                        foreign_key: 'executor_id', optional: true
-  has_many :transaction_histories
-  # don't change this enum
-  enum expenditure_type: %i[на_товар аванс зарплата еда грузовик запчасть газ налог свет прочие]
-  validates :price, presence: true, unless: -> { на_товар? }
-  validate :if_worker_payment_expenditure
-  validate :if_product_expenditure
-  validate :set_total_paid
+  include ProtectEditAfterDay
+  include ProtectDestroyAfterDay
+  include SendImage
+  attr_accessor :rate
+  attr_accessor :image
 
-  scope :from_index_2, -> { where("expenditure_type >= ?", Expenditure.expenditure_types[:еда]) }
-  scope :from_enum_to_enum, -> (x, y) { where(expenditure_type: x..y) }
+  belongs_to :user
+  belongs_to :combination_of_local_product, optional: true
+  belongs_to :delivery_from_counterparty, optional: true
+  has_many :transaction_histories, dependent: :destroy
+  validates_presence_of :expenditure_type
+  validates_presence_of :price
+  enum expenditure_type: %i[Корея qarz банк другие_расходы на_покупку_товаров]
+  enum payment_type: %i[наличные карта click другие]
+  scope :price_in_uzs, -> { where('price_in_usd = ?', false) }
+  scope :price_in_usd, -> { where('price_in_usd = ?', true) }
 
-  scope :totals_by_time_duration, lambda { |day = 'day'|
-    select("date_trunc('#{day}', created_at) AS duration, sum(price) as amount")
-      .group('duration')
-      .order('duration, amount')
-      .map do |row|
-        [
-          row['duration'].strftime(day == 'hour' ? '%d-%b|%R' : '%D'),
-          row.amount.to_f
-        ]
-    end
-  }
-  def self.ransackable_associations(auth_object = nil)
-    ["executor", "outcomer", "product", "user"]
-  end
+  validate :check_if_total_paid_is_not_more_than_price
+  after_create :set_transaction_history_and_notify_via_tg
+  before_save :set_total_paid
+  before_destroy :varify_delivery_from_counterparty_is_not_closed
+  scope :unpaid, -> { where("price > total_paid") }
+  scope :filter_by_total_paid_less_than_price, ->(value) {
+          if value == "1" # The checkbox value when selected
+            where("total_paid < price")
+          else
+            all # No filter when the checkbox is not selected
+          end
+        }
 
   private
 
-  def if_worker_payment_expenditure
-    if ['аванс', 'зарплата'].include?(expenditure_type) && user.nil?
-      errors.add(:user, "error, please fill forms")
-    end
+  def set_transaction_history_and_notify_via_tg
+    self.transaction_histories.create(price: total_paid, first_record: true, user_id: user.id)
+    message =
+      "<b>#{user.name.upcase} оформил расход</b>\n" \
+      "<b>Тип расхода:</b> #{expenditure_type}\n" \
+      "<b>Тип оплаты:</b> #{payment_type}\n" \
+      "<b>Цена расхода:</b> #{price} #{price_in_usd ? '$' : 'сум'}\n"
+
+    message << "&#9888<b>Оплачено:</b> #{total_paid}" if price > total_paid
+    message << "<b>Комментарие:</b> #{comment}" if comment.present?
+    SendMessage.run(message: message)
+  end
+
+  def check_if_total_paid_is_not_more_than_price
+    return if total_paid.nil?
+
+    errors.add(:base, "cannot be greater than price") if total_paid > price
   end
 
   def set_total_paid
-    self.total_paid = price unless expenditure_type == 'на_товар'
+    return unless total_paid.nil?
+
+    self.total_paid = price.to_f
   end
 
-  def if_product_expenditure
-    if expenditure_type == 'на_товар' &&
-     [outcomer, quantity, product, product_price].any?(&:blank?)
-      errors.add(:base, "ошибка, пожалуйста, заполните формы")
-    elsif expenditure_type == 'на_товар' && !quantity.nil?
-      if new_record?
-        product.increment!(:amount_left, quantity)
-      else
-        old_record = Expenditure.find(id)
-        old_record.product.update(amount_left: old_record.product.amount_left - old_record.quantity)
-        product.update(amount_left: product.amount_left + quantity)
-      end
-
-      self.price = (product_price.to_i * quantity)
-      self.total_paid = 0 if total_paid.nil?
-    end
+  def varify_delivery_from_counterparty_is_not_closed
+    throw(:abort) if !delivery_from_counterparty.nil? && delivery_from_counterparty.closed?
+    throw(:abort) if !combination_of_local_product.nil? && combination_of_local_product.closed?
   end
 end

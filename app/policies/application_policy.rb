@@ -60,7 +60,7 @@ class ApplicationPolicy
   end
 
   def user_is_manager?
-    %w[админ менеджер].include?(user.role)
+    %w[админ менеджер бухгалтер].include?(user.role)
   end
 
   def everyone_is_allowed?

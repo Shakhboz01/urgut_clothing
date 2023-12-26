@@ -1,7 +1,35 @@
 <div class="container">
   <h1>Создание пользователя</h1>
 
-  <%= render 'form', user: @user %>
+  <%= form_with(model: @user, method: :post) do |form| %>
+    <div class="form-group">
+      <%= form.label :password, 'Пароль' %>
+      <%= form.password_field :password, autocomplete: "new-password", class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :password_confirmation, 'Подтверждение пароля' %>
+      <%= form.password_field :password_confirmation, autocomplete: "new-password", class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :name, 'Название' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :allowed_to_use, 'Разрешено использовать эту приложению' %>
+      <%= form.check_box :allowed_to_use, {} %>
+    </div>
+    <div class="form-group">
+      <%= form.label :daily_payment, 'ежедневный платеж' %>
+      <%= form.number_field :daily_payment, class: 'form form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :role, 'Роль' %>
+      <%= form.select :role, User.roles.keys, {}, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.submit 'Сохранить', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
 
   <%= link_to 'Назад', users_path, class: "btn btn-secondary" %>
 </div>

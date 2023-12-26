@@ -1,0 +1,38 @@
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <%= link_to 'Приход от поставщиков', delivery_from_counterparties_path, class: 'btn btn-secondary' %>
+        <button type="button" class="btn btn-primary">Приход от производство</button>
+        <%= link_to 'Детально', product_entries_path, class: 'btn btn-secondary' %>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <table class="table table-hover table-bordered table-striped">
+        <thead>
+          <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Итого расход</th>
+            <th>Коммент</th>
+            <th>Оформлено в</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @combination_of_local_products.each do |combination_of_local_product| %>
+            <tr>
+              <td><%= active_check(combination_of_local_product.closed?) %></td>
+              <td><%= combination_of_local_product.id %></td>
+              <td><%= number_to_currency combination_of_local_product&.calculate_total_price %></td>
+              <td><%= combination_of_local_product.comment %></td>
+              <td><%= strf_datetime combination_of_local_product.created_at %></td>
+              <td><%= clink_to 'Посмотреть', combination_of_local_product_path(combination_of_local_product), 'fa-search' %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-title font-weight-bold">Discounts</h3>
+      <%= link_to 'Добавить новый', new_discount_path, class: "btn btn-success min-width-btn" %>
+    </div>
+
+    <div class="card-body">
+      <table class="table table-hover table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>ID продажи</th>
+            <th>Проверено со стороны бухгалтера</th>
+            <th>Цена</th>
+            <th>Исполнитель</th>
+            <th>Коммент</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @discounts.each do |discount| %>
+            <tr>
+              <td><%= discount.id %></td>
+              <td><%= link_to discount.sale_id, sale_path(discount.sale) %></td>
+              <td><%= active_check(discount.verified) %></td>
+              <td><%= currency_convert(discount.price_in_usd, discount.price) %></td>
+              <td><%= discount.user.name %></td>
+              <td><%= discount.comment %></td>
+              <% unless discount.verified %>
+                <td>
+                  <%= clink_to 'Отметить как проверенное', verify_discount_path(discount), 'fa-check', :post %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= paginate @discounts %>
+      <table class='table-bordered'>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Итого цена</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>В долларах </th>
+            <td><%= number_to_currency @discounts_data.price_in_usd.sum(:price) %></td>
+          </tr>
+          <tr>
+            <th>В сумах </th>
+            <td><%= num_to_usd(@discounts_data.price_in_uzs.sum(:price)) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

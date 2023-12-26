@@ -1,0 +1,24 @@
+<div class='col-sm-2'>
+  <div style='height: 100vh; overflow: auto'>
+    <%= clink_to 'Добавить категорию', new_product_category_path, 'fa-regular fa-square-plus fa-2xl' %>
+    <br>
+    <div class='category-element text-center table-hover'>
+      <%= link_to 'Показать все', product_categories_path, style: !defined?(product_category_id) && 'background: black; color: white;' %>
+    </div>
+    <% product_categories.each do |category| %>
+      <div id="<%= defined?(product_category_id) && category.id == product_category_id && 'current' %>" style="<%= defined?(product_category_id) && category.id == product_category_id && 'background: black; color: white;' %>" class='text-center table-hover category-element' >
+        <%= link_to category.name, product_category_path(category) %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const currentElement = document.getElementById('current');
+    if (currentElement) {
+      currentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+</script>

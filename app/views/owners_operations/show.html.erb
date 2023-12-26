@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @owners_operation %>
+
+<div>
+  <%= link_to "Edit this owners operation", edit_owners_operation_path(@owners_operation) %> |
+  <%= link_to "Back to owners operations", owners_operations_path %>
+
+  <%= button_to "Destroy this owners operation", @owners_operation, method: :delete %>
+</div>

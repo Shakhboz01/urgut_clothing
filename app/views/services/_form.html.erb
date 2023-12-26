@@ -1,0 +1,20 @@
+<%= simple_form_for(service, html: { class: 'form-horizontal' }) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+    <%= f.input :name, label: 'Название' %>
+  </div>
+  <div class="form-inputs">
+    <%= f.input :unit, label: 'Измерение', collection: Service.units.keys.map { |unit| [Service.human_attribute_name("unit.#{unit}"), unit] }, include_blank: false %>
+  </div>
+  <div class="form-inputs">
+    <%= f.input :price, label: 'цена услуги' %>
+  </div>
+  <div class="form-inputs">
+    <%= f.input :team_fee_in_percent, label: 'доля бригадеров в %' %>
+  </div>
+  <div class="form-actions">
+    <%= f.button :submit, 'Завершить' %>
+  </div>
+<% end %>

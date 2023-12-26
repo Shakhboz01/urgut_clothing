@@ -1,0 +1,24 @@
+<% if sale_from_local_service.total_paid < sale_from_local_service.total_price %>
+  <i type="button" class="fa fa-money-bill-transfer" title=<%= "Пополнить оставщегося" %> style='color: blue; cursor: pointer' data-toggle="modal" data-target="#exampleModal"></i>
+<% end %>
+
+<% if sale_from_local_service.transaction_histories.exists? %>
+  <%= clink_to 'история пополнений', transaction_histories_path(sale_from_local_service_id: sale_from_local_service.id), 'fa-clock-rotate-left' %>
+<% end %>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= render 'transaction_histories/form', transaction_history: TransactionHistory.new(sale_from_local_service_id: sale_from_local_service.id) %>
+      </div>
+    </div>
+  </div>
+</div>

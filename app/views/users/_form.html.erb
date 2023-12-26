@@ -1,4 +1,4 @@
-<%= form_with(model: @user) do |form| %>
+<%= form_with(model: @user, method: :post) do |form| %>
   <% if params[:password_change].present? %>
     <div class="form-group">
       <%= form.label :password, 'Пароль' %>
@@ -11,7 +11,7 @@
     </div>
   <% else %>
     <div class="form-group">
-      <%= form.label :name, 'Имя' %>
+      <%= form.label :name, 'Название' %>
       <%= form.text_field :name, class: 'form-control' %>
     </div>
 

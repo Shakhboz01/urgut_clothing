@@ -1,0 +1,27 @@
+<div class='container'>
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h3 class="card-title font-weight-bold">Услуга</h3>
+  </div>
+  <% unless @sale_from_local_service.closed? %>
+    <%= render 'product_sells/form', product_sell: ProductSell.new(sale_from_local_service_id: @sale_from_local_service.id) %>
+    <%= render 'local_services/form', local_service: LocalService.new(sale_from_local_service_id: @sale_from_local_service.id) %>
+  <% end %>
+  <br><br>
+
+  <div class='row'>
+    <div class='col-sm-12 col-md-7'>
+      <% unless @product_sells.count.zero? %>
+        <%= render 'product_sells/product_sells', product_sells: @product_sells %>
+      <% end %>
+    </div>
+    <div class='col-sm-12 col-md-5'>
+      <% unless @local_services.count.zero? %>
+        <%= render 'local_services/local_services', local_services: @local_services %>
+      <% end %>
+    </div>
+  </div><br><br><hr>
+  <div><b>ИТОГО: <%= number_to_currency @sale_from_local_service.get_total_price %></b></div>
+  <% unless @sale_from_local_service.closed? %>
+    <%= render 'form', sale_from_local_service: @sale_from_local_service %>
+  <% end %>
+</div>

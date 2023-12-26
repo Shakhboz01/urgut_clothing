@@ -10,90 +10,113 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_26_084806) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_25_132709) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "billets", force: :cascade do |t|
+  create_table "buyers", force: :cascade do |t|
+    t.string "name"
+    t.string "phone_number"
+    t.string "comment"
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "weight", default: 0
+  end
+
+  create_table "combination_of_local_products", force: :cascade do |t|
+    t.string "comment"
+    t.integer "status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "currency_conversions", force: :cascade do |t|
+    t.decimal "rate", precision: 9, scale: 2
+    t.boolean "to_uzs", default: true
     t.bigint "user_id", null: false
-    t.integer "quantity"
-    t.bigint "waste_paper_proportion_id", null: false
+    t.decimal "price_in_uzs", precision: 18, scale: 2
+    t.decimal "price_in_usd", precision: 18, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_billets_on_user_id"
-    t.index ["waste_paper_proportion_id"], name: "index_billets_on_waste_paper_proportion_id"
+    t.index ["user_id"], name: "index_currency_conversions_on_user_id"
   end
 
-  create_table "books", force: :cascade do |t|
-    t.integer "sold"
-    t.string "name"
-    t.boolean "active"
+  create_table "currency_rates", force: :cascade do |t|
+    t.decimal "rate", precision: 12, scale: 2
+    t.datetime "finished_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "end_products", force: :cascade do |t|
-    t.integer "amount_left"
-    t.string "name"
+  create_table "delivery_from_counterparties", force: :cascade do |t|
+    t.decimal "total_price", precision: 16, scale: 2, default: "0.0"
+    t.decimal "total_paid"
+    t.integer "payment_type", default: 0
+    t.string "comment"
+    t.integer "status", default: 0
+    t.bigint "provider_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.boolean "price_in_usd", default: false
+    t.boolean "with_image", default: false
+    t.index ["provider_id"], name: "index_delivery_from_counterparties_on_provider_id"
+    t.index ["user_id"], name: "index_delivery_from_counterparties_on_user_id"
+  end
+
+  create_table "discounts", force: :cascade do |t|
+    t.bigint "sale_id", null: false
+    t.boolean "verified", default: false
+    t.boolean "price_in_usd", default: false
+    t.decimal "price", precision: 15, scale: 2
+    t.string "comment"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sale_id"], name: "index_discounts_on_sale_id"
+    t.index ["user_id"], name: "index_discounts_on_user_id"
   end
 
   create_table "expenditures", force: :cascade do |t|
-    t.bigint "executor_id"
-    t.string "comment"
-    t.bigint "user_id"
-    t.bigint "product_id"
-    t.bigint "outcomer_id"
+    t.bigint "combination_of_local_product_id"
+    t.decimal "price", default: "0.0"
+    t.decimal "total_paid"
     t.integer "expenditure_type"
-    t.integer "price"
-    t.integer "quantity"
-    t.integer "total_paid"
+    t.integer "payment_type", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["outcomer_id"], name: "index_expenditures_on_outcomer_id"
-    t.index ["product_id"], name: "index_expenditures_on_product_id"
+    t.bigint "delivery_from_counterparty_id"
+    t.boolean "price_in_usd", default: false
+    t.string "sale_ids"
+    t.boolean "with_image", default: false
+    t.bigint "user_id"
+    t.string "comment"
+    t.index ["combination_of_local_product_id"], name: "index_expenditures_on_combination_of_local_product_id"
+    t.index ["delivery_from_counterparty_id"], name: "index_expenditures_on_delivery_from_counterparty_id"
     t.index ["user_id"], name: "index_expenditures_on_user_id"
   end
 
-  create_table "incomes", force: :cascade do |t|
-    t.bigint "product_id"
-    t.integer "quantity", default: 0
-    t.bigint "outcomer_id", null: false
-    t.integer "price", default: 0
-    t.integer "total_paid", default: 0
-    t.bigint "user_id", null: false
+  create_table "local_services", force: :cascade do |t|
+    t.decimal "price", precision: 16, scale: 2
+    t.string "comment"
+    t.bigint "sale_from_local_service_id", null: false
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["outcomer_id"], name: "index_incomes_on_outcomer_id"
-    t.index ["product_id"], name: "index_incomes_on_product_id"
-    t.index ["user_id"], name: "index_incomes_on_user_id"
+    t.index ["sale_from_local_service_id"], name: "index_local_services_on_sale_from_local_service_id"
+    t.index ["user_id"], name: "index_local_services_on_user_id"
   end
 
-  create_table "machine_sizes", force: :cascade do |t|
+  create_table "owners_operations", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.integer "devision"
+    t.integer "operation_type", default: 0
+    t.boolean "price_in_usd", default: true
+    t.decimal "price", precision: 19, scale: 2
+    t.bigint "operator_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_machine_sizes_on_user_id"
-  end
-
-  create_table "outcomers", force: :cascade do |t|
-    t.integer "role"
-    t.string "name"
-    t.boolean "active_outcomer", default: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "packages", force: :cascade do |t|
-    t.bigint "product_id", null: false
-    t.bigint "user_id", null: false
-    t.integer "quantity"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_packages_on_product_id"
-    t.index ["user_id"], name: "index_packages_on_user_id"
+    t.index ["user_id"], name: "index_owners_operations_on_user_id"
   end
 
   create_table "participations", force: :cascade do |t|
@@ -104,104 +127,272 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_26_084806) do
     t.index ["user_id"], name: "index_participations_on_user_id"
   end
 
-  create_table "product_prices", force: :cascade do |t|
-    t.bigint "product_id", null: false
-    t.integer "price"
+  create_table "product_categories", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_product_prices_on_product_id"
+  end
+
+  create_table "product_entries", force: :cascade do |t|
+    t.decimal "buy_price", precision: 10, scale: 2, default: "0.0"
+    t.decimal "sell_price", precision: 10, scale: 2, default: "0.0"
+    t.boolean "paid_in_usd", default: false
+    t.decimal "service_price", precision: 10, scale: 2
+    t.bigint "product_id", null: false
+    t.decimal "amount", precision: 18, scale: 2, default: "0.0"
+    t.decimal "amount_sold", precision: 18, scale: 2, default: "0.0"
+    t.string "comment"
+    t.integer "payment_type", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "delivery_from_counterparty_id"
+    t.bigint "combination_of_local_product_id"
+    t.boolean "local_entry", default: false
+    t.boolean "return", default: false
+    t.bigint "storage_id", null: false
+    t.decimal "price_in_percentage", precision: 5, scale: 2
+    t.index ["combination_of_local_product_id"], name: "index_product_entries_on_combination_of_local_product_id"
+    t.index ["delivery_from_counterparty_id"], name: "index_product_entries_on_delivery_from_counterparty_id"
+    t.index ["product_id"], name: "index_product_entries_on_product_id"
+    t.index ["storage_id"], name: "index_product_entries_on_storage_id"
+  end
+
+  create_table "product_remaining_inequalities", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.decimal "amount"
+    t.decimal "previous_amount"
+    t.string "reason"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_product_remaining_inequalities_on_product_id"
+    t.index ["user_id"], name: "index_product_remaining_inequalities_on_user_id"
+  end
+
+  create_table "product_sells", force: :cascade do |t|
+    t.bigint "combination_of_local_product_id"
+    t.bigint "product_id", null: false
+    t.decimal "buy_price", precision: 16, scale: 2, default: "0.0"
+    t.decimal "sell_price", precision: 16, scale: 2, default: "0.0"
+    t.decimal "total_profit", default: "0.0"
+    t.jsonb "price_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "amount", precision: 15, scale: 2, default: "0.0"
+    t.jsonb "average_prices"
+    t.bigint "sale_from_local_service_id"
+    t.bigint "sale_id"
+    t.bigint "sale_from_service_id"
+    t.boolean "price_in_usd", default: false
+    t.index ["combination_of_local_product_id"], name: "index_product_sells_on_combination_of_local_product_id"
+    t.index ["product_id"], name: "index_product_sells_on_product_id"
+    t.index ["sale_from_local_service_id"], name: "index_product_sells_on_sale_from_local_service_id"
+    t.index ["sale_from_service_id"], name: "index_product_sells_on_sale_from_service_id"
+    t.index ["sale_id"], name: "index_product_sells_on_sale_id"
   end
 
   create_table "products", force: :cascade do |t|
     t.string "name"
-    t.integer "amount_left"
+    t.boolean "local", default: false
+    t.boolean "active", default: true
+    t.decimal "sell_price", precision: 14, scale: 2, default: "0.0"
+    t.decimal "buy_price", precision: 14, scale: 2, default: "0.0"
+    t.decimal "initial_remaining", precision: 15, scale: 2, default: "0.0"
+    t.integer "unit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "product_category_id", null: false
+    t.boolean "price_in_usd", default: false
+    t.string "code"
+    t.index ["product_category_id"], name: "index_products_on_product_category_id"
+  end
+
+  create_table "providers", force: :cascade do |t|
+    t.string "name"
+    t.string "phone_number"
+    t.string "comment"
+    t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "weight", default: 0
   end
 
-  create_table "proportion_details", force: :cascade do |t|
-    t.bigint "product_id", null: false
-    t.bigint "waste_paper_proportion_id", null: false
-    t.integer "percentage"
+  create_table "salaries", force: :cascade do |t|
+    t.boolean "prepayment"
+    t.date "month", default: "2023-12-26"
+    t.bigint "team_id"
+    t.bigint "user_id"
+    t.decimal "price", precision: 10, scale: 2
+    t.integer "payment_type", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_proportion_details_on_product_id"
-    t.index ["waste_paper_proportion_id"], name: "index_proportion_details_on_waste_paper_proportion_id"
+    t.index ["team_id"], name: "index_salaries_on_team_id"
+    t.index ["user_id"], name: "index_salaries_on_user_id"
   end
 
-  create_table "refunds", force: :cascade do |t|
-    t.bigint "product_id", null: false
-    t.bigint "user_id", null: false
-    t.integer "quantity"
+  create_table "sale_from_local_services", force: :cascade do |t|
+    t.decimal "total_price", precision: 18, scale: 2, default: "0.0"
+    t.decimal "total_paid", precision: 18, scale: 2
+    t.string "coment"
+    t.bigint "buyer_id", null: false
+    t.integer "payment_type", default: 0
+    t.integer "status", default: 0
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_refunds_on_product_id"
-    t.index ["user_id"], name: "index_refunds_on_user_id"
+    t.index ["buyer_id"], name: "index_sale_from_local_services_on_buyer_id"
+    t.index ["user_id"], name: "index_sale_from_local_services_on_user_id"
   end
 
-  create_table "sausages", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.integer "quantity"
+  create_table "sale_from_services", force: :cascade do |t|
+    t.decimal "total_paid", precision: 17, scale: 2, default: "0.0"
+    t.integer "payment_type", default: 0
+    t.bigint "buyer_id", null: false
+    t.decimal "total_price", precision: 17, scale: 2, default: "0.0"
+    t.string "comment"
+    t.bigint "user_id"
+    t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_sausages_on_user_id"
+    t.index ["buyer_id"], name: "index_sale_from_services_on_buyer_id"
+    t.index ["user_id"], name: "index_sale_from_services_on_user_id"
+  end
+
+  create_table "sales", force: :cascade do |t|
+    t.decimal "total_paid", precision: 17, scale: 2, default: "0.0"
+    t.integer "payment_type", default: 0
+    t.bigint "buyer_id", null: false
+    t.decimal "total_price", precision: 17, scale: 2, default: "0.0"
+    t.string "comment"
+    t.bigint "user_id"
+    t.integer "status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "price_in_usd", default: false
+    t.index ["buyer_id"], name: "index_sales_on_buyer_id"
+    t.index ["user_id"], name: "index_sales_on_user_id"
+  end
+
+  create_table "services", force: :cascade do |t|
+    t.string "name"
+    t.integer "unit"
+    t.decimal "price", precision: 15, scale: 2, default: "0.0"
+    t.boolean "active", default: true
+    t.bigint "user_id", null: false
+    t.integer "team_fee_in_percent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_services_on_user_id"
+  end
+
+  create_table "storages", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "team_services", force: :cascade do |t|
+    t.bigint "sale_from_service_id", null: false
+    t.bigint "team_id", null: false
+    t.decimal "total_price", precision: 17, scale: 2, default: "0.0"
+    t.integer "team_fee", default: 30
+    t.decimal "team_portion", precision: 17, scale: 2, default: "0.0"
+    t.decimal "company_portion", precision: 17, scale: 2, default: "0.0"
+    t.bigint "user_id"
+    t.string "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sale_from_service_id"], name: "index_team_services_on_sale_from_service_id"
+    t.index ["team_id"], name: "index_team_services_on_team_id"
+    t.index ["user_id"], name: "index_team_services_on_user_id"
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.string "name"
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "transaction_histories", force: :cascade do |t|
-    t.bigint "income_id"
-    t.bigint "user_id", null: false
+    t.bigint "sale_id"
+    t.bigint "sale_from_service_id"
+    t.bigint "sale_from_local_service_id"
+    t.bigint "delivery_from_counterparty_id"
     t.bigint "expenditure_id"
-    t.integer "amount"
+    t.decimal "price", precision: 17, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "price_in_usd", default: false
+    t.bigint "user_id"
+    t.boolean "first_record", default: false
+    t.index ["delivery_from_counterparty_id"], name: "index_transaction_histories_on_delivery_from_counterparty_id"
     t.index ["expenditure_id"], name: "index_transaction_histories_on_expenditure_id"
-    t.index ["income_id"], name: "index_transaction_histories_on_income_id"
+    t.index ["sale_from_local_service_id"], name: "index_transaction_histories_on_sale_from_local_service_id"
+    t.index ["sale_from_service_id"], name: "index_transaction_histories_on_sale_from_service_id"
+    t.index ["sale_id"], name: "index_transaction_histories_on_sale_id"
     t.index ["user_id"], name: "index_transaction_histories_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.integer "role", default: 2
+    t.string "name"
+    t.boolean "active", default: true
+    t.boolean "allowed_to_use", default: true
+    t.integer "daily_payment", default: 0
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.string "name"
-    t.integer "role", default: 0
-    t.boolean "active_user", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "allowed_to_use", default: true
-    t.integer "daily_payment", default: 0
+    t.string "telegram_chat_id"
+    t.string "string"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "waste_paper_proportions", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "name"
-  end
-
-  add_foreign_key "billets", "users"
-  add_foreign_key "billets", "waste_paper_proportions"
-  add_foreign_key "expenditures", "outcomers"
-  add_foreign_key "expenditures", "products"
+  add_foreign_key "currency_conversions", "users"
+  add_foreign_key "delivery_from_counterparties", "providers"
+  add_foreign_key "delivery_from_counterparties", "users"
+  add_foreign_key "discounts", "sales"
+  add_foreign_key "discounts", "users"
+  add_foreign_key "expenditures", "combination_of_local_products"
+  add_foreign_key "expenditures", "delivery_from_counterparties"
   add_foreign_key "expenditures", "users"
-  add_foreign_key "incomes", "outcomers"
-  add_foreign_key "incomes", "products"
-  add_foreign_key "incomes", "users"
-  add_foreign_key "machine_sizes", "users"
-  add_foreign_key "packages", "products"
-  add_foreign_key "packages", "users"
+  add_foreign_key "local_services", "sale_from_local_services"
+  add_foreign_key "local_services", "users"
+  add_foreign_key "owners_operations", "users"
   add_foreign_key "participations", "users"
-  add_foreign_key "product_prices", "products"
-  add_foreign_key "proportion_details", "products"
-  add_foreign_key "proportion_details", "waste_paper_proportions"
-  add_foreign_key "refunds", "products"
-  add_foreign_key "refunds", "users"
-  add_foreign_key "sausages", "users"
+  add_foreign_key "product_entries", "combination_of_local_products"
+  add_foreign_key "product_entries", "delivery_from_counterparties"
+  add_foreign_key "product_entries", "products"
+  add_foreign_key "product_entries", "storages"
+  add_foreign_key "product_remaining_inequalities", "products"
+  add_foreign_key "product_remaining_inequalities", "users"
+  add_foreign_key "product_sells", "combination_of_local_products"
+  add_foreign_key "product_sells", "products"
+  add_foreign_key "product_sells", "sale_from_local_services"
+  add_foreign_key "product_sells", "sale_from_services"
+  add_foreign_key "product_sells", "sales"
+  add_foreign_key "products", "product_categories"
+  add_foreign_key "salaries", "teams"
+  add_foreign_key "salaries", "users"
+  add_foreign_key "sale_from_local_services", "buyers"
+  add_foreign_key "sale_from_local_services", "users"
+  add_foreign_key "sale_from_services", "buyers"
+  add_foreign_key "sale_from_services", "users"
+  add_foreign_key "sales", "buyers"
+  add_foreign_key "sales", "users"
+  add_foreign_key "services", "users"
+  add_foreign_key "team_services", "sale_from_services"
+  add_foreign_key "team_services", "teams"
+  add_foreign_key "team_services", "users"
+  add_foreign_key "transaction_histories", "delivery_from_counterparties"
   add_foreign_key "transaction_histories", "expenditures"
-  add_foreign_key "transaction_histories", "incomes"
+  add_foreign_key "transaction_histories", "sale_from_local_services"
+  add_foreign_key "transaction_histories", "sale_from_services"
+  add_foreign_key "transaction_histories", "sales"
   add_foreign_key "transaction_histories", "users"
 end

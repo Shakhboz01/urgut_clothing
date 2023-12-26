@@ -1,0 +1,28 @@
+<div class="card-header d-flex justify-content-between align-items-center">
+  <h3 class="card-title font-weight-bold">Обьект</h3>
+</div>
+
+<% unless @sale_from_service.closed? %>
+  <%= render 'product_sells/form', product_sell: ProductSell.new(sale_from_service_id: @sale_from_service.id) %>
+  <%= render 'team_services/form', team_service: TeamService.new(sale_from_service_id: @sale_from_service.id) %>
+<% end %>
+<br><br><hr>
+
+<div class='row shadow-lg'>
+  <div class='col-sm-12 col-md-7'>
+    <% unless @product_sells.count.zero? %>
+      <%= render 'product_sells/product_sells', product_sells: @product_sells %>
+    <% end %>
+  </div>
+  <div class='col-sm-12 col-md-4'>
+    <% unless @team_services.count.zero? %>
+      <%= render 'team_services/team_services', team_services: @team_services %>
+    <% end %>
+  </div>
+</div>
+
+<hr><br><br><div><b>ИТОГО: <%= number_to_currency @sale_from_service.get_total_price %></b></div>
+
+<% unless @sale_from_service.closed? %>
+  <%= render 'sale_from_services/form', sale_from_service: @sale_from_service %>
+<% end %>

@@ -1,131 +1,80 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <%= link_to 'ROLLI', main_page_path, class: 'navbar-brand', style: 'font-family: cursive'%>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+<nav class="navbar navbar-expand-lg navbar bg-dark">
+  <%= link_to 'SAM NERJ', root_path, class: 'navbar-brand' %>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <% if user_signed_in? %>
-          <%# <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li> %>
-          <% if policy(:view).access? %>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Продажа
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <%= link_to 'Добавить новую продажу', define_outcomer_incomes_path(end_product: true), class: 'dropdown-item' %>
-                <%= link_to 'продажи', incomes_path, class: 'dropdown-item' %>
-              </div>
-            </li>
-            <li class="nav-item active">
-              <%= link_to 'Oформить приход товара', products_path, class: 'nav-link' %>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="outcomerDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Добавить расходы
-              </a>
-              <div class="dropdown-menu" aria-labelledby="outcomerDropdown">
-                <%= link_to "Для выплаты", new_expenditure_path(expenditure_type: 'зарплата'), class: "dropdown-item" %>
-                <%= link_to "Аванс", new_expenditure_path(expenditure_type: 'аванс'), class: "dropdown-item" %>
-                <%= link_to "Для прочих целей", new_expenditure_path, class: "dropdown-item" %>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="outcomerDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Расходы
-              </a>
-              <div class="dropdown-menu" aria-labelledby="outcomerDropdown">
-                <%= link_to "на товар", product_expenditure_expenditures_path, class: "dropdown-item" %>
-                <%= link_to "на зарплату", payment_expenditure_expenditures_path, class: "dropdown-item" %>
-                <%= link_to "для остального", expenditures_path, class: "dropdown-item" %>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Заготовка
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <%= link_to 'Заготовки', billets_path, class: 'dropdown-item' %>
-                <%= link_to 'Добавить новую заготовку', new_billet_path, class: 'dropdown-item' %>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Упаковка
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <%= link_to 'Упаковки', packages_path, class: 'dropdown-item' %>
-                <%= link_to 'Добавить новую упаковку', new_package_path, class: 'dropdown-item' %>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Работники
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <%= link_to 'Работники', users_path, class: 'dropdown-item' %>
-                <%= link_to 'переклички', participations_path, class: 'dropdown-item' %>
-                <%= link_to 'добавить новую перекличку', new_participation_path, class: 'dropdown-item' %>
-               </div>
-            </li>
-              <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="outcomerDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Колбасы
-              </a>
-              <div class="dropdown-menu" aria-labelledby="outcomerDropdown">
-                <%= link_to "колбасы", sausages_path, class: "dropdown-item" %>
-                <%= link_to "добавить новую колбасу", new_sausage_path, class: "dropdown-item" %>
-                <%= link_to "станки", machine_sizes_path, class: "dropdown-item" %>
-                <%= link_to "показать ожидаемый платеж операторов", operators_payment_sausages_path, class: "dropdown-item" %>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="outcomerDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Клиенты
-              </a>
-              <div class="dropdown-menu" aria-labelledby="outcomerDropdown">
-                <%= link_to "Покупатели", outcomers_path(role: :покупатель), class: "dropdown-item" %>
-                <%= link_to "Поставщики", outcomers_path(role: :поставщик), class: "dropdown-item" %>
-              </div>
-            </li>
-          <% end %>
-          <% if policy(:view).admin? %>
-            <li class="nav-item active">
-              <%= link_to 'Админ', dashboard_path, class: 'nav-link' %>
-            </li>
-          <% end %>
-          <% if policy(:view).product_access? %>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Товары
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <%= link_to 'Товары', products_path(end_product: true), class: 'dropdown-item' %>
-                <%= link_to 'Сырья', products_path, class: 'dropdown-item' %>
-                <%= link_to 'Цены', product_prices_path, class: 'dropdown-item' %>
-                <%= link_to 'Возвраты', refunds_path, class: 'dropdown-item' %>
-                <%= link_to 'Добавить возврат', new_refund_path, class: 'dropdown-item' %>
-              </div>
-            </li>
-          <% end %>
-        <% end %>
-      </ul>
-    </div>
-    <ul class="text-center navbar-nav ml-auto">
-      <% if user_signed_in? %>
-        <li class="nav-item ml-auto">
-          <%= button_to "Выйти", destroy_user_session_url, method: :delete, class: "nav-link styled-delete-button" %>
-        </li>
-      <% else %>
-        <li class="nav-item">
-          <%= link_to "Войти", new_user_session_path, class: "nav-link" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Зарегистрироваться", new_user_registration_path, class: "nav-link" %>
-        </li>
-      <% end %>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <%= link_to 'Продажа товаров', product_sells_path, class: 'nav-link' %>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Посмотреть список
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <%= link_to 'Продажи', sales_path, class: 'dropdown-item' %>
+          <%= link_to 'Расходов', expenditures_path, class: 'dropdown-item' %>
+          <%= link_to 'Приход товаров', delivery_from_counterparties_path, class: 'dropdown-item' %>
+          <%= link_to 'Поставщиков', providers_path, class: 'dropdown-item' %>
+          <%= link_to 'Покупателей', buyers_path, class: 'dropdown-item' %>
+          <%= link_to 'Товар/материалов', products_path, class: 'dropdown-item' %>
+          <%= link_to 'Зарплат/Аванс', salaries_path, class: 'dropdown-item' %>
+          <%= link_to 'Работников', users_path, class: 'dropdown-item' %>
+          <%= link_to 'Переклички работников', participations_path, class: 'dropdown-item' %>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Оформить
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <%= link_to 'Продажу (alt + 2)', default_create_sales_path, method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Приход товара (alt + 5)', default_create_delivery_from_counterparties_path, method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Расход (alt + 0)', new_expenditure_path, class: 'dropdown-item' %>
+          <%= link_to 'Поставщика', new_provider_path, class: 'dropdown-item' %>
+          <%= link_to 'Покупателя', buyers_path, class: 'dropdown-item' %>
+          <%= link_to 'Товарa (alt + 1)', new_product_path, class: 'dropdown-item' %>
+          <%= link_to 'Зарплату/Аванс', new_salary_path, class: 'dropdown-item' %>
+          <%= link_to 'Перекличку работников', new_participation_path, class: 'dropdown-item' %>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Прочие
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <%= link_to 'Конвертация', currency_conversions_path, class: 'dropdown-item' %>
+          <%= link_to 'Шорткаты', shortcut_path, class: 'dropdown-item' %>
+          <%= link_to 'Cкидки при продаже', discounts_path, class: 'dropdown-item' %>
+          <%= link_to 'История пополнений', transaction_histories_path, class: 'dropdown-item' %>
+          <%= link_to 'История изменений остатки товара', product_remaining_inequalities_path, class: 'dropdown-item' %>
+          <%= link_to 'Настройки курса', currency_rates_path, class: 'dropdown-item' %>
+          <%= link_to 'Приходы/Расходы от руководителей', owners_operations_path, class: 'dropdown-item' %>
+        </div>
+      </li>
     </ul>
+  </div>
+  <ul class="text-center navbar-nav ml-auto">
+    <% if user_signed_in? %>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%= current_user.name&.capitalize %>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <%= link_to "Выйти", destroy_user_session_url, method: :delete, data: { confirm: strip_tags('вы уверены?') }, class: "nav-link styled-delete-button", style: 'color: black' %>
+          <div class="dropdown-divider"></div>
+          <a style= 'color: black' class="nav-link disabled" href="#"><%= num_to_usd(CurrencyRate.last.rate) %>$</a>
+        </div>
+      </li>
+      <li class="nav-item ml-auto">
+      </li>
+    <% else %>
+      <li class="nav-item">
+        <%= link_to "Войти", new_user_session_path, class: "nav-link" %>
+      </li>
+    <% end %>
+  </ul>
 </nav>
+<br>

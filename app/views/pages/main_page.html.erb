@@ -1,7 +1,103 @@
-<div class='container'>
+<div>
   <div class='row'>
-    <%= render 'debetors_and_creditors' %>
-    <%= render 'income_expenditure_info' %>
+    <div class='col-sm-3 main-page-header'>
+      <div>
+        <h4 class='text-center'>Покупатели</h4>
+        <%= render 'buyers/buyers', buyers: @buyers, shrink: true %>
+      </div>
+    </div>
+    <div class='col-sm-4 main-page-header'>
+      <div>
+        <h4 class='text-center'>Поставщики</h4>
+        <%= render 'providers/providers', providers: @providers, shrink: true %>
+      </div>
+    </div>
+    <div class='col-sm-5 main-page-header'>
+      <div>
+        <h4 class='text-center'>Касса</h4>
+        <%= search_form_for @q, url: request.path, html: { class: 'form form-horizontal filter-form'} do |f| %>
+          <div class="container">
+            <div class="row">
+              <div class="form-group col-sm-3">
+                <%= f.label :created_at_gteq, 'Дата от' %>
+                <%= f.text_field :created_at_gteq, value: @q.created_at_gteq.nil? ? '' : @q.created_at_gteq, class: 'datepicker', autocomplete: :off %>
+              </div>
+              <div class="form-group col-sm-3">
+                <%= f.label :created_at_end_of_day_lteq, 'Дата до' %>
+                <%= f.text_field :created_at_end_of_day_lteq, value: @q.created_at_end_of_day_lteq.nil? ? '' : @q.created_at_end_of_day_lteq, class: 'datepicker', autocomplete: :off %>
+              </div>
+              <div class="form-group align-center col-sm-6">
+                <%= f.submit 'Фильтр' %>
+                <%= link_to 'Очистить', request.path, class: "cancel-button" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        <br>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>Итого</th>
+              <th>Количество</th>
+              <th>В долларах</th>
+              <th>Оплачено</th>
+              <th>В сумах</th>
+              <th>Оплачено</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Продажа</th>
+              <td><%= @sales_in_usd.count + @sales_in_uzs.count %></td>
+              <td><%= number_to_currency @sales_in_usd.sum(:total_price) %></td>
+              <td><%= number_to_currency @sales_in_usd.sum(:total_paid) %></td>
+              <td><%= num_to_usd @sales_in_uzs.sum(:total_price) %></td>
+              <td><%= num_to_usd @sales_in_uzs.sum(:total_paid) %></td>
+            </tr>
+            <tr>
+              <th>Приход товара</th>
+              <td><%= @delivery_from_counterparties_in_usd.count + @delivery_from_counterparties_in_uzs.count %></td>
+              <td><%= number_to_currency @delivery_from_counterparties_in_usd.sum(:total_price) %></td>
+              <td><%= number_to_currency @delivery_from_counterparties_in_usd.sum(:total_paid) %></td>
+              <td><%= num_to_usd @delivery_from_counterparties_in_uzs.sum(:total_price) %></td>
+              <td><%= num_to_usd @delivery_from_counterparties_in_uzs.sum(:total_paid) %></td>
+            </tr>
+            <tr>
+              <th>Расходы</th>
+              <td><%= @expenditures_in_usd.count + @expenditures_in_uzs.count %></td>
+              <td><%= number_to_currency @expenditures_in_usd.sum(:price) %></td>
+              <td><%= number_to_currency @expenditures_in_usd.sum(:total_paid) %></td>
+              <td><%= num_to_usd @expenditures_in_uzs.sum(:price) %></td>
+              <td><%= num_to_usd @expenditures_in_uzs.sum(:total_paid) %></td>
+            </tr>
+            <tr>
+              <th>Зарплата/Аванс</th>
+              <td><%= @total_salary.count %></td>
+              <td style='text-align:center' colspan='3'><%= num_to_usd @total_salary.sum(:price) %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-  <%= render 'incomes_and_expenditures' %>
+  <br><br><br><br>
+  <div class='row'>
+    <div class='col-sm-6 main-page-body'>
+      <h4 class='text-center'>Продажи</h4>
+      <%= render 'sales/sales', sales: @sales, shrink: true %>
+    </div>
+    <div class='col-sm-12 col-md-6'>
+      <h4 class='text-center'>Приход от поставщиков</h4>
+      <%= render 'delivery_from_counterparties/delivery_from_counterparties', delivery_from_counterparties: @delivery_from_counterparties, shrink: true %>
+    </div>
+  </div>
+  <br>
+  <div class='row'>
+    <div class='col-sm-12 col-md-12'>
+      <h4 class='text-center'>Расходы</h4>
+      <%= render 'expenditures/expenditures', expenditures: @expenditures, shrink: true %>
+    </div>
+  </div>
 </div>
+
+<script>$(function(){$(".datepicker").datepicker({dateFormat: 'dd-mm-yy'})})</script>

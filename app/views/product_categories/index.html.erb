@@ -1,0 +1,7 @@
+<div class=' row'>
+  <%= render 'categories', product_categories: @product_categories %>
+  <div class='col-sm-9'>
+    <%= render 'products/filter_form', url: request.path, q: @q %>
+    <%= render 'products/products', products: @products, q: @q %>
+  </div>
+</div>

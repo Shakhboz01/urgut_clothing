@@ -1,0 +1,60 @@
+<% unless @delivery_from_counterparty.closed? %>
+  <%= render 'product_entries/form', product_entry: @product_entry, storage: @storage, products: @products, price_in_percentage: @price_in_percentage %>
+<% end %>
+<br><br>
+
+<% unless @delivery_from_counterparty.product_entries.count.zero? %>
+  <%= render 'product_entries/product_entries', product_entries: @product_entries, q: @q, deletable: true, shrink: true %>
+<% end %>
+<br><hr><hr>
+
+<div class='d-flex justify-content-around'>
+  <b>ИТОГО ЦЕНА ПРИХОДА: <%= num_to_usd @delivery_from_counterparty.calculate_total_price %></b>
+  <b>ИТОГО ЦЕНА ПОСЛЕ ПРОДАЖИ: <%= num_to_usd @delivery_from_counterparty.calculate_sell_price %></b>
+  <b>ИТОГО КОЛИЧЕСТВО: <%= @delivery_from_counterparty.product_entries.sum(:amount) %></b>
+</div>
+
+<% unless @delivery_from_counterparty.closed? %>
+  <%= render 'form', delivery_from_counterparty: @delivery_from_counterparty %><br>
+<% end %>
+
+<script>
+  $(document).ready(function() {
+  function calculateSellPrice() {
+    var buyPrice = parseFloat(document.getElementById('product_entry_buy_price').value);
+    var priceInPercentage = parseFloat(document.getElementById('product_entry_price_in_percentage').value);
+
+    if (!isNaN(buyPrice) && !isNaN(priceInPercentage)) {
+      var sellPrice = buyPrice + (buyPrice * (priceInPercentage / 100));
+      document.getElementById('product_entry_sell_price').value = sellPrice.toFixed(2);
+    }
+  }
+
+  // Function to calculate percentage based on buy price and sell price
+  function calculatePercentage() {
+    var buyPrice = parseFloat(document.getElementById('product_entry_buy_price').value);
+    var sellPrice = parseFloat(document.getElementById('product_entry_sell_price').value);
+
+    if (!isNaN(buyPrice) && !isNaN(sellPrice) && buyPrice !== 0 && sellPrice !== 0) {
+      var percentage = (sellPrice * 100 / buyPrice) - 100;
+      document.getElementById('product_entry_price_in_percentage').value = percentage.toFixed(2);
+    }
+  }
+
+  // Event listeners for price-in-percentage and buy-price inputs
+  document.getElementById('product_entry_price_in_percentage').addEventListener('input', function() {
+    calculateSellPrice();
+  });
+
+  document.getElementById('product_entry_buy_price').addEventListener('input', function() {
+    calculateSellPrice();
+    calculatePercentage();
+  });
+
+  // Event listener for sell-price input
+  document.getElementById('product_entry_sell_price').addEventListener('input', function() {
+    calculatePercentage();
+  });
+
+  });
+</script>

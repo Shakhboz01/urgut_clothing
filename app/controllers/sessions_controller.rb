@@ -1,14 +1,15 @@
 class SessionsController < Devise::SessionsController
-  def new
-    if params[:role].blank?
-      redirect_to roles_path, alert: 'Выберите роль, чтобы продолжить.'
-    else
-      @collection = User.where(active_user: true)
-                        .where(role: params[:role].to_i)
-                        .pluck(:name, :email)
-      @role = params[:role]
-      @users = User.where(role: @role).where(allowed_to_use: true)
-      super
+  def create
+    self.resource = warden.authenticate!(auth_options)
+    if !resource.active
+      sign_out resource
+      flash[:alert] = 'Your account is not active. Please contact the administrator.'
+      redirect_to new_user_session_path and return
     end
+
+    set_flash_message!(:notice, :signed_in)
+    sign_in(resource_name, resource)
+    yield resource if block_given?
+    respond_with resource, location: after_sign_in_path_for(resource)
   end
 end

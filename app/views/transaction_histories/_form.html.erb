@@ -1,15 +1,18 @@
 
-<%= simple_form_for(@transaction_history) do |f| %>
+<%= simple_form_for(transaction_history) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs">
-    <%= f.association :income, as: :hidden %>
+    <%= f.association :sale, as: :hidden %>
+    <%= f.association :sale_from_service, as: :hidden %>
+    <%= f.association :sale_from_local_service, as: :hidden %>
+    <%= f.association :delivery_from_counterparty, as: :hidden %>
     <%= f.association :expenditure, as: :hidden %>
-    <%= f.input :amount, label: 'вводите оплату' %>
+    <%= f.input :price, label: 'Введите цену', focus: true %>
   </div>
 
   <div class="form-actions">
-    <%= f.submit 'Пополнить', class: 'btn btn-primary' %>
+    <%= f.button :submit, 'Завершить' %>
   </div>
 <% end %>

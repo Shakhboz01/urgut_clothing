@@ -1,51 +1,10 @@
-<div class="container my-5">
-  <div class="card shadow">
-    <div class="card-header">
-      <h3 class="card-title font-weight-bold">Детали продукта</h3>
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col-md-4">
-          <p class="font-weight-bold">Название:</p>
-        </div>
-        <div class="col-md-8">
-          <p><%= @product.name %></p>
-        </div>
-      </div>
+<p style="color: green"><%= notice %></p>
 
-      <div class="row">
-        <div class="col-md-4">
-          <p class="font-weight-bold">Осталось:</p>
-        </div>
-        <div class="col-md-8">
-          <p><%= @product.amount_left %></p>
-        </div>
-      </div>
+<%= render @product %>
 
-      <div class="row">
-        <div class="col-md-4">
-          <p class="font-weight-bold">Создано:</p>
-        </div>
-        <div class="col-md-8">
-          <p><%= @product.created_at.strftime('%Y-%m-%d %H:%M') %></p>
-        </div>
-      </div>
+<div>
+  <%= link_to "Edit this product", edit_product_path(@product) %> |
+  <%= link_to "Back to products", products_path %>
 
-      <div class="row">
-        <div class="col-md-4">
-          <p class="font-weight-bold">Обновлено:</p>
-        </div>
-        <div class="col-md-8">
-          <p><%= @product.updated_at.strftime('%Y-%m-%d %H:%M') %></p>
-        </div>
-      </div>
-
-      <div class="row mt-4">
-        <div class="d-flex justify-content-start col-md-12">
-          <%= clink_to 'редактировать', edit_product_path(@product), 'fa-edit' %>
-          <%= clink_to 'Назад', products_path, 'fa-circle-arrow-left' %>
-        </div>
-      </div>
-    </div>
-  </div>
+  <%= button_to "Destroy this product", @product, method: :delete %>
 </div>

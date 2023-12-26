@@ -1,0 +1,35 @@
+<div style='background-color: #80d3ff87;' class="container shadow-lg">
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <%= render 'layouts/progress', value: '97' %>
+      <h1 class="text-center mb-4">Pедактировать</h1>
+      <%# do nor show provider if local entry %>
+      <%= simple_form_for(@product_entry) do |f| %>
+        <%= f.error_notification %>
+        <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+        <div class="form-inputs">
+          <%= f.input :buy_price, label: 'Цена прихода каждого товара в $', input_html: {disabled: true} %>
+          <%= f.input :sell_price, label: 'Цена продажи каждого товара в $' %>
+          <%= f.association :product, label: 'Товар', collection: Product.active.where(local: params[:local_entry] == 'true'), include_blank: false, input_html: {disabled: true} %>
+          <%= f.association :storage, label: 'Склад', collection: Storage.pluck(:name, :id), include_blank: false, input_html: {disabled: true} %>
+          <%= f.association :delivery_from_counterparty, as: :hidden %>
+
+
+          <%= f.input :amount, label: 'количество', id: 'inputs', input_html: {disabled: true} %>
+
+          <%= f.input :comment, label: 'Коммент', placeholder: 'Не обязательно' %>
+          <%= f.input :return, as: :hidden %>
+          <%= f.input :amount_sold, as: :hidden %>
+          <%= f.input :local_entry, as: :hidden %>
+        </div>
+
+        <div class="form-actions">
+          <%= f.button :submit, 'Завершить' %>
+        </div>
+      <% end %>
+
+      <%= link_to 'назад', product_entries_path, class: "btn btn-light min-width-btn" %>
+    </div>
+  </div>
+</div>

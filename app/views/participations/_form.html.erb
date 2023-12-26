@@ -1,0 +1,23 @@
+<%= form_with(model: participation) do |form| %>
+  <% if participation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(participation.errors.count, "error") %> prohibited this participation from being saved:</h2>
+      <ul>
+        <% participation.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+      <div class="form-group mb-3">
+                <%= form.label :user_id %>
+          <%= form.collection_select :user_id, User.all, :id, :name, { prompt: true }, { class: "form-select" }  %>
+          </div>
+      <div class="form-group mb-3">
+                <%= form.label :status, class: "form-label" %>
+          <%= form.number_field :status, class:"form-control" %>
+          </div>
+    <div class="form-group mb-3">
+    <%= form.submit 'Завершить', class: 'btn btn-primary' %>
+  </div>
+<% end %>

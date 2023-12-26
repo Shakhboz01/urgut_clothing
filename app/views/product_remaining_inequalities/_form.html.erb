@@ -1,0 +1,16 @@
+
+<%= simple_form_for(product_remaining_inequality) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+    <%= f.association :product, as: :hidden %>
+    <%= f.input :previous_amount, label: 'Остаток был', input_html: { value: product_remaining_inequality.previous_amount, disabled: true } %>
+    <%= f.input :amount, label: 'Остаток теперь:' %>
+    <%= f.input :reason, label: 'Причина редактирование' %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, 'Завершить' %>
+  </div>
+<% end %>

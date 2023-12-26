@@ -1,0 +1,42 @@
+<i title='Фильтр' class="fa-solid fa-magnifying-glass fa-lg" id='toggle-button'></i>
+<br>
+<div id='filter-toggle'>
+  <%= search_form_for @q, url: url, html: { class: 'form form-horizontal filter-form' } do |f| %>
+    <div class="card shadow-lg">
+      <div class="row">
+        <div class="form-group col-xs-12 col-sm-4">
+          <%= f.label :name_cont, 'Название содержит:', class: 'control-label' %>
+          <%= f.text_field :name_cont, class: 'form-control', autocomplete: :off %>
+        </div>
+        <div class="form-group col-xs-12 col-sm-2">
+          <%= f.label :code_cont, 'Код содержит:', class: 'control-label' %>
+          <%= f.text_field :code_cont, class: 'form-control', autocomplete: :off %>
+        </div>
+        <div class="form-group col-xs-12 col-sm-4">
+          <%= f.label :active_true, 'Активные товары:', class: ' form-control' %>
+          <%= f.check_box :active_true, {}, 1, nil %>
+        </div>
+        <div class="form-group col-xs-12 col-sm-2">
+          <%= f.label :price_in_usd_true, 'Цена в $', class: 'control-label' %>
+          <%= f.select :price_in_usd_true, [['Да', true], ['Нет', false]], {include_blank: true}, class: 'form-control' %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-xs-12 col-sm-6">
+          <%= f.submit 'Фильтр', class: 'btn btn-primary' %>
+          <%= link_to 'Очистить поиск', request.path, class: 'btn btn-default' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#filter-toggle').hide()
+    $('#toggle-button').click(function(){
+      $('#filter-toggle').toggle()
+    })
+  })
+</script>
+<script>$(function(){$(".datepicker").datepicker({dateFormat: 'dd-mm-yy'})})</script>
