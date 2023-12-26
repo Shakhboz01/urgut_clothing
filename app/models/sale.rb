@@ -59,7 +59,7 @@ class Sale < ApplicationRecord
         "<b>Итого доход от этой продажи:</b> #{total_profit} #{price_sign}\n"
       message << "&#9888<b>Оплачено:</b> #{total_paid} #{price_sign}\n" if total_price > total_paid
       message << "<b>Комментарие:</b> #{comment}\n" if comment.present?
-      message << "Нажмите <a href=\"#{ENV.fetch('HOST_URL')}/sales/#{self.id}\">здесь</a> для просмотра"
+      message << "Нажмите <a href=\"https://#{ENV.fetch('HOST_URL')}/sales/#{self.id}\">здесь</a> для просмотра"
       SendMessage.run(message: message)
     end
   end

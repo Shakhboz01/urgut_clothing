@@ -55,7 +55,7 @@ class DeliveryFromCounterparty < ApplicationRecord
         "<b>предполагаемый доход:</b> #{calculate_sell_price - total_price} #{price_sign}\n"
       message << "&#9888<b>Оплачено:</b> #{total_paid} #{price_sign}\n" if total_price > total_paid
       message << "<b>Комментарие:</b> #{comment}\n" if comment.present?
-      message << "Нажмите <a href=\"#{ENV.fetch('HOST_URL')}/delivery_from_counterparties/#{self.id}\">здесь</a> для просмотра"
+      message << "Нажмите <a href=\"https://#{ENV.fetch('HOST_URL')}/delivery_from_counterparties/#{self.id}\">здесь</a> для просмотра"
       SendMessage.run(message: message)
     end
   end
