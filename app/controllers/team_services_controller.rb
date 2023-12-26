@@ -7,7 +7,7 @@ class TeamServicesController < ApplicationController
     @all_team_services = @team_services
     @team_services = @q.result
     @all_team_services = @team_services
-    @team_services = @team_services.page(params[:page]).per(40)
+    @team_services = @team_services.page(params[:page]).per(70)
   end
 
   # GET /team_services/1 or /team_services/1.json

@@ -7,7 +7,7 @@ class OwnersOperationsController < ApplicationController
     @q = OwnersOperation.ransack(params[:q])
     @owners_operations = @q.result.order(id: :desc)
     @all_owners_operations = @owners_operations
-    @owners_operations = @owners_operations.page(params[:page]).per(40)
+    @owners_operations = @owners_operations.page(params[:page]).per(70)
 
   end
 

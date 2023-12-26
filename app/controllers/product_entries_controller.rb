@@ -7,7 +7,7 @@ class ProductEntriesController < ApplicationController
     @q = ProductEntry.ransack(params[:q])
     @product_entries = @q.result.includes(:product).order(created_at: :desc)
     @product_entries_data = @product_entries
-    @product_entries = @product_entries.page(params[:page]).per(40)
+    @product_entries = @product_entries.page(params[:page]).per(70)
   end
 
   # GET /product_entries/1 or /product_entries/1.json

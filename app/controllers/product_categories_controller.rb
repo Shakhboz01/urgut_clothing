@@ -5,14 +5,14 @@ class ProductCategoriesController < ApplicationController
   def index
     @product_categories = ProductCategory.all
     @q = Product.ransack(params[:q])
-    @products = @q.result.order(active: :desc).page(params[:page]).per(40)
+    @products = @q.result.order(active: :desc).page(params[:page]).per(70)
   end
 
   # GET /product_categories/1 or /product_categories/1.json
   def show
     @product_categories = ProductCategory.all
     @q = @product_category.products.ransack(params[:q])
-    @products = @q.result.order(active: :desc).page(params[:page]).per(40)
+    @products = @q.result.order(active: :desc).page(params[:page]).per(70)
   end
 
   # GET /product_categories/new

@@ -4,7 +4,7 @@ class CurrencyRatesController < ApplicationController
   # GET /currency_rates or /currency_rates.json
   def index
     @q = CurrencyRate.ransack(params[:q])
-    @currency_rates = @q.result.order(created_at: :desc).page(params[:page]).per(40)
+    @currency_rates = @q.result.order(created_at: :desc).page(params[:page]).per(70)
   end
 
   # GET /currency_rates/1 or /currency_rates/1.json

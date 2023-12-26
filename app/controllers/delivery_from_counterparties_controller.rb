@@ -9,7 +9,7 @@ class DeliveryFromCounterpartiesController < ApplicationController
         .order(id: :desc)
 
     @delivery_from_counterparties_data = @delivery_from_counterparties
-    @delivery_from_counterparties = @delivery_from_counterparties.page(params[:page]).per(40)
+    @delivery_from_counterparties = @delivery_from_counterparties.page(params[:page]).per(70)
   end
 
   # GET /delivery_from_counterparties/1 or /delivery_from_counterparties/1.json

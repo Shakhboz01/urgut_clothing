@@ -4,7 +4,7 @@ class ProductRemainingInequalitiesController < ApplicationController
   # GET /product_remaining_inequalities or /product_remaining_inequalities.json
   def index
     @q = ProductRemainingInequality.ransack(params[:q])
-    @product_remaining_inequalities = @q.result.order(created_at: :desc).page(params[:page]).per(40)
+    @product_remaining_inequalities = @q.result.order(created_at: :desc).page(params[:page]).per(70)
   end
 
   # GET /product_remaining_inequalities/1 or /product_remaining_inequalities/1.json

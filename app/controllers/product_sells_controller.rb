@@ -6,7 +6,7 @@ class ProductSellsController < ApplicationController
     @q = ProductSell.ransack(params[:q])
     @product_sells = @q.result.includes(:product).order(id: :desc)
     @product_sells_data = @product_sells
-    @product_sells = @product_sells.page(params[:page]).per(40)
+    @product_sells = @product_sells.page(params[:page]).per(70)
   end
 
   # GET /product_sells/1 or /product_sells/1.json

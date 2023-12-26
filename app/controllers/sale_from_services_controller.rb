@@ -9,7 +9,7 @@ class SaleFromServicesController < ApplicationController
         .order(id: :desc)
 
     @all_sale_from_services = @sale_from_services
-    @sale_from_services = @sale_from_services.page(params[:page]).per(40)
+    @sale_from_services = @sale_from_services.page(params[:page]).per(70)
   end
 
   # GET /sales/1 or /sales/1.json

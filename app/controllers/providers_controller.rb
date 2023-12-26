@@ -4,7 +4,7 @@ class ProvidersController < ApplicationController
   # GET /providers or /providers.json
   def index
     @q = Provider.ransack(params[:q])
-    @providers = @q.result.page(params[:page]).per(40)
+    @providers = @q.result.page(params[:page]).per(70)
   end
 
   # GET /providers/1 or /providers/1.json

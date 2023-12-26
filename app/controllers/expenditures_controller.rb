@@ -7,7 +7,7 @@ class ExpendituresController < ApplicationController
     @expenditures = @q.result.filter_by_total_paid_less_than_price(params.dig(:q_other, :total_paid_less_than_price))
                       .page(params[:page]).order(id: :desc)
     @expenditures_data = @expenditures
-    @expenditures = @expenditures.page(params[:page]).per(40)
+    @expenditures = @expenditures.page(params[:page]).per(70)
   end
 
   # GET /expenditures/1 or /expenditures/1.json

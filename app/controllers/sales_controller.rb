@@ -9,7 +9,7 @@ class SalesController < ApplicationController
         .order(id: :desc)
 
     @sales_data = @sales
-    @sales = @sales.page(params[:page]).per(40)
+    @sales = @sales.page(params[:page]).per(70)
   end
 
   # GET /sales/1 or /sales/1.json

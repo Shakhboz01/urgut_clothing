@@ -4,7 +4,7 @@ class LocalServicesController < ApplicationController
   # GET /local_services or /local_services.json
   def index
     @q = LocalService.ransack(params[:q])
-    @local_services = @q.result.includes(:user).page(params[:page]).per(40)
+    @local_services = @q.result.includes(:user).page(params[:page]).per(70)
   end
 
   # GET /local_services/1 or /local_services/1.json

@@ -9,7 +9,7 @@ class SalariesController < ApplicationController
     @total_by_prepayment = @salaries.where(prepayment: true).count
     @total_by_payment = @salaries.count - @total_by_prepayment
     @total_price = @salaries.sum(:price)
-    @salaries = @salaries.page(params[:page]).per(40)
+    @salaries = @salaries.page(params[:page]).per(70)
   end
 
   # GET /salaries/1 or /salaries/1.json

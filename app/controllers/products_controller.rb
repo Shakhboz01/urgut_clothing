@@ -4,7 +4,7 @@ class ProductsController < ApplicationController
   # GET /products or /products.json
   def index
     @q = Product.ransack(params[:q])
-    @products = @q.result.order(active: :desc).order(name: :asc).page(params[:page]).per(40)
+    @products = @q.result.order(active: :desc).order(name: :asc).page(params[:page]).per(70)
     @product_categories = ProductCategory.all
   end
 
@@ -41,7 +41,7 @@ class ProductsController < ApplicationController
   def update
     respond_to do |format|
       if @product.update(product_params)
-        format.html { redirect_to request.referrer, notice: "Product was successfully updated." }
+        format.html { redirect_to products_path, notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -49,6 +49,7 @@ class ProductsController < ApplicationController
       end
     end
   end
+  Product.where('buy_price > ?', 2000).update_all(price_in_usd: false)
 
   # DELETE /products/1 or /products/1.json
   def destroy

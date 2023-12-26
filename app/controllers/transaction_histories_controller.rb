@@ -17,7 +17,7 @@ class TransactionHistoriesController < ApplicationController
       end
     end
     @transaction_histories_data = @transaction_histories
-    @transaction_histories = @transaction_histories.page(params[:page]).per(40)
+    @transaction_histories = @transaction_histories.page(params[:page]).per(70)
   end
 
   # GET /transaction_histories/1 or /transaction_histories/1.json

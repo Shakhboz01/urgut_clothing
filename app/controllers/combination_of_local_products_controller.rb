@@ -4,7 +4,7 @@ class CombinationOfLocalProductsController < ApplicationController
   # GET /combination_of_local_products or /combination_of_local_products.json
   def index
     @q = CombinationOfLocalProduct.ransack(params[:q])
-    @combination_of_local_products = @q.result.order(id: :desc).page(params[:page]).per(40)
+    @combination_of_local_products = @q.result.order(id: :desc).page(params[:page]).per(70)
   end
 
   # GET /combination_of_local_products/1 or /combination_of_local_products/1.json

@@ -4,7 +4,7 @@ class TeamsController < ApplicationController
   # GET /teams or /teams.json
   def index
     @q = Team.ransack(params[:q])
-    @teams = @q.result.order(active: :desc).page(params[:page]).per(40)
+    @teams = @q.result.order(active: :desc).page(params[:page]).per(70)
   end
 
   # GET /teams/1 or /teams/1.json

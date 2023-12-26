@@ -7,7 +7,7 @@ class CurrencyConversionsController < ApplicationController
     @q = CurrencyConversion.ransack(params[:q])
     @currency_conversions = @q.result.order(id: :desc)
     @all_currency_conversions = @currency_conversions
-    @currency_conversions = @currency_conversions.page(params[:page]).per(40)
+    @currency_conversions = @currency_conversions.page(params[:page]).per(70)
   end
 
   # GET /currency_conversions/1 or /currency_conversions/1.json

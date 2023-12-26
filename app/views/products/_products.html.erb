@@ -28,8 +28,8 @@
             <td><%= product.code %></td>
             <td><%= product.name %></td>
             <td><%= active_check(product.price_in_usd) %></td>
-            <td><%= number_to_currency(product.buy_price) %></td>
-            <td><%= number_to_currency(product.sell_price) %></td>
+            <td><%= currency_convert(product.price_in_usd, product.buy_price) %></td>
+            <td><%= currency_convert(product.price_in_usd, product.sell_price) %></td>
             <td><%= product.unit %></td>
             <td><%= product.calculate_product_remaining %></td>
             <td><%= strf_datetime(product.created_at) %></td>

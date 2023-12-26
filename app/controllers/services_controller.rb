@@ -4,7 +4,7 @@ class ServicesController < ApplicationController
   # GET /services or /services.json
   def index
     @q = Service.ransack(params[:q])
-    @services = @q.result.order(active: :desc).page(params[:page]).per(40)
+    @services = @q.result.order(active: :desc).page(params[:page]).per(70)
   end
 
   # GET /services/1 or /services/1.json

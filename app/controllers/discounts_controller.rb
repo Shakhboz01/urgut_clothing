@@ -7,7 +7,7 @@ class DiscountsController < ApplicationController
     @q = Discount.ransack(params[:q])
     @discounts = @q.result.order(created_at: :desc)
     @discounts_data = @discounts
-    @discounts = @discounts.page(params[:page]).per(40)
+    @discounts = @discounts.page(params[:page]).per(70)
   end
 
   # GET /discounts/1 or /discounts/1.json
