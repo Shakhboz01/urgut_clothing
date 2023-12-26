@@ -10,14 +10,18 @@ module ApplicationHelper
   def clink_to(title, link, css_class = nil, method = :get)
     styled_title =
       css_class.nil? ? t(title) : raw("<i class=\"fa fa-fw #{css_class}\"></i>")
-    link_to styled_title, link, title: title, method: method
+    if method == :get
+      link_to styled_title, link, title: title, method: method
+    else
+      button_to styled_title, link, title: title, style: 'color: green; cursor: pointer; border: none', method: method
+    end
   end
 
   def cdlink_to(title, link, icon = "fa-remove", confirm_text = "вы уверены?")
-    link_to icon.blank? ? title : content_tag(:i, "", class: %i[fa fa-fw].push(icon)),
+    button_to icon.blank? ? title : content_tag(:i, "", class: %i[fa fa-fw].push(icon)),
             link,
             title: title,
-            style: 'color: blue; cursor: pointer',
+            style: 'color: blue; cursor: pointer; border: none',
             method: :delete, data: { confirm: strip_tags(confirm_text) }
   end
 
