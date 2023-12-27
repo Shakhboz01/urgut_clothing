@@ -26,7 +26,11 @@ class TransactionHistoriesController < ApplicationController
 
   # GET /transaction_histories/new
   def new
-    @transaction_history = TransactionHistory.new
+    @transaction_history = TransactionHistory.new(
+      sale_id: params[:sale_id],
+      expenditure_id: params[:expenditure_id],
+      delivery_from_counterparty_id: params[:delivery_from_counterparty_id]
+    )
   end
 
   # GET /transaction_histories/1/edit
@@ -37,9 +41,18 @@ class TransactionHistoriesController < ApplicationController
   def create
     @transaction_history = TransactionHistory.new(transaction_history_params)
     @transaction_history.user_id = current_user.id
+    anchor =
+      if !@transaction_history.expenditure_id.nil?
+        "expenditure_#{@transaction_history.expenditure_id}"
+      elsif !@transaction_history.delivery_from_counterparty_id.nil?
+        "delivery_from_counterparty_#{@transaction_history.delivery_from_counterparty_id}"
+      elsif !@transaction_history.sale_id.nil?
+        "sale_#{@transaction_history.sale_id}"
+      end
+
     respond_to do |format|
       if @transaction_history.save
-        format.html { redirect_to request.referrer, notice: "Transaction history was successfully created." }
+        format.html { redirect_to root_path(name: anchor), notice: "Transaction history was successfully created." }
         format.json { render :show, status: :created, location: @transaction_history }
       else
         format.html { render :new, status: :unprocessable_entity }

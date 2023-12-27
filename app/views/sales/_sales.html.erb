@@ -24,7 +24,7 @@
   </thead>
   <tbody>
     <% sales.each do |sale| %>
-      <tr>
+      <tr id="sale_<%= sale.id %>">
         <td class="<%= detect_danger_row(sale.total_price, sale.total_paid) %>"><%= sale.id %></td>
         <% unless defined?(shrink) %>
           <td><%= active_check(sale.closed?) %></td>

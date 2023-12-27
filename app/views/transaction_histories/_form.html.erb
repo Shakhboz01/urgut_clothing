@@ -5,11 +5,9 @@
 
   <div class="form-inputs">
     <%= f.association :sale, as: :hidden %>
-    <%= f.association :sale_from_service, as: :hidden %>
-    <%= f.association :sale_from_local_service, as: :hidden %>
     <%= f.association :delivery_from_counterparty, as: :hidden %>
     <%= f.association :expenditure, as: :hidden %>
-    <%= f.input :price, label: 'Введите цену', focus: true %>
+    <%= f.input :price, label: 'Введите цену', :autofocus => true %>
   </div>
 
   <div class="form-actions">

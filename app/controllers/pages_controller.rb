@@ -1,8 +1,8 @@
 class PagesController < ApplicationController
   def main_page
     # TODO include discount when calculating a remaining balance
-    @buyers = Buyer.all.select { |buyer| buyer.calculate_debt_in_usd > 0 || buyer.calculate_debt_in_uzs > 0 }
-    @providers = Provider.all.select { |provider| provider.calculate_debt_in_usd > 0 || provider.calculate_debt_in_uzs > 0 }
+    @buyers = Buyer.all.order(active: :desc)
+    @providers = Provider.all.order(active: :desc)
     @delivery_from_counterparties =
       DeliveryFromCounterparty.where('created_at >= ?', DateTime.current.beginning_of_day)
                               .or(DeliveryFromCounterparty.unpaid)
