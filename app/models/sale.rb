@@ -4,7 +4,7 @@ class Sale < ApplicationRecord
   belongs_to :buyer
   belongs_to :user
   enum status: %i[processing closed]
-  enum payment_type: %i[наличные карта click дригие]
+  enum payment_type: %i[наличные карта click дригие perechisleniye]
   has_many :product_sells
   has_one :discount
   has_many :transaction_histories, dependent: :destroy
