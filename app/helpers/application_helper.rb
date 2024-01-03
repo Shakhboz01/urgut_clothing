@@ -13,7 +13,7 @@ module ApplicationHelper
     if method == :get
       link_to styled_title, link, title: title, method: method
     else
-      button_to styled_title, link, title: title, style: 'color: green; cursor: pointer; border: none', method: method
+      button_to styled_title, link, title: title, style: 'cursor: pointer; background: none; border: none', method: method
     end
   end
 
@@ -21,7 +21,7 @@ module ApplicationHelper
     button_to icon.blank? ? title : content_tag(:i, "", class: %i[fa fa-fw].push(icon)),
             link,
             title: title,
-            style: 'color: blue; cursor: pointer; border: none',
+            style: 'color: blue; cursor: pointer; border: none; background: none',
             method: :delete, data: { confirm: strip_tags(confirm_text) }
   end
 

@@ -27,7 +27,6 @@ class DeliveryFromCounterparty < ApplicationRecord
 
     if enable_to_alter
       self.total_price = total_price unless closed?
-      self.total_paid = total_price unless closed?
     end
 
     total_price

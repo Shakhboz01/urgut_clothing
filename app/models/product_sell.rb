@@ -25,29 +25,13 @@ class ProductSell < ApplicationRecord
   private
 
   def increase_total_price
-    if !sale_from_service.nil?
-      sale_from_service.increment!(:total_price, (sell_price * amount))
-      sale_from_service.increment!(:total_paid, (sell_price * amount))
-    elsif !sale_from_local_service.nil?
-      sale_from_local_service.increment!(:total_price, (sell_price * amount))
-      sale_from_local_service.increment!(:total_paid, (sell_price * amount))
-    elsif !sale.nil?
+    if !sale.nil?
       sale.increment!(:total_price, (sell_price * amount))
-      sale.increment!(:total_paid, (sell_price * amount))
     end
   end
 
   def decrease_total_price
-    if !sale_from_service.nil?
-      sale_from_service.decrement!(:total_price, (sell_price * amount))
-      sale_from_service.decrement!(:total_paid, (sell_price * amount))
-    elsif !sale_from_local_service.nil?
-      sale_from_local_service.decrement!(:total_price, sell_price)
-      sale_from_local_service.decrement!(:total_paid, sell_price)
-    elsif !sale.nil?
-      sale.decrement!(:total_price, sell_price)
-      sale.decrement!(:total_paid, sell_price)
-    end
+    sale.calculate_total_price
   end
 
   def deccrease_amount_sold

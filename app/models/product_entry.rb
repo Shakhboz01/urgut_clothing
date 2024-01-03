@@ -43,7 +43,6 @@ class ProductEntry < ApplicationRecord
   def varify_delivery_from_counterparty_is_not_closed
     throw(:abort) if delivery_from_counterparty.closed? && sell_price == sell_price_before_last_save && amount >= amount_sold
     delivery_from_counterparty.decrement!(:total_price, buy_price)
-    delivery_from_counterparty.decrement!(:total_paid, buy_price)
   end
 
   def update_delivery_currency
