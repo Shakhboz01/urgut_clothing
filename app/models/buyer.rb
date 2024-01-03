@@ -8,10 +8,10 @@ class Buyer < ApplicationRecord
   scope :active, -> { where(:active => true) }
 
   def calculate_debt_in_usd
-    self.sales.unpaid.price_in_usd.sum(:total_price) - self.sales.unpaid.price_in_usd.sum(:total_paid)
+    self.sales.price_in_usd.sum(:total_price) - self.sales.price_in_usd.sum(:total_paid)
   end
 
   def calculate_debt_in_uzs
-    self.sales.unpaid.price_in_uzs.sum(:total_price) - self.sales.unpaid.price_in_uzs.sum(:total_paid)
+    self.sales.price_in_uzs.sum(:total_price) - self.sales.price_in_uzs.sum(:total_paid)
   end
 end

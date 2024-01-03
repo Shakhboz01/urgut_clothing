@@ -12,7 +12,7 @@
         <%= f.input :total_paid, label: 'Итого оплачено', input_html: {placeholder: 'Пропустите этот поле если вы оплатили полностью'} %>
       </div>
       <div class='col-sm-3 col-md-2'>
-        <%= f.association :provider, label: 'Поставщик', collection: Provider.active.order(weight: :desc), include_blank: false %>
+        <%= f.association :provider, label: 'Поставщик', collection: Provider.active.order(weight: :desc).order(name: :asc), include_blank: false %>
       </div>
       <div class='col-sm-3 col-md-2'>
         <%= f.input :payment_type, label: 'Тип оплаты', collection: DeliveryFromCounterparty.payment_types.keys.map { |unit| [DeliveryFromCounterparty.human_attribute_name("unit.#{unit}"), unit] }, include_blank: false %>
