@@ -1,6 +1,7 @@
 class SalesController < ApplicationController
-  before_action :set_sale, only: %i[ show edit update destroy ]
+  before_action :set_sale, only: %i[ show edit update destroy toggle_status ]
 
+  include Pundit::Authorization
   # GET /sales or /sales.json
   def index
     @q = Sale.ransack(params[:q])
@@ -81,6 +82,13 @@ class SalesController < ApplicationController
     else
       redirect_to request.referrer, notice: "Something went wrong"
     end
+  end
+
+  def toggle_status
+    authorize Sale, :manage?
+
+    @sale.update(status: @sale.closed? ? 0 : 1)
+    redirect_to request.referrer, notice: 'Successfully updated'
   end
 
   private

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   end
   resources :sales do
     post :default_create, on: :collection
+    post :toggle_status, on: :member
   end
   resources :local_services
   resources :sale_from_local_services do
@@ -19,6 +20,7 @@ Rails.application.routes.draw do
   end
   resources :delivery_from_counterparties do
     post :default_create, on: :collection
+    post :toggle_status, on: :member
   end
   resources :product_sells do
     post :ajax_sell_price_request, on: :collection

@@ -66,4 +66,8 @@ class ApplicationPolicy
   def everyone_is_allowed?
     %w[админ менеджер продавец упаковщик оператор механик резчик колбасник дробильщик приёмщик].include?(user.role)
   end
+
+  def user_is_accaontant?
+    %w[бухгалтер].include?(user.role)
+  end
 end

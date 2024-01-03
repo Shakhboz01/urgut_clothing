@@ -1,5 +1,6 @@
 class DeliveryFromCounterpartiesController < ApplicationController
-  before_action :set_delivery_from_counterparty, only: %i[ show edit update destroy ]
+  before_action :set_delivery_from_counterparty, only: %i[ show edit update destroy toggle_status ]
+  include Pundit::Authorization
 
   # GET /delivery_from_counterparties or /delivery_from_counterparties.json
   def index
@@ -91,6 +92,13 @@ class DeliveryFromCounterpartiesController < ApplicationController
     else
       redirect_to request.referrer, notice: "Something went wrong"
     end
+  end
+
+  def toggle_status
+    authorize DeliveryFromCounterparty, :manage?
+
+    @delivery_from_counterparty.update(status: @delivery_from_counterparty.closed? ? 0 : 1)
+    redirect_to request.referrer, notice: 'Successfully updated'
   end
 
   private

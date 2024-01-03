@@ -27,7 +27,13 @@
       <tr id="sale_<%= sale.id %>">
         <td class="<%= detect_danger_row(sale.total_price, sale.total_paid) %>"><%= sale.id %></td>
         <% unless defined?(shrink) %>
-          <td><%= active_check(sale.closed?) %></td>
+          <td>
+            <% if sale.closed? %>
+              <%= clink_to 'Open', toggle_status_sale_path(sale),'fa-lock', :post %>
+            <% else %>
+              <%= clink_to 'Close', toggle_status_sale_path(sale),'fa-lock-open', :post %>
+            <% end %>
+          </td>
         <% end %>
         <td><%= sale.buyer.name %></td>
         <td><%= currency_convert(sale.price_in_usd, sale.total_price) %></td>
