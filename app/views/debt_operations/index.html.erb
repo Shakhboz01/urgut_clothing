@@ -25,8 +25,8 @@
             <tr>
               <td><%= debt_operation.id %></td>
               <td><%= debt_operation.status %></td>
-              <td><%= debt_operation.debt_user.name %></td>
-              <td><%= currency_convert(debt_operation.price_in_usd, debt_operation.price) %></td>
+              <td><%= link_to debt_operation.debt_user.name, debt_users_path %></td>
+              <td><%= currency_convert(debt_operation.debt_in_usd, debt_operation.price) %></td>
               <td><%= debt_operation.user.name %></td>
               <td><%= debt_operation.comment %></td>
             </tr>

@@ -2,6 +2,7 @@
   <div class="card shadow-lg">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h3 class="card-title font-weight-bold">дебетор/кредеторы</h3>
+      <%= link_to 'Приём/отдача средств', debt_operations_path, class: 'btn btn-warning' %>
       <%= link_to 'Добавить новый', new_debt_user_path, class: "btn btn-success min-width-btn" %>
     </div>
 
@@ -21,8 +22,8 @@
             <tr>
               <td><%= debt_user.id %></td>
               <td><%= debt_user.name %></td>
-              <td></td>
-              <td></td>
+              <td><%= calculate_debt(debt_user, true) %></td>
+              <td><%= calculate_debt(debt_user) %></td>
             </tr>
           <% end %>
         </tbody>
