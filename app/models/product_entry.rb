@@ -17,7 +17,9 @@ class ProductEntry < ApplicationRecord
   before_update :amount_sold_is_not_greater_than_amount
   before_destroy :varify_delivery_from_counterparty_is_not_closed
   after_create :update_delivery_currency
+  after_create :update_delivery_category
   after_update :notify_on_remaining_inequality, if: :saved_change_to_amount_sold?
+
   scope :paid_in_uzs, -> { where('paid_in_usd = ?', false) }
   scope :paid_in_usd, -> { where('paid_in_usd = ?', true) }
   private
@@ -49,5 +51,11 @@ class ProductEntry < ApplicationRecord
     return if delivery_from_counterparty.nil? || delivery_from_counterparty.price_in_usd == paid_in_usd
 
     delivery_from_counterparty.update(price_in_usd: paid_in_usd)
+  end
+
+  def update_delivery_category
+    return if delivery_from_counterparty&.product_category_id == product.product_category_id
+
+    delivery_from_counterparty.update(product_category_id: product.product_category_id)
   end
 end

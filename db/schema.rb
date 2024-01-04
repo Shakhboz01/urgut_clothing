@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_25_132709) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_04_034241) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,6 +61,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_25_132709) do
     t.bigint "user_id", null: false
     t.boolean "price_in_usd", default: false
     t.boolean "with_image", default: false
+    t.bigint "product_category_id"
+    t.index ["product_category_id"], name: "index_delivery_from_counterparties_on_product_category_id"
     t.index ["provider_id"], name: "index_delivery_from_counterparties_on_provider_id"
     t.index ["user_id"], name: "index_delivery_from_counterparties_on_user_id"
   end
@@ -354,6 +356,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_25_132709) do
   end
 
   add_foreign_key "currency_conversions", "users"
+  add_foreign_key "delivery_from_counterparties", "product_categories"
   add_foreign_key "delivery_from_counterparties", "providers"
   add_foreign_key "delivery_from_counterparties", "users"
   add_foreign_key "discounts", "sales"
