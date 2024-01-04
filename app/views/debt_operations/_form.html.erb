@@ -1,0 +1,17 @@
+
+<%= simple_form_for(debt_operation) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+    <%= f.association :debt_user, label: 'Пользователь' %>
+    <%= f.input :status, label: 'Статус', collection: DebtOperation.statuses.keys.map { |unit| [DebtOperation.human_attribute_name("unit.#{unit}"), unit] }, include_blank: false %>
+    <%= f.input :debt_in_usd, label: 'долг в $' %>
+    <%= f.input :price, label: 'cумма долга' %>
+    <%= f.input :comment, label: 'Коммент' %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, 'Завершить' %>
+  </div>
+<% end %>

@@ -25,7 +25,7 @@ class DebtUsersController < ApplicationController
 
     respond_to do |format|
       if @debt_user.save
-        format.html { redirect_to debt_users_url, notice: "Debt user was successfully created." }
+        format.html { redirect_to debt_operations_url, notice: "Debt user was successfully created." }
         format.json { render :show, status: :created, location: @debt_user }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class DebtUsersController < ApplicationController
   def update
     respond_to do |format|
       if @debt_user.update(debt_user_params)
-        format.html { redirect_to debt_users_url, notice: "Debt user was successfully updated." }
+        format.html { redirect_to debt_operations_url, notice: "Debt user was successfully updated." }
         format.json { render :show, status: :ok, location: @debt_user }
       else
         format.html { render :edit, status: :unprocessable_entity }
