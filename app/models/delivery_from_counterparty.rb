@@ -7,7 +7,8 @@ class DeliveryFromCounterparty < ApplicationRecord
   has_many :product_entries, dependent: :destroy
   has_many :transaction_histories, dependent: :destroy
   enum status: %i[processing closed]
-  enum payment_type: %i[наличные карта click дригие]
+  enum payment_type: %i[наличные карта click
+предоплата дригие]
   scope :unpaid, -> { where("total_price > total_paid") }
   scope :price_in_uzs, -> { where('price_in_usd = ?', false) }
   scope :price_in_usd, -> { where('price_in_usd = ?', true) }
