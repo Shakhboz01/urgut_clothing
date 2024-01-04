@@ -10,8 +10,7 @@ class ProductSell < ApplicationRecord
   has_one :buyer, through: :sale
   has_one :user, through: :sale
   validates_presence_of :amount
-  enum payment_type: %i[наличные карта click
-предоплата дригие]
+  enum payment_type: %i[наличные карта click предоплата перечисление дригие]
   validate :handle_amount_sold
   validate :verify_combination_is_not_closed
   scope :price_in_uzs, -> { where('price_in_usd = ?', false) }

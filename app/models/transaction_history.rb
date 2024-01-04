@@ -10,6 +10,7 @@ class TransactionHistory < ApplicationRecord
   before_destroy :proccess_decrement
   scope :price_in_uzs, -> { where('price_in_usd = ?', false) }
   scope :price_in_usd, -> { where('price_in_usd = ?', true) }
+  enum payment_type: %i[наличные карта click предоплата перечисление дригие]
 
   private
 
