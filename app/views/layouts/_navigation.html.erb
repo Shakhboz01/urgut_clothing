@@ -38,6 +38,9 @@
           <%= link_to 'Товарa (alt + 1)', new_product_path, class: 'dropdown-item' %>
           <%= link_to 'Зарплату/Аванс', new_salary_path, class: 'dropdown-item' %>
           <%= link_to 'Перекличку работников', new_participation_path, class: 'dropdown-item' %>
+          <% if user_signed_in? && current_user.кассир? %>
+            <%= link_to 'ежедневный отчет по кассе', new_daily_transaction_report_path, class: 'dropdown-item' %>
+          <% end %>
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -52,6 +55,7 @@
           <%= link_to 'История изменений остатки товара', product_remaining_inequalities_path, class: 'dropdown-item' %>
           <%= link_to 'Настройки курса', currency_rates_path, class: 'dropdown-item' %>
           <%= link_to 'Приходы/Расходы от руководителей', owners_operations_path, class: 'dropdown-item' %>
+          <%= link_to 'ежедневный отчет по кассе', daily_transaction_reports_path, class: 'dropdown-item' %>
         </div>
       </li>
     </ul>

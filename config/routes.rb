@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :daily_transaction_reports
   resources :owners_operations
   resources :currency_conversions
   resources :discounts do

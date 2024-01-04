@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_04_140552) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_04_142615) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -47,6 +47,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_04_140552) do
     t.datetime "finished_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "daily_transaction_reports", force: :cascade do |t|
+    t.decimal "income_in_usd", precision: 18, scale: 2
+    t.decimal "income_in_uzs", precision: 18, scale: 2
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_daily_transaction_reports_on_user_id"
   end
 
   create_table "delivery_from_counterparties", force: :cascade do |t|
@@ -357,6 +366,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_04_140552) do
   end
 
   add_foreign_key "currency_conversions", "users"
+  add_foreign_key "daily_transaction_reports", "users"
   add_foreign_key "delivery_from_counterparties", "product_categories"
   add_foreign_key "delivery_from_counterparties", "providers"
   add_foreign_key "delivery_from_counterparties", "users"

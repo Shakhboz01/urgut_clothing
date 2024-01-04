@@ -1,0 +1,53 @@
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-title font-weight-bold">ежедневный отчет по кассе</h3>
+      <%= link_to 'Добавить новый', new_daily_transaction_report_path, class: "btn btn-success min-width-btn" %>
+    </div>
+
+    <div class="card-body">
+      <table class="table table-hover table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>кассир</th>
+            <th>Остаток в $</th>
+            <th>Остаток в сум</th>
+            <th>датa</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @daily_transaction_reports.each do |daily_transaction_report| %>
+            <tr>
+              <td><%= daily_transaction_report.id %></td>
+              <td><%= daily_transaction_report.user.name %></td>
+              <td><%= num_to_usd daily_transaction_report.income_in_uzs %></td>
+              <td><%= number_to_currency daily_transaction_report.income_in_usd %></td>
+              <td><%= daily_transaction_report.created_at.to_date %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= paginate @daily_transaction_reports %>
+      <table class='table-bordered'>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Итого цена</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>В долларах </th>
+            <td><%= number_to_currency @all_daily_transaction_reports.sum(:income_in_usd) %></td>
+          </tr>
+          <tr>
+            <th>В сумах </th>
+            <td><%= num_to_usd(@all_daily_transaction_reports.sum(:income_in_uzs)) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

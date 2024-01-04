@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @daily_transaction_report %>
+
+<div>
+  <%= link_to "Edit this daily transaction report", edit_daily_transaction_report_path(@daily_transaction_report) %> |
+  <%= link_to "Back to daily transaction reports", daily_transaction_reports_path %>
+
+  <%= button_to "Destroy this daily transaction report", @daily_transaction_report, method: :delete %>
+</div>
