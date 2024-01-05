@@ -9,7 +9,7 @@
         <%= f.input :total_price, label: 'Итого цена', disabled: true %>
       </div>
       <div class='col-sm-3 col-md-2'>
-        <%= f.input :total_paid, label: 'Итого оплачено', input_html: {placeholder: 'Пропустите этот поле если вы оплатили полностью'} %>
+        <%= f.input :total_paid, label: 'Итого оплачено' %>
       </div>
       <div class='col-sm-3 col-md-2'>
         <%= f.association :provider, label: 'Поставщик', collection: Provider.active.order(weight: :desc).order(name: :asc), include_blank: false %>
@@ -20,6 +20,9 @@
       <% if delivery_from_counterparty.persisted? && delivery_from_counterparty.product_entries.empty? %>
         <div class='col-sm-3 col-md-2'>
           <%= f.input :price_in_usd, label: 'договор в $' %>
+        </div>
+        <div class='col-sm-3 col-md-2'>
+          <%= f.association :product_category, label: 'Категория', collection: ProductCategory.all, include_blank: false %>
         </div>
       <% end %>
       <div class='col-sm-3 col-md-2'>
