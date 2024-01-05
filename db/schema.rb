@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_04_154922) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_05_114308) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -90,6 +90,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_04_154922) do
     t.boolean "price_in_usd", default: false
     t.boolean "with_image", default: false
     t.bigint "product_category_id"
+    t.boolean "enable_to_send_sms", default: true
     t.index ["product_category_id"], name: "index_delivery_from_counterparties_on_product_category_id"
     t.index ["provider_id"], name: "index_delivery_from_counterparties_on_provider_id"
     t.index ["user_id"], name: "index_delivery_from_counterparties_on_user_id"
@@ -299,6 +300,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_04_154922) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "price_in_usd", default: false
+    t.boolean "enable_to_send_sms", default: true
     t.index ["buyer_id"], name: "index_sales_on_buyer_id"
     t.index ["user_id"], name: "index_sales_on_user_id"
   end
