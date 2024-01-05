@@ -54,4 +54,8 @@ class PagesController < ApplicationController
       format.html { redirect_to request.referrer || root_path }
     end
   end
+
+  def admin_page
+    authorize PagesController, :access?
+  end
 end
