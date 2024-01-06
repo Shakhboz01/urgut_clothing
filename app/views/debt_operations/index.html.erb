@@ -17,6 +17,7 @@
             <th>Цена</th>
             <th>Исполнитель</th>
             <th>Коммент</th>
+            <th>Создано в</th>
             <th colspan="3"></th>
           </tr>
         </thead>
@@ -29,6 +30,7 @@
               <td><%= currency_convert(debt_operation.debt_in_usd, debt_operation.price) %></td>
               <td><%= debt_operation.user.name %></td>
               <td><%= debt_operation.comment %></td>
+              <td><%= strf_datetime debt_operation.created_at %></td>
             </tr>
           <% end %>
         </tbody>

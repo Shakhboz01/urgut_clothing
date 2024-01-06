@@ -57,5 +57,25 @@ class PagesController < ApplicationController
 
   def admin_page
     authorize PagesController, :access?
+
+    @q = DeliveryFromCounterparty.ransack(params[:q])
+    @delivery_from_counterparties = @q.result
+    @product_categories = ProductCategory.where(weight: 0)
+    @result = []
+    @product_categories.each do |product_category|
+      money_given_in_usd =
+        @delivery_from_counterparties.where(product_category_id: product_category.id)
+                                     .price_in_usd.sum(:total_paid)
+      money_given_in_uzs =
+        @delivery_from_counterparties.where(product_category_id: product_category.id)
+                                     .price_in_uzs.sum(:total_paid)
+      product_taken_in_usd =
+        @delivery_from_counterparties.where(product_category_id: product_category.id)
+                                     .price_in_usd.sum(:total_price)
+      product_taken_in_uzs =
+        @delivery_from_counterparties.where(product_category_id: product_category.id)
+                                     .price_in_usd.sum(:total_price)
+
+    end
   end
 end

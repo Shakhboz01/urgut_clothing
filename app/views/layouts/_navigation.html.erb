@@ -60,11 +60,11 @@
         </div>
       </li>
 
-      <% if %w[руководитель бухгалтер].include?(current_user.role) %>
-        <li class="nav-item">
-          <%= link_to 'Админ', admin_page_path, class: 'nav-link' %>
-        </li>
-      <% end %>
+      <%# <% if %w[руководитель бухгалтер].include?(current_user.role) %>
+        <%# <li class="nav-item"> %>
+          <%# <%= link_to 'Админ', admin_page_path, class: 'nav-link' %>
+        <%# </li> %>
+      <%# <% end %>
     </ul>
   </div>
   <ul class="text-center navbar-nav ml-auto">
