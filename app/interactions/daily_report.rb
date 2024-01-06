@@ -1,6 +1,6 @@
 # source of income: transactionHistory(sale_id not nil), Sale, ownersOperation
 # source of outcome: Expenditure, TransactionHistory, Discount, Salary, DeliveryFromCounterparty, ownersOperation
-
+include ActionView::Helpers
 class DailyReport < ActiveInteraction::Base
   def execute
     yesterday_start = DateTime.yesterday.beginning_of_day
@@ -81,9 +81,9 @@ class DailyReport < ActiveInteraction::Base
 
     message =
       "<b>ОТЧЁТ ПО: #{yesterday_start.to_date}:</b>\n\n" \
-      "Итого приход денег:      #{numberTo_currency overall_income_in_uzs}  +  #{overall_income_in_usd}$\n" \
-      "Итого уход денег:          #{overall_outcome_in_uzs}  +  #{overall_outcome_in_usd}$\n" \
-      "Остаток:                      #{overall_income_in_uzs - overall_outcome_in_uzs}  +  #{overall_income_in_usd - overall_outcome_in_usd}$\n"
+      "Итого приход денег:      #{num_to_usd overall_income_in_uzs}  +  #{number_to_currency overall_income_in_usd}\n" \
+      "Итого уход денег:          #{num_to_usd overall_outcome_in_uzs}  +  #{number_to_currency overall_outcome_in_usd}\n" \
+      "Остаток:                      #{num_to_usd(overall_income_in_uzs - overall_outcome_in_uzs)}  +  #{number_to_currency(overall_income_in_usd - overall_outcome_in_usd)}\n"
     SendMessage.run(message: message)
     # total_income based_on_kassir
     # total_outcome based_on_kassir
