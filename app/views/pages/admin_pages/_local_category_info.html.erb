@@ -1,0 +1,66 @@
+<div>
+  <div class='row'>
+    <div class='col-sm-6'>
+      <div>
+        <h3 class='text-center'>В сум</h3>
+        <table class='table shadow card-header table-striped table-hover'>
+          <thead>
+            <tr>
+              <th></th>
+              <th>пул чиккан</th>
+              <th>йук келган</th>
+              <th>фарк</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% local_category_info.each do |info| %>
+              <tr>
+                <td><%= num_to_usd info[:category] %></td>
+                <td><%= num_to_usd info[:money_given_in_uzs] %></td>
+                <td><%= num_to_usd info[:product_taken_in_uzs] %></td>
+                <td><%= num_to_usd info[:difference_in_uzs] %></td>
+              </tr>
+            <% end %>
+            <tr class="table-info">
+              <td>ИТОГО</td>
+              <td><%= num_to_usd local_category_info.map { |hash| hash[:money_given_in_uzs] }.sum %></td>
+              <td><%= num_to_usd local_category_info.map { |hash| hash[:product_taken_in_uzs] }.sum %></td>
+              <td><%= num_to_usd local_category_info.map { |hash| hash[:difference_in_uzs] }.sum %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class='col-sm-6'>
+      <div>
+        <h3 class='text-center'>В доллар</h3>
+        <table class='table shadow card-header table-striped table-hover'>
+          <thead>
+            <tr>
+              <th></th>
+              <th>пул чиккан</th>
+              <th>йук келган</th>
+              <th>фарк</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% local_category_info.each do |info| %>
+              <tr>
+                <td><%= number_to_currency info[:category] %></td>
+                <td><%= number_to_currency info[:money_given_in_usd] %></td>
+                <td><%= number_to_currency info[:product_taken_in_usd] %></td>
+                <td><%= number_to_currency info[:difference_in_usd] %></td>
+              </tr>
+            <% end %>
+            <tr class="table-info">
+              <td>ИТОГО</td>
+              <td><%= number_to_currency local_category_info.map { |hash| hash[:money_given_in_usd] }.sum %></td>
+              <td><%= number_to_currency local_category_info.map { |hash| hash[:product_taken_in_usd] }.sum %></td>
+              <td><%= number_to_currency local_category_info.map { |hash| hash[:difference_in_usd] }.sum %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

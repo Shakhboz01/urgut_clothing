@@ -1,0 +1,23 @@
+<div class='card shadow card-header'>
+  <h3 class='text-center'>Import Koreya</h3>
+  <table class='table table-hover'>
+    <thead>
+      <tr>
+        <th></th>
+        <th>пул чиккан</th>
+        <th>йук келган</th>
+        <th>фарк</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% import_category_info.each do |info| %>
+        <tr>
+          <td><%= info[:category] %></td>
+          <td><%= number_to_currency info[:money_given_in_usd] %></td>
+          <td><%= number_to_currency info[:product_taken_in_usd] %></td>
+          <td><%= number_to_currency info[:difference_in_usd] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

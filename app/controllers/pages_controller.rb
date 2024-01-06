@@ -61,7 +61,7 @@ class PagesController < ApplicationController
     @q = DeliveryFromCounterparty.ransack(params[:q])
     @delivery_from_counterparties = @q.result
     @product_categories = ProductCategory.where(weight: 0)
-    @result = []
+    @local_category_info = []
     @product_categories.each do |product_category|
       money_given_in_usd =
         @delivery_from_counterparties.where(product_category_id: product_category.id)
@@ -75,7 +75,31 @@ class PagesController < ApplicationController
       product_taken_in_uzs =
         @delivery_from_counterparties.where(product_category_id: product_category.id)
                                      .price_in_usd.sum(:total_price)
-
+      overall = {
+        category: product_category.name,
+        money_given_in_usd: money_given_in_usd,
+        money_given_in_uzs: money_given_in_uzs,
+        product_taken_in_usd: product_taken_in_usd,
+        product_taken_in_uzs: product_taken_in_uzs,
+        difference_in_usd: money_given_in_usd - product_taken_in_usd,
+        difference_in_uzs: money_given_in_uzs - product_taken_in_uzs
+      }
+      @local_category_info.push(overall)
     end
+
+    @import_category_info = []
+    import_product_category = ProductCategory.find_by(weight: 1)
+    product_taken_in_usd =
+      @delivery_from_counterparties.where(product_category_id: import_product_category.id)
+                                   .price_in_usd.sum(:total_price)
+    money_given_in_usd =
+      @delivery_from_counterparties.where(product_category_id: import_product_category.id)
+                                   .price_in_usd.sum(:total_paid)
+    @import_category_info.push({
+      category: import_product_category.name,
+      money_given_in_usd: money_given_in_usd,
+      product_taken_in_usd: product_taken_in_usd,
+      difference_in_usd: money_given_in_usd - product_taken_in_usd
+    })
   end
 end

@@ -1,2 +1,5 @@
-<%= render 'filter_form', q: @q, url: request.path %>
-<h1>admin page</h1>
+<div>
+  <%= render 'pages/admin_pages/filter_form', q: @q, url: request.path %><br>
+  <%= render 'pages/admin_pages/local_category_info', local_category_info: @local_category_info %><br><hr>
+  <%= render 'pages/admin_pages/import_category_info', import_category_info: @import_category_info %>
+</div>
