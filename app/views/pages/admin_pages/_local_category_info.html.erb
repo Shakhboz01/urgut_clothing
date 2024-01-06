@@ -15,7 +15,7 @@
           <tbody>
             <% local_category_info.each do |info| %>
               <tr>
-                <td><%= num_to_usd info[:category] %></td>
+                <td><%= info[:category] %></td>
                 <td><%= num_to_usd info[:money_given_in_uzs] %></td>
                 <td><%= num_to_usd info[:product_taken_in_uzs] %></td>
                 <td><%= num_to_usd info[:difference_in_uzs] %></td>
@@ -46,7 +46,7 @@
           <tbody>
             <% local_category_info.each do |info| %>
               <tr>
-                <td><%= number_to_currency info[:category] %></td>
+                <td><%= info[:category] %></td>
                 <td><%= number_to_currency info[:money_given_in_usd] %></td>
                 <td><%= number_to_currency info[:product_taken_in_usd] %></td>
                 <td><%= number_to_currency info[:difference_in_usd] %></td>

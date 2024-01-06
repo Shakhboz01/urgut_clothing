@@ -24,8 +24,12 @@ class DailyReport < ActiveInteraction::Base
     sales_that_is_not_yesterdays_in_uzs = sales_that_is_not_yesterdays.price_in_uzs.sum(:price)
 
     owners_operations = OwnersOperation.where('created_at >= ?', yesterday_start).where('created_at <= ?', yesterday_end)
+    debt_operations = DebtOperation.where('created_at >= ?', yesterday_start).where('created_at <= ?', yesterday_end)
     owners_operations_income_in_usd = owners_operations.приход.price_in_usd.sum(:price)
     owners_operations_income_in_uzs = owners_operations.приход.price_in_uzs.sum(:price)
+    debt_operations_income_in_uzs = debt_operations.приём.price_in_uzs.sum(:price)
+    debt_operations_income_in_usd = debt_operations.приём.price_in_usd.sum(:price)
+
 
     # source_of_outcome
     delivery_from_counterparties = DeliveryFromCounterparty.where('created_at >= ?', yesterday_start).where('created_at <= ?', yesterday_end)
@@ -59,19 +63,27 @@ class DailyReport < ActiveInteraction::Base
     # owners:
     owners_operations_outcome_in_usd = owners_operations.расход.price_in_usd.sum(:price)
     owners_operations_outcome_in_uzs = owners_operations.расход.price_in_uzs.sum(:price)
+    debt_operations_outcome_in_uzs = debt_operations.отдача.price_in_uzs.sum(:price)
+    debt_operations_outcome_in_usd = debt_operations.отдача.price_in_usd.sum(:price)
 
     # overall:
-    overall_income_in_usd = transaction_histories.where.not(sale_id: nil).price_in_usd.sum(:price) + owners_operations_income_in_usd
-    overall_income_in_uzs = transaction_histories.where.not(sale_id: nil).price_in_uzs.sum(:price) + owners_operations_income_in_uzs
+    overall_income_in_usd =
+      transaction_histories.where.not(sale_id: nil).price_in_usd.sum(:price) + owners_operations_income_in_usd + debt_operations_income_in_usd
+    overall_income_in_uzs =
+      transaction_histories.where.not(sale_id: nil).price_in_uzs.sum(:price) + owners_operations_income_in_uzs + debt_operations_income_in_uzs
 
     # total_outcome
-    overall_outcome_in_usd = transaction_histories.where(sale_id: nil).price_in_usd.sum(:price) + owners_operations_outcome_in_usd
-    overall_outcome_in_uzs = transaction_histories.where(sale_id: nil).price_in_uzs.sum(:price) + owners_operations_outcome_in_uzs
+    overall_outcome_in_usd =
+      transaction_histories.where(sale_id: nil).price_in_usd.sum(:price) + owners_operations_outcome_in_usd + debt_operations_outcome_in_usd
+    overall_outcome_in_uzs =
+      transaction_histories.where(sale_id: nil).price_in_uzs.sum(:price) + owners_operations_outcome_in_uzs + debt_operations_outcome_in_uzs
 
 
     message =
-      "Итого приход денег:      #{overall_income_in_uzs}  +  #{overall_income_in_usd}$\n" \
-      "Итого расход денег:      #{overall_outcome_in_uzs}  +  #{overall_outcome_in_usd}$\n"
+      "<b>ОТЧЁТ ПО: #{yesterday_start.to_date}:</b>\n\n" \
+      "Итого приход денег:      #{numberTo_currency overall_income_in_uzs}  +  #{overall_income_in_usd}$\n" \
+      "Итого уход денег:          #{overall_outcome_in_uzs}  +  #{overall_outcome_in_usd}$\n" \
+      "Остаток:                      #{overall_income_in_uzs - overall_outcome_in_uzs}  +  #{overall_income_in_usd - overall_outcome_in_usd}$\n"
     SendMessage.run(message: message)
     # total_income based_on_kassir
     # total_outcome based_on_kassir
