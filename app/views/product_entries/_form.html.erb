@@ -14,7 +14,7 @@
         <%= f.association :product, label: 'Товар', collection: products.order(:name), include_blank: false %>
       </div>
       <div class='col-sm-1'>
-        <%= f.association :storage, label: 'Склад', collection: Storage.pluck(:name, :id), selected: defined?(storage) ? storage : nil, include_blank: false %>
+        <%= f.association :pack, label: 'Пачка', collection: Pack.pluck(:name, :id), include_blank: false %>
       </div>
       <div class='col-sm-1'>
         <%= f.input :amount, label: 'количество', id: 'inputs' %>
