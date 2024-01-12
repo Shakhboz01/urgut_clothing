@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @pack %>
+
+<div>
+  <%= link_to "Edit this pack", edit_pack_path(@pack) %> |
+  <%= link_to "Back to packs", packs_path %>
+
+  <%= button_to "Destroy this pack", @pack, method: :delete %>
+</div>

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :packs
   resources :colors
   resources :sizes
   resources :debt_operations
