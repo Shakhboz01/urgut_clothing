@@ -10,7 +10,7 @@
   <div class='row'>
     <div class='col-sm-12'>
       <% unless @product_sells.count.zero? %>
-        <%= render 'product_sells/product_sells', product_sells: @product_sells %>
+        <%= render 'product_sells/product_sells', shrink: true, product_sells: @product_sells %>
       <% end %>
     </div>
   </div>
