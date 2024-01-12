@@ -1,3 +1,3 @@
 class Size < ApplicationRecord
-  validates_uniqueness_of :size
+  validates_uniqueness_of :name
 end
