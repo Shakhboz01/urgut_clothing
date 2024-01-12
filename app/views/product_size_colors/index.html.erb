@@ -1,0 +1,35 @@
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-title font-weight-bold">Product Size Colors</h3>
+      <%= link_to 'Добавить новый', new_product_size_color_path, class: "btn btn-success min-width-btn" %>
+    </div>
+
+    <div class="card-body">
+      <table class="table table-hover table-bordered table-striped">
+        <thead>
+          <tr>
+                        <th>Color</th>
+                        <th>Size</th>
+                        <th>Amount</th>
+                        <th>Pack</th>
+                        <th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @product_size_colors.each do |product_size_color| %>
+            <tr>
+                              <td><%= product_size_color.color_id %></td>
+                              <td><%= product_size_color.size_id %></td>
+                              <td><%= product_size_color.amount %></td>
+                              <td><%= product_size_color.pack_id %></td>
+                            <td><%= clink_to 'Посмотреть', product_size_color_path(product_size_color), 'fa-search' %></td>
+              <td><%= clink_to 'Редактировать', edit_product_size_color_path(product_size_color), 'fa-edit' %></td>
+              <td><%= cdlink_to 'удалить', product_size_color %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :product_size_colors
   resources :packs
   resources :colors
   resources :sizes
