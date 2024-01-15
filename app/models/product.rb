@@ -2,17 +2,19 @@
 # NOTE sell_price buy price might be 0
 class Product < ApplicationRecord
   include ProtectDestroyable
-
-  validates_uniqueness_of :code
+  belongs_to :color
+  belongs_to :size
   validates_presence_of :name
   validates_presence_of :unit
   belongs_to :product_category
   has_many :product_entries
   has_many :product_remaining_inequalities
+  validates :code, presence: true, uniqueness: { scope: [:color_id, :size_id], message: "combination already exists" }
   enum unit: %i[ шт. кг метр пачка ]
   scope :active, -> { where(:active => true) }
   scope :local, -> { where(:local => true) }
   after_save :process_initial_remaining_change, if: :saved_change_to_initial_remaining?
+
 
   def self.generate_code
     rand(100_000..999_999).to_s

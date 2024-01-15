@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_12_104446) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_12_114510) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -196,8 +196,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_12_104446) do
     t.boolean "return", default: false
     t.bigint "storage_id", null: false
     t.decimal "price_in_percentage", precision: 5, scale: 2
+    t.bigint "pack_id", null: false
     t.index ["combination_of_local_product_id"], name: "index_product_entries_on_combination_of_local_product_id"
     t.index ["delivery_from_counterparty_id"], name: "index_product_entries_on_delivery_from_counterparty_id"
+    t.index ["pack_id"], name: "index_product_entries_on_pack_id"
     t.index ["product_id"], name: "index_product_entries_on_product_id"
     t.index ["storage_id"], name: "index_product_entries_on_storage_id"
   end
@@ -236,6 +238,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_12_104446) do
     t.index ["sale_id"], name: "index_product_sells_on_sale_id"
   end
 
+  create_table "product_size_colors", force: :cascade do |t|
+    t.bigint "color_id", null: false
+    t.bigint "size_id", null: false
+    t.integer "amount"
+    t.bigint "pack_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["color_id"], name: "index_product_size_colors_on_color_id"
+    t.index ["pack_id"], name: "index_product_size_colors_on_pack_id"
+    t.index ["size_id"], name: "index_product_size_colors_on_size_id"
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.boolean "local", default: false
@@ -249,7 +263,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_12_104446) do
     t.bigint "product_category_id", null: false
     t.boolean "price_in_usd", default: false
     t.string "code"
+    t.bigint "color_id", null: false
+    t.bigint "size_id", null: false
+    t.index ["color_id"], name: "index_products_on_color_id"
     t.index ["product_category_id"], name: "index_products_on_product_category_id"
+    t.index ["size_id"], name: "index_products_on_size_id"
   end
 
   create_table "providers", force: :cascade do |t|
@@ -424,6 +442,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_12_104446) do
   add_foreign_key "participations", "users"
   add_foreign_key "product_entries", "combination_of_local_products"
   add_foreign_key "product_entries", "delivery_from_counterparties"
+  add_foreign_key "product_entries", "packs"
   add_foreign_key "product_entries", "products"
   add_foreign_key "product_entries", "storages"
   add_foreign_key "product_remaining_inequalities", "products"
@@ -433,7 +452,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_12_104446) do
   add_foreign_key "product_sells", "sale_from_local_services"
   add_foreign_key "product_sells", "sale_from_services"
   add_foreign_key "product_sells", "sales"
+  add_foreign_key "product_size_colors", "colors"
+  add_foreign_key "product_size_colors", "packs"
+  add_foreign_key "product_size_colors", "sizes"
+  add_foreign_key "products", "colors"
   add_foreign_key "products", "product_categories"
+  add_foreign_key "products", "sizes"
   add_foreign_key "salaries", "teams"
   add_foreign_key "salaries", "users"
   add_foreign_key "sale_from_local_services", "buyers"
