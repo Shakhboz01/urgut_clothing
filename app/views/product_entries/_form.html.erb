@@ -10,8 +10,11 @@
     <%= f.input :local_entry, as: :hidden %>
 
     <div class="row">
-      <div class='col-sm-2'>
-        <%= f.association :product, label: 'Товар', collection: products.order(:name), include_blank: false %>
+      <div class='col-sm-1'>
+        <%= f.input :product_code, label: 'Код товара', collection: Product.pluck(:name) %>
+      </div>
+      <div class='col-sm-1'>
+        <%= f.input :product_category, label: 'Тип', collection: ProductCategory.pluck(:name) %>
       </div>
       <div class='col-sm-1'>
         <%= f.association :pack, label: 'Пачка', collection: Pack.pluck(:name, :id), include_blank: false %>

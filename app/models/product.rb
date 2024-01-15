@@ -2,17 +2,20 @@
 # NOTE sell_price buy price might be 0
 class Product < ApplicationRecord
   include ProtectDestroyable
+
   belongs_to :color
   belongs_to :size
-  validates_presence_of :name
-  validates_presence_of :unit
   belongs_to :product_category
   has_many :product_entries
   has_many :product_remaining_inequalities
+
   validates :code, presence: true, uniqueness: { scope: [:color_id, :size_id], message: "combination already exists" }
-  enum unit: %i[ шт. кг метр пачка ]
+  validate :consistent_category_for_same_code
+  validate :unique_size_and_color_for_the_same_code
+
   scope :active, -> { where(:active => true) }
   scope :local, -> { where(:local => true) }
+
   after_save :process_initial_remaining_change, if: :saved_change_to_initial_remaining?
 
 
@@ -31,5 +34,14 @@ class Product < ApplicationRecord
     return if initial_remaining.positive? && !self.product_entries.count.zero?
 
     # SendMessage.run(message: "Остаток товара(#{name}) = #{initial_remaining}", chat: 'warning')
+  end
+
+  def consistent_category_for_same_code
+    if Product.exists?(code: code) && Product.where(code: code).last.product_category_id != product_category_id
+      errors.add(:product_category_id, 'Products with the same code should have the same category_id')
+    end
+  end
+
+  def unique_size_and_color_for_the_same_code
   end
 end

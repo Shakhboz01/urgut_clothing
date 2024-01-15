@@ -11,7 +11,6 @@
       <% unless defined?(shrink) %>
       <th><%= sort_link q, :amount_sold, 'Продано' %></th>
       <% end %>
-      <th>склад</th>
       <% unless defined?(shrink) %>
         <%# <th>
           <%= sort_link q, :return, 'Возврат' %>
@@ -36,7 +35,6 @@
         <% unless defined?(shrink) %>
         <td><%= product_entry.amount_sold %></td>
         <% end %>
-        <td><%= product_entry.storage.name %></td>
         <% unless defined?(shrink) %>
           <%# <td><%= active_check(product_entry.return) %>
           <td><%= strf_datetime(product_entry.created_at) %></td>
