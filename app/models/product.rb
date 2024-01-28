@@ -11,7 +11,6 @@ class Product < ApplicationRecord
 
   validates :code, presence: true, uniqueness: { scope: [:color_id, :size_id], message: "combination already exists" }
   validate :consistent_category_for_same_code
-  validate :unique_size_and_color_for_the_same_code
 
   scope :active, -> { where(:active => true) }
   scope :local, -> { where(:local => true) }
@@ -40,8 +39,5 @@ class Product < ApplicationRecord
     if Product.exists?(code: code) && Product.where(code: code).last.product_category_id != product_category_id
       errors.add(:product_category_id, 'Products with the same code should have the same category_id')
     end
-  end
-
-  def unique_size_and_color_for_the_same_code
   end
 end
