@@ -10,6 +10,7 @@ class Product < ApplicationRecord
   has_many :product_remaining_inequalities
 
   validates :code, presence: true, uniqueness: { scope: [:color_id, :size_id], message: "combination already exists" }
+  validates :barcode, presence: true, uniqueness: { scope: [:color_id, :size_id], message: "combination already exists" }
   validate :consistent_category_for_same_code
 
   scope :active, -> { where(:active => true) }
@@ -20,6 +21,10 @@ class Product < ApplicationRecord
 
   def self.generate_code
     rand(100_000..999_999).to_s
+  end
+
+  def self.generate_barcode
+    rand(100_00000..999_99999).to_s
   end
 
   def calculate_product_remaining

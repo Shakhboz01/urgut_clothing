@@ -25,7 +25,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <%= render 'products/form', product: Product.new, random_code: Product.generate_code %>
+        <%= render 'products/form', product: Product.new, random_code: Product.generate_code, random_barcode: Product.generate_barcode %>
       </div>
     </div>
   </div>

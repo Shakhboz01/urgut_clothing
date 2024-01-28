@@ -9,6 +9,7 @@
       <thead>
         <tr>
           <th><%= sort_link q, :code, 'код' %></th>
+          <th><%= sort_link q, :barcode, 'баркод' %></th>
           <th><%= sort_link q, :name, 'Название' %></th>
           <th><%= sort_link q, :buy_price, 'Цена прихода' %></th>
           <th><%= sort_link q, :sell_price, 'Цена продажи' %></th>
@@ -22,6 +23,7 @@
         <% products.each do |product| %>
           <tr class="<%= active_tr(product.active) %>">
             <td><%= product.code %></td>
+            <td><%= product.barcode %></td>
             <td><%= product.name %></td>
             <td><%= currency_convert(product.price_in_usd, product.buy_price) %></td>
             <td><%= currency_convert(product.price_in_usd, product.sell_price) %></td>
