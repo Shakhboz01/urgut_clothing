@@ -13,8 +13,6 @@
     <% unless product.persisted? %>
       <%= f.input :initial_remaining, label: 'остаток' %>
     <% end %>
-
-    <%= f.input :unit, label: 'Единица измерение', collection: Product.units.keys.map { |unit| [Product.human_attribute_name("unit.#{unit}"), unit] }, include_blank: false %>
   </div>
 
   <div class="form-actions">
