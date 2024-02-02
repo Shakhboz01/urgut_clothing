@@ -18,6 +18,7 @@
       </div>
       <div class='col-sm-1'>
         <%= f.association :pack, label: 'Пачка', collection: Pack.pluck(:name, :id), include_blank: false %>
+        <%= render 'packs/form', pack: Pack.new %>
       </div>
       <div class='col-sm-1'>
         <%= f.input :amount, label: 'количество', id: 'inputs' %>

@@ -8,7 +8,6 @@
     <%= f.input :barcode, input_html: {value: product.persisted? ? product.barcode : random_barcode}, label: 'баркод' %>
     <%= f.input :buy_price, label: 'Цена прихода' %>
     <%= f.input :sell_price, label: 'Цена продажи' %>
-    <%= f.association :product_category, label: 'Категория товара', include_blank: false %>
 
     <% unless product.persisted? %>
       <%= f.input :initial_remaining, label: 'остаток' %>

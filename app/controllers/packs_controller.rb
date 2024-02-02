@@ -65,6 +65,6 @@ class PacksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def pack_params
-      params.require(:pack).permit(:name)
+      params.require(:pack).permit(:name, product_size_colors_attributes: [:size, :color_id, :amount])
     end
 end

@@ -10,8 +10,6 @@ class Product < ApplicationRecord
   has_many :product_remaining_inequalities
 
   validates :code, presence: true, uniqueness: { scope: [:color_id, :size_id], message: "combination already exists" }
-  validates :barcode, presence: true, uniqueness: { scope: [:color_id, :size_id], message: "combination already exists" }
-  validate :consistent_category_for_same_code
 
   scope :active, -> { where(:active => true) }
   scope :local, -> { where(:local => true) }
@@ -38,11 +36,5 @@ class Product < ApplicationRecord
     return if initial_remaining.positive? && !self.product_entries.count.zero?
 
     # SendMessage.run(message: "Остаток товара(#{name}) = #{initial_remaining}", chat: 'warning')
-  end
-
-  def consistent_category_for_same_code
-    if Product.exists?(code: code) && Product.where(code: code).last.product_category_id != product_category_id
-      errors.add(:product_category_id, 'Products with the same code should have the same category_id')
-    end
   end
 end

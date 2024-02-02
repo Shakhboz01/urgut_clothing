@@ -1,13 +1,46 @@
+<%
+  10.times do
+    pack.product_size_colors.build
+  end
+%>
 
-<%= simple_form_for(@pack) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
-  <div class="form-inputs">
-    <%= f.input :name %>
+<div class="modal fade" id="packModal" tabindex="-1" role="dialog" aria-labelledby="packModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= simple_form_for(pack, url: packs_path, method: :post) do |f| %>
+          <%= f.error_notification %>
+          <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+          <div class="form-inputs row">
+            <div class='col-sm-6'>
+              <%= f.input :name %>
+            </div>
+            <div class='col-sm-6 align-self-center'>
+              <%= f.button :submit %>
+            </div>
+          </div>
+          <%= f.fields_for :product_size_colors do |ff| %>
+            <div class="row">
+              <div class="col-sm-4">
+                <%= ff.input :size, label: '', input_html: {placeholder: 'SIZE'} %>
+              </div>
+              <div class="col-sm-4">
+                <%= ff.association :color, label: '', input_html: {placeholder: 'color'} %>
+              </div>
+              <div class="col-sm-4">
+                <%= ff.input :amount, label: '', input_html: {placeholder: 'amount'} %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
   </div>
+</div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
-<% end %>
+<button accesskey='3' style='font-size: small' type="button"  data-toggle="modal" data-target="#packModal">+</button>
