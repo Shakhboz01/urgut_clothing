@@ -1,5 +1,5 @@
 class PacksController < ApplicationController
-  before_action :set_pack, only: %i[ show edit update destroy ]
+  before_action :set_pack, only: %i[ show edit update destroy calculate_product_remaining]
 
   # GET /packs or /packs.json
   def index
@@ -65,6 +65,12 @@ class PacksController < ApplicationController
     respond_to do |format|
       format.js # assuming you have a corresponding js.erb file for the response
     end
+  end
+
+  def calculate_product_remaining
+    calculate_product_remaining = @pack.calculate_product_remaining
+
+    render json: { calculate_product_remaining: calculate_product_remaining }
   end
 
   private

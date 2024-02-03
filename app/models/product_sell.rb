@@ -2,10 +2,9 @@
 # if price_data has a key of `0`, it means from product model, not from prod entry
 # increase product initial remaining before_destroy if price data contains 0
 class ProductSell < ApplicationRecord
-  belongs_to :combination_of_local_product, optional: true
-  belongs_to :sale_from_local_service, optional: true
+  attr_accessor :initial_remaining
   belongs_to :sale
-  belongs_to :sale_from_service, optional: true
+  belongs_to :pack
   belongs_to :product
   has_one :buyer, through: :sale
   has_one :user, through: :sale

@@ -1,28 +1,27 @@
-<div class='container'>
-  <div class="card-header d-flex justify-content-between align-items-center">
+<div class='mx-2'>
+  <div class="text-center card-header d-flex justify-content-between align-items-center">
     <h3 class="card-title font-weight-bold">Продажа</h3>
   </div>
-  <% unless @sale.closed? %>
-    <%= render 'product_sells/form', product_sell: @product_sell, products: @products %>
-  <% end %>
-  <br><br>
-
   <div class='row'>
-    <div class='col-sm-12'>
+    <% unless @sale.closed? %>
+      <div class='col-sm-12 col-md-3'>
+        <%= render 'product_sells/form', product_sell: @product_sell, products: @products %>
+      </div>
+    <% end %>
+    <div class='col-sm-12 col-md-7'>
       <% unless @product_sells.count.zero? %>
         <%= render 'product_sells/product_sells', shrink: true, product_sells: @product_sells %>
       <% end %>
+      <%= render 'total_info' %>
     </div>
+    <% unless @sale.closed? %>
+      <div class='col-sm-12 col-md-2'>
+        <%= render 'sales/form', sale: @sale %>
+      </div>
+    <% end %>
   </div>
-  <br><br><hr>
-  <div class='d-flex justify-content-around'>
-  <b>ИТОГО ЦЕНА: <%= num_to_usd @sale.calculate_total_price %></b>
-  <b>ИТОГО КОЛИЧЕСТВО: <%= @sale.product_sells.sum(:amount) %></b>
 </div>
-  <% unless @sale.closed? %>
-    <%= render 'sales/form', sale: @sale %>
-  <% end %>
-</div>
+
 
 <script>
   $(document).ready(function() {

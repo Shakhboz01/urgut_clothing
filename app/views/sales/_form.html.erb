@@ -1,36 +1,17 @@
-<div class='card-header shadow-lg'>
+<div class='p-3' style='color: black; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;'>
   <%= simple_form_for(sale) do |f| %>
     <%= f.error_notification %>
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
     <%= f.input :status, as: :hidden, input_html: { value: 1 } %>
 
-    <div class="row">
-      <div class="col-sm-3 col-md-2">
-        <%= f.input :total_price, label: 'Договор', disabled: true, input_html: {id: 'total-price'} %>
-      </div>
-      <div class="col-sm-3 col-md-2">
-        <%= f.input :total_paid, label: 'Итого оплачено' %>
-      </div>
-      <div class="col-sm-3 col-md-2">
-        <%= f.association :buyer, label: 'Покупатель', collection: Buyer.active.order(weight: :desc).order(name: :asc), include_blank: false %>
-      </div>
-      <div class="col-sm-3 col-md-2">
-        <%= f.input :payment_type, label: 'Тип оплаты', collection: Sale.payment_types.keys.map { |unit| [Sale.human_attribute_name("unit.#{unit}"), unit] }, include_blank: false %>
-      </div>
-      <% if sale.persisted? && sale.product_sells.empty? %>
-        <div class='col-sm-3 col-md-2'>
-          <%= f.input :price_in_usd, label: 'договор в $' %>
-        </div>
-      <% end %>
-      <div class="col-sm-3 col-md-2">
-        <%= f.input :discount_price, label: 'Скидка', as: :numeric, input_html:  {id: 'discount-price'} %>
-      </div>
-      <div class="col-sm-3 col-md-2">
-        <%= f.input :comment, label: 'Комментарие' %>
-      </div>
-      <div class="col-sm-3 col-md-2 align-self-center">
-        <%= f.button :submit, 'Закрыть проводку' %>
-      </div>
+    <div class="form-inputs">
+      <%= f.input :total_price, label: 'Договор', disabled: true, input_html: {id: 'total-price'} %>
+      <%= f.input :total_paid, label: 'Итого оплачено' %>
+      <%= f.association :buyer, label: 'Покупатель', collection: Buyer.active.order(weight: :desc).order(name: :asc), include_blank: false %>
+      <%= f.input :payment_type, label: 'Тип оплаты', collection: Sale.payment_types.keys.map { |unit| [Sale.human_attribute_name("unit.#{unit}"), unit] }, include_blank: false %>
+      <%= f.input :price_in_usd, label: 'договор в $' %>
+      <%= f.input :comment, label: 'Комментарие' %>
+      <%= f.button :submit, 'Закрыть проводку' %>
     </div>
   <% end %>
 </div>

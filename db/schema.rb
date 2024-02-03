@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_03_122359) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_03_142336) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -163,6 +163,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_03_122359) do
     t.datetime "updated_at", null: false
     t.string "code"
     t.string "barcode"
+    t.integer "initial_remaining", default: 0
   end
 
   create_table "participations", force: :cascade do |t|
@@ -216,7 +217,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_03_122359) do
 
   create_table "product_sells", force: :cascade do |t|
     t.bigint "combination_of_local_product_id"
-    t.bigint "product_id", null: false
+    t.bigint "product_id"
     t.decimal "buy_price", precision: 16, scale: 2, default: "0.0"
     t.decimal "sell_price", precision: 16, scale: 2, default: "0.0"
     t.decimal "total_profit", default: "0.0"
@@ -229,7 +230,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_03_122359) do
     t.bigint "sale_id"
     t.bigint "sale_from_service_id"
     t.boolean "price_in_usd", default: false
+    t.bigint "pack_id"
     t.index ["combination_of_local_product_id"], name: "index_product_sells_on_combination_of_local_product_id"
+    t.index ["pack_id"], name: "index_product_sells_on_pack_id"
     t.index ["product_id"], name: "index_product_sells_on_product_id"
     t.index ["sale_from_local_service_id"], name: "index_product_sells_on_sale_from_local_service_id"
     t.index ["sale_from_service_id"], name: "index_product_sells_on_sale_from_service_id"
