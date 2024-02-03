@@ -17,8 +17,8 @@
         <%= f.input :product_category, label: 'Тип', collection: ProductCategory.pluck(:name) %>
       </div>
       <div class='col-sm-1'>
-        <%= f.association :pack, label: 'Пачка', collection: Pack.pluck(:name, :id), include_blank: false %>
-        <%= render 'packs/form', pack: Pack.new %>
+        <%= f.association :pack, label: 'Пачка', collection: Pack.pluck(:name, :id), include_blank: false, selected: params.dig(:pack_id).present? ? params.dig(:pack_id) : nil %>
+        <%= link_to '+', new_pack_path(delivery_id: params[:id]) %>
       </div>
       <div class='col-sm-1'>
         <%= f.input :amount, label: 'количество', id: 'inputs' %>

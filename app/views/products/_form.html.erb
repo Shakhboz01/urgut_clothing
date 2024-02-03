@@ -6,12 +6,6 @@
     <%= f.input :name, label: 'Название' %>
     <%= f.input :code, input_html: {value: product.persisted? ? product.code : random_code}, label: 'код' %>
     <%= f.input :barcode, input_html: {value: product.persisted? ? product.barcode : random_barcode}, label: 'баркод' %>
-    <%= f.input :buy_price, label: 'Цена прихода' %>
-    <%= f.input :sell_price, label: 'Цена продажи' %>
-
-    <% unless product.persisted? %>
-      <%= f.input :initial_remaining, label: 'остаток' %>
-    <% end %>
   </div>
 
   <div class="form-actions">

@@ -32,6 +32,7 @@ class ProductsController < ApplicationController
         format.html { redirect_to request.referrer, notice: "Product was successfully created." }
         format.json { render :show, status: :created, location: @product }
       else
+        byebug
         format.html { render :new, product: @product, status: :unprocessable_entity }
         format.json { render json: @product.errors, status: :unprocessable_entity }
       end

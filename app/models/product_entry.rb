@@ -38,6 +38,6 @@ class ProductEntry < ApplicationRecord
   end
 
   def increase_product_amount
-    InitialRemainingBasedOnPack.run(code: product_code, pack: pack, product_entry_amount: amount)
+    InitialRemainingBasedOnPack.run(code: pack.code, pack: pack, product_entry_amount: amount)
   end
 end

@@ -15,7 +15,7 @@ class InitialRemainingBasedOnPack < ActiveInteraction::Base
         color: psc.color,
         size: psc.size,
         code: psc.color,
-        product_category: product.product_category
+        pack: pack
       )
       product.update(name: name) if product.name.nil?
       case action

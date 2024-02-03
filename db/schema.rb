@@ -161,6 +161,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_091228) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "code"
+    t.string "barcode"
   end
 
   create_table "participations", force: :cascade do |t|
@@ -262,10 +264,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_091228) do
     t.datetime "updated_at", null: false
     t.boolean "price_in_usd", default: false
     t.string "code"
-    t.bigint "color_id", null: false
-    t.bigint "size_id", null: false
+    t.bigint "color_id"
+    t.bigint "size_id"
     t.string "barcode"
+    t.bigint "pack_id"
     t.index ["color_id"], name: "index_products_on_color_id"
+    t.index ["pack_id"], name: "index_products_on_pack_id"
     t.index ["size_id"], name: "index_products_on_size_id"
   end
 

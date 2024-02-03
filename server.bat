@@ -1,1 +1,0 @@
-cd /d D:\urgut_clothing\gm_global && rails s

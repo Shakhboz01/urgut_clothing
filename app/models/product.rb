@@ -4,8 +4,7 @@ class Product < ApplicationRecord
   include ProtectDestroyable
 
   belongs_to :color
-  belongs_to :size
-  belongs_to :product_category
+  belongs_to :size, optional: true
   has_many :product_entries
   has_many :product_remaining_inequalities
 
