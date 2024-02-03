@@ -19,13 +19,10 @@ class DeliveryFromCounterpartiesController < ApplicationController
     @expenditures_data = @delivery_from_counterparty.expenditures
     @q = @delivery_from_counterparty.product_entries.ransack(params[:q])
     @product_entries = @q.result
-    @storage = @delivery_from_counterparty.product_entries&.last&.storage_id
     @product_entry = ProductEntry.new(delivery_from_counterparty_id: @delivery_from_counterparty.id)
     @price_in_percentage = 0
-    @products = Product.active.order(:name)
     if (product_entries = @delivery_from_counterparty.product_entries).exists?
       @price_in_percentage = product_entries.last.price_in_percentage
-      @products = @products.where(product_category_id: product_entries.last.product.product_category_id).order(:name)
     end
   end
 
@@ -109,6 +106,6 @@ class DeliveryFromCounterpartiesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def delivery_from_counterparty_params
-    params.require(:delivery_from_counterparty).permit(:total_price, :status, :total_paid, :payment_type, :comment, :provider_id, :product_category)
+    params.require(:delivery_from_counterparty).permit(:total_price, :status, :total_paid, :payment_type, :comment, :provider_id, :product_category, :price_in_usd)
   end
 end

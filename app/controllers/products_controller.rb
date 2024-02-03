@@ -14,8 +14,6 @@ class ProductsController < ApplicationController
 
   # GET /products/new
   def new
-    @random_code = Product.generate_code
-    @random_barcode = Product.generate_barcode
     @product = Product.new
   end
 

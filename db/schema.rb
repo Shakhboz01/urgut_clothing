@@ -185,7 +185,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_091228) do
     t.decimal "sell_price", precision: 10, scale: 2, default: "0.0"
     t.boolean "paid_in_usd", default: false
     t.decimal "service_price", precision: 10, scale: 2
-    t.bigint "product_id", null: false
     t.decimal "amount", precision: 18, scale: 2, default: "0.0"
     t.decimal "amount_sold", precision: 18, scale: 2, default: "0.0"
     t.string "comment"
@@ -196,14 +195,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_091228) do
     t.bigint "combination_of_local_product_id"
     t.boolean "local_entry", default: false
     t.boolean "return", default: false
-    t.bigint "storage_id", null: false
     t.decimal "price_in_percentage", precision: 5, scale: 2
     t.bigint "pack_id", null: false
     t.index ["combination_of_local_product_id"], name: "index_product_entries_on_combination_of_local_product_id"
     t.index ["delivery_from_counterparty_id"], name: "index_product_entries_on_delivery_from_counterparty_id"
     t.index ["pack_id"], name: "index_product_entries_on_pack_id"
-    t.index ["product_id"], name: "index_product_entries_on_product_id"
-    t.index ["storage_id"], name: "index_product_entries_on_storage_id"
   end
 
   create_table "product_remaining_inequalities", force: :cascade do |t|
@@ -446,8 +442,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_091228) do
   add_foreign_key "product_entries", "combination_of_local_products"
   add_foreign_key "product_entries", "delivery_from_counterparties"
   add_foreign_key "product_entries", "packs"
-  add_foreign_key "product_entries", "products"
-  add_foreign_key "product_entries", "storages"
   add_foreign_key "product_remaining_inequalities", "products"
   add_foreign_key "product_remaining_inequalities", "users"
   add_foreign_key "product_sells", "combination_of_local_products"

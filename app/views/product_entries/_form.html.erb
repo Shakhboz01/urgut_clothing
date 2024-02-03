@@ -1,53 +1,68 @@
 <%# do nor show provider if local entry %>
 <%# removed service price %>
-<div class='shadow card shadow-lg' style='color: black; margin: 5px'>
+<div class='p-3' style='color: black; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;'>
   <%= simple_form_for(product_entry) do |f| %>
     <%= f.error_notification %>
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
     <%= f.association :delivery_from_counterparty, as: :hidden %>
-    <%= f.input :return, as: :hidden %>
     <%= f.input :amount_sold, as: :hidden %>
-    <%= f.input :local_entry, as: :hidden %>
-
-    <div class="row">
-      <div class='col-sm-1'>
-        <%= f.input :product_code, label: 'Код товара', collection: Product.pluck(:name) %>
-      </div>
-      <div class='col-sm-1'>
-        <%= f.input :product_category, label: 'Тип', collection: ProductCategory.pluck(:name) %>
-      </div>
-      <div class='col-sm-1'>
-        <%= f.association :pack, label: 'Пачка', collection: Pack.pluck(:name, :id), include_blank: false, selected: params.dig(:pack_id).present? ? params.dig(:pack_id) : nil %>
-        <%= link_to '+', new_pack_path(delivery_id: params[:id]) %>
-      </div>
-      <div class='col-sm-1'>
-        <%= f.input :amount, label: 'количество', id: 'inputs' %>
-      </div>
-      <% unless product_entry.local_entry %>
-        <div class='col-sm-2'>
-          <%= f.input :buy_price, label: 'Цена прихода', input_html: {id: 'product_entry_buy_price'} %>
-        </div>
-        <div class='col-sm-2'>
-          <%= f.input :sell_price, label: 'Цена продажи', input_html: {id: 'product_entry_sell_price'} %>
-        </div>
+    <div class="form-inputs">
+      <%= f.association :pack, label: 'выберите пачку:', collection: Pack.pluck(:name, :id, :code), include_blank: true, selected: params.dig(:pack_id).present? ? params.dig(:pack_id) : nil, input_html: { id: 'pack-select' } %>
+      <%= link_to new_pack_path(delivery_id: params[:id]) do %>
+        <div>не нашли? &#128070;</div><br>
       <% end %>
-
-      <div class='col-sm-2'>
-        <%= f.input :price_in_percentage, label: 'продажа в %', input_html: {id: 'product_entry_price_in_percentage', value: defined?(price_in_percentage) ? price_in_percentage : 0} %>
-      </div>
-      <div class='col-sm-2 align-self-center'>
-        <div class="form-actions">
-          <%= f.button :submit, 'Создать', class: 'btn btn-warning' %>
-        </div>
-      </div>
+      <%= f.input :barcode, label: 'или поиск по кодам:', input_html: {id: 'code-input', autofocus: 'true'} %>
+      <%= f.input :amount, label: 'количество:', id: 'inputs' %>
+      <%= f.input :buy_price, label: 'Цена прихода:', input_html: {id: 'product_entry_buy_price'} %>
+      <%= f.input :sell_price, label: 'Цена продажи:', input_html: {id: 'product_entry_sell_price'} %>
+      <%= f.input :price_in_percentage, label: 'продажа в %', input_html: {id: 'product_entry_price_in_percentage', value: defined?(price_in_percentage) ? price_in_percentage : 0} %>
+      <%= f.button :submit, 'Создать', class: 'btn btn-warning' %>
     </div>
   <% end %>
 </div>
 
+
 <script>
   $(document).ready(function() {
+    $('form').on('keypress', e => {
+      if (e.keyCode == 13) {
+        return false;
+      }
+    });
+
     $("input").focus(function() {
       $(this).select();
     });
+
+    var codeInput = document.getElementById('code-input');
+    var packSelect = document.getElementById('pack-select');
+    var h1Element = document.querySelector('#pack-name');
+
+    packSelect.addEventListener('change', function() {
+      // Update the content of the <h1> tag with the selected pack's text content
+      var selectedPackOption = packSelect.options[packSelect.selectedIndex];
+      var selectedPackText = selectedPackOption ? selectedPackOption.text : '';
+      h1Element.textContent = selectedPackText;
+    });
+    // Event listener for code input change
+    codeInput.addEventListener('input', function() {
+      // Filter the pack options based on the code input value
+      var codeValue = codeInput.value.trim().toLowerCase();
+
+      // Make an AJAX request to the filtered_packs action
+      $.ajax({
+        url: '/packs/filtered_packs',
+        method: 'GET',
+        data: { code_value: codeValue },
+        dataType: 'script',
+        success: function() {
+          // Update the content of the <h1> tag with the selected pack's text content
+          var selectedPackOption = packSelect.options[packSelect.selectedIndex];
+          var selectedPackText = selectedPackOption ? selectedPackOption.text : '';
+          h1Element.textContent = selectedPackText;
+        }
+      });
+    });
   });
+
 </script>

@@ -17,7 +17,7 @@ class Product < ApplicationRecord
 
 
   def self.generate_code
-    rand(100_000..999_999).to_s
+    rand(1_000..9_999).to_s
   end
 
   def self.generate_barcode

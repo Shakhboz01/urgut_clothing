@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :product_size_colors
-  resources :packs
+  resources :packs do
+    get :filtered_packs, on: :collection
+  end
   resources :colors
   resources :sizes
   resources :debt_operations

@@ -1,21 +1,16 @@
-<table class="table table-hover table-bordered table-striped">
+<table class="table shadow table-hover table-bordered table-striped" style="box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
   <thead>
     <tr>
-      <th><%= sort_link q, :id, 'ID' %></th>
-      <th>Поставщик</th>
+      <% unless defined?(shrink) %>
+        <th><%= sort_link q, :id, 'ID' %></th>
+        <th>Поставщик</th>
+      <% end %>
       <th><%= sort_link q, :buy_price, 'Цена прихода' %></th>
       <th><%= sort_link q, :sell_price, 'Цена продажи' %></th>
-      <th><%= sort_link q, :sell_price, 'Цена в %' %></th>
-      <th>Товар</th>
-      <th><%= sort_link q, :amount, 'Количество' %></th>
+      <th><%= sort_link q, :sell_price, 'Цена %' %></th>
+      <th>Пвчка</th>
+      <th><%= sort_link q, :amount, 'Кол.' %></th>
       <% unless defined?(shrink) %>
-      <th><%= sort_link q, :amount_sold, 'Продано' %></th>
-      <% end %>
-      <% unless defined?(shrink) %>
-        <%# <th>
-          <%= sort_link q, :return, 'Возврат' %>
-          <%# <i title='При оформлении возврата, оно учитывается как приход' class="fa-solid fa-circle-info"></i> %>
-        <%# </th> %>
         <th><%= sort_link q, :created_at, 'Оформлено в' %></th>
         <td>Исполнитель</td>
       <% end %>
@@ -25,32 +20,27 @@
   <tbody>
     <% product_entries.each do |product_entry| %>
       <tr>
-        <td class="<%= active_tr(product_entry.amount > product_entry.amount_sold) %>"><%= product_entry.id %></td>
-        <td><%= product_entry.provider.name %></td>
+        <% unless defined?(shrink) %>
+          <td class="<%= active_tr(product_entry.amount > product_entry.amount_sold) %>"><%= product_entry.id %></td>
+          <td><%= product_entry.provider.name %></td>
+        <% end %>
         <td><%= currency_convert(product_entry.paid_in_usd, product_entry.buy_price) %> (<%= currency_convert(product_entry.paid_in_usd, product_entry.buy_price * product_entry.amount) %>)</td>
         <td><%= currency_convert(product_entry.paid_in_usd, product_entry.sell_price) %> (<%= currency_convert(product_entry.paid_in_usd, product_entry.sell_price * product_entry.amount) %>)</td>
         <td><%= product_entry.price_in_percentage %>%</td>
-        <td><%= product_entry.product.name %></td>
+        <td><%= product_entry.pack.name %></td>
         <td><%= product_entry.amount %></td>
         <% unless defined?(shrink) %>
-        <td><%= product_entry.amount_sold %></td>
-        <% end %>
-        <% unless defined?(shrink) %>
-          <%# <td><%= active_check(product_entry.return) %>
           <td><%= strf_datetime(product_entry.created_at) %></td>
           <td><%= product_entry.user.name %></td>
         <% end %>
         <td>
-          <% if product_entry.combination_of_local_product %>
-              <%= clink_to 'посмотреть', combination_of_local_product_path(product_entry.combination_of_local_product), 'fa-search' %>
-          <% end %>
           <% unless defined?(shrink) %>
             <%= clink_to 'Редактировать цену продажи', edit_product_entry_path(product_entry), 'fa-edit' %>
           <% end %>
+          <% if defined?(deletable) %>
+            <%= cdlink_to 'Удалить', product_entry %>
+          <% end %>
         </td>
-        <% if defined?(deletable) %>
-          <td><%= cdlink_to 'Удалить', product_entry %></td>
-        <% end %>
       </tr>
     <% end %>
   </tbody>

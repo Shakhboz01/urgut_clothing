@@ -18,6 +18,7 @@ class DeliveryFromCounterparty < ApplicationRecord
             all
           end
         }
+  before_update :update_product_entries_prices
   after_save :process_status_change, if: :saved_change_to_status?
 
   def calculate_total_price(enable_to_alter = true)
@@ -62,5 +63,9 @@ class DeliveryFromCounterparty < ApplicationRecord
         self.enable_to_send_sms = false
       end
     end
+  end
+
+  def update_product_entries_prices
+    product_entries.update_all(paid_in_usd: price_in_usd)
   end
 end

@@ -1,0 +1,9 @@
+// app/views/packs/filtered_packs.js.erb
+var packSelect = document.getElementById('pack-select');
+var options = '';
+
+<% @filtered_packs.each do |pack| %>
+  options += '<option value="<%= pack.id %>"><%= pack.name %></option>';
+<% end %>
+
+packSelect.innerHTML = options;

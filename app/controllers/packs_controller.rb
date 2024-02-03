@@ -12,6 +12,8 @@ class PacksController < ApplicationController
 
   # GET /packs/new
   def new
+    @random_code = Product.generate_code
+    @random_barcode = Product.generate_barcode
     @pack = Pack.new
   end
 
@@ -28,7 +30,7 @@ class PacksController < ApplicationController
         format.html { redirect_to delivery_from_counterparty_url(delivery, pack_id: @pack.id), notice: "Pack was successfully created." }
         format.json { render :show, status: :created, location: @pack }
       else
-        format.html { redirect_to request.referrer, notice: 'error' }
+        format.html { redirect_to request.referrer, notice: @pack.errors.messages.values.join(' | ') }
         format.json { render json: @pack.errors, status: :unprocessable_entity }
       end
     end
@@ -54,6 +56,14 @@ class PacksController < ApplicationController
     respond_to do |format|
       format.html { redirect_to packs_url, notice: "Pack was successfully destroyed." }
       format.json { head :no_content }
+    end
+  end
+
+  def filtered_packs
+    code_value = params[:code_value].downcase.strip
+    @filtered_packs = Pack.where("lower(code) LIKE ? OR lower(barcode) LIKE ?", "%#{code_value}%", "%#{code_value}%")
+    respond_to do |format|
+      format.js # assuming you have a corresponding js.erb file for the response
     end
   end
 
