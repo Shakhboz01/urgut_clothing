@@ -22,7 +22,6 @@ class Pack < ApplicationRecord
 
   def reset_name
     size_names = ''
-    byebug
     product_size_colors.each do |product_size_color|
       size = product_size_color.size.name
       product_size_color.amount.times do

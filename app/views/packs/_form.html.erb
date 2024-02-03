@@ -1,5 +1,5 @@
 <%
-  10.times do
+  12.times do
     pack.product_size_colors.build
   end
 %>
@@ -10,14 +10,14 @@
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
     <div class="form-inputs row">
       <div class='col-sm-3'>
-        <%= f.input :name, input_html: {autofocus: 'true'} %>
+        <%= f.input :name, label: 'Название пачки', input_html: {autofocus: 'true'} %>
       </div>
       <div class='col-sm-3'>
-        <%= f.input :code, input_html: {value: @random_code} %>
+        <%= f.input :code, label: 'код', input_html: {value: @random_code} %>
         <%= f.input :delivery_id, input_html: {value: params[:delivery_id] }, as: :hidden  %>
       </div>
       <div class='col-sm-3'>
-        <%= f.input :barcode, input_html: {value: @random_barcode} %>
+        <%= f.input :barcode, label: 'баркод',  input_html: {value: @random_barcode} %>
       </div>
       <div class='col-sm-3 align-self-center'>
         <%= f.button :submit %>
@@ -25,20 +25,38 @@
     </div>
     <%= f.fields_for :product_size_colors do |ff| %>
       <div class="row">
-        <div class="col-sm-4">
-          <%= ff.input :size, label: '', input_html: {placeholder: 'SIZE'} %>
+        <div class="col-sm-4 d-flex align-center">
+          <div class=''><%= ff.index + 1 %>-</div>
+          <%= ff.input :size, label: false, input_html: {placeholder: 'размер'} %>
         </div>
         <div class="col-sm-4">
-          <%= ff.association :color, label: '', input_html: {placeholder: 'color'} %>
+          <%= ff.association :color, label: false, input_html: {placeholder: 'цвет', class: 'color-input'} %>
         </div>
         <div class="col-sm-4">
-          <%= ff.input :amount, label: '', input_html: {placeholder: 'amount'} %>
+          <%= ff.input :amount, label: false, input_html: {placeholder: 'количество'} %>
         </div>
       </div>
     <% end %>
   <% end %>
 </div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get all color input elements
+    var colorInputs = document.querySelectorAll('.color-input');
+
+    // Event listener for the change event on the first color input
+    colorInputs[0].addEventListener('change', function() {
+      // Get the value of the first color input
+      var firstColorValue = this.value;
+
+      // Set the same value for all other color inputs
+      colorInputs.forEach(function(input) {
+        input.value = firstColorValue;
+      });
+    });
+  });
+</script>
 
 <script>
   $(document).ready(function() {
