@@ -19,6 +19,8 @@ class PacksController < ApplicationController
 
   # GET /packs/1/edit
   def edit
+    @random_code = @pack.code
+    @random_barcode = @pack.barcode
   end
 
   # POST /packs or /packs.json

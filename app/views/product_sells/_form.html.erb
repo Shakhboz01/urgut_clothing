@@ -4,7 +4,8 @@
       <%= f.error_notification %>
       <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
       <%= f.association :sale, as: :hidden %>
-      <%= f.association :product, label: 'товар', collection: products.order('LOWER(name) ASC'), include_blank: false %>
+      <%= f.association :pack, label: 'выберите пачку', collection: Pack.all.order('LOWER(name) ASC'), include_blank: true, input_html: { id: 'pack-select' } %>
+      <%= f.input :barcode, label: 'или поиск по кодам:', input_html: {id: 'code-input', autofocus: 'true'} %>
       <%= f.input :amount, label: 'Количество', input_html: {value: ''} %>
       <%= f.input :initial_remaining, label: 'остаток', input_html: { disabled: true } %>
       <%= f.submit "Создать", class: 'btn btn-primary'%>
@@ -15,16 +16,18 @@
 
 <script>
   $(document).ready(function() {
-    document.querySelector('#product_sell_product_id').addEventListener('change', function(e) {
-      document.querySelector('#product_sell_amount').value = 1;
-      document.querySelector('#product_sell_product_code_id').value = document.querySelector('#product_sell_product_id').value;
-      handleProductChange();
-      calculateSalePrice();
-    })
+    $('form').on('keypress', e => {
+      if (e.keyCode == 13) {
+        return false;
+      }
+    });
 
-    document.querySelector('#product_sell_product_code_id').addEventListener('change', function(e) {
+    $("input").focus(function() {
+      $(this).select();
+    });
+
+    document.querySelector('#pack-select').addEventListener('change', function(e) {
       document.querySelector('#product_sell_amount').value = 1;
-      document.querySelector('#product_sell_product_id').value = document.querySelector('#product_sell_product_code_id').value;
       handleProductChange();
       calculateSalePrice();
     })
@@ -35,7 +38,7 @@
     });
 
     function calculateSalePrice(){
-      var product_id = document.querySelector('#product_sell_product_id').value;
+      var product_id = document.querySelector('#pack-select').value;
       var sell_price = document.querySelector('#product_sell_sell_price').value;
       var amount = document.querySelector('#product_sell_amount').value;
       var customActionURL = '/product_sells/ajax_sell_price_request';
@@ -49,7 +52,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfToken, // Include the CSRF token in the request headers
+            'X-CSRF-Token': csrfToken
           },
           body: JSON.stringify(data)
         })
@@ -69,8 +72,39 @@
       }
     }
 
-    function handleProductChange() {
-      var productSelect = document.querySelector("#product_sell_product_id");
+    var codeInput = document.getElementById('code-input');
+    var packSelect = document.getElementById('pack-select');
+    var h1Element = document.querySelector('#pack-name');
+
+    packSelect.addEventListener('change', function() {
+      // Update the content of the <h1> tag with the selected pack's text content
+      var selectedPackOption = packSelect.options[packSelect.selectedIndex];
+      var selectedPackText = selectedPackOption ? selectedPackOption.text : '';
+      h1Element.textContent = selectedPackText;
+    });
+    // Event listener for code input change
+    codeInput.addEventListener('input', function() {
+      // Filter the pack options based on the code input value
+      var codeValue = codeInput.value.trim().toLowerCase();
+
+      // Make an AJAX request to the filtered_packs action
+      $.ajax({
+        url: '/packs/filtered_packs',
+        method: 'GET',
+        data: { code_value: codeValue },
+        dataType: 'script',
+        success: function() {
+          // Update the content of the <h1> tag with the selected pack's text content
+          var selectedPackOption = packSelect.options[packSelect.selectedIndex];
+          var selectedPackText = selectedPackOption ? selectedPackOption.text : '';
+          h1Element.textContent = selectedPackText;
+          handleProductChange()
+        }
+      });
+    });
+
+     function handleProductChange() {
+      var productSelect = document.querySelector("#pack-select");
       var initialRemainingInput = document.querySelector("#product_sell_initial_remaining");
 
       if (productSelect) {

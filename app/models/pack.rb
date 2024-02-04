@@ -18,6 +18,11 @@ class Pack < ApplicationRecord
     end
   end
 
+  def calculate_product_remaining
+    remaining_from_entries = product_entries.sum(:amount) - product_entries.sum(:amount_sold)
+    remaining_from_entries + initial_remaining
+  end
+
   private
 
   def reset_name
@@ -30,10 +35,5 @@ class Pack < ApplicationRecord
     end
 
     self.name = "#{name} | #{size_names}"
-  end
-
-  def calculate_product_remaining
-    remaining_from_entries = product_entries.sum(:amount) - product_entries.sum(:amount_sold)
-    remaining_from_entries + initial_remaining
   end
 end

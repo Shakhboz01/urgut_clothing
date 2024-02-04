@@ -12,30 +12,40 @@
       <div class='col-sm-3'>
         <%= f.input :name, label: 'Название пачки', input_html: {autofocus: 'true'} %>
       </div>
-      <div class='col-sm-3'>
+      <div class='col-sm-2'>
         <%= f.input :code, label: 'код', input_html: {value: @random_code} %>
         <%= f.input :delivery_id, input_html: {value: params[:delivery_id] }, as: :hidden  %>
       </div>
       <div class='col-sm-3'>
         <%= f.input :barcode, label: 'баркод',  input_html: {value: @random_barcode} %>
       </div>
-      <div class='col-sm-3 align-self-center'>
+
+      <% unless params[:delivery_id].present? %>
+        <div class='col-sm-3'>
+          <%= f.input :initial_remaining, label: 'остаток'%>
+        </div>
+      <% end %>
+
+      <div class='col-sm-1 align-self-center'>
         <%= f.button :submit %>
       </div>
     </div>
-    <%= f.fields_for :product_size_colors do |ff| %>
-      <div class="row">
-        <div class="col-sm-4 d-flex align-center">
-          <div class=''><%= ff.index + 1 %>-</div>
-          <%= ff.input :size, label: false, input_html: {placeholder: 'размер'} %>
+
+    <% unless pack.persisted? %>
+      <%= f.fields_for :product_size_colors do |ff| %>
+        <div class="row">
+          <div class="col-sm-4 d-flex align-center">
+            <div class=''><%= ff.index + 1 %>-</div>
+            <%= ff.input :size, label: false, input_html: {placeholder: 'размер'} %>
+          </div>
+          <div class="col-sm-4">
+            <%= ff.association :color, label: false, input_html: {prompt: 'цвет', class: 'color-input'} %>
+          </div>
+          <div class="col-sm-4">
+            <%= ff.input :amount, label: false, input_html: {placeholder: 'количество'} %>
+          </div>
         </div>
-        <div class="col-sm-4">
-          <%= ff.association :color, label: false, input_html: {placeholder: 'цвет', class: 'color-input'} %>
-        </div>
-        <div class="col-sm-4">
-          <%= ff.input :amount, label: false, input_html: {placeholder: 'количество'} %>
-        </div>
-      </div>
+      <% end %>
     <% end %>
   <% end %>
 </div>

@@ -3,6 +3,7 @@
 # increase product initial remaining before_destroy if price data contains 0
 class ProductSell < ApplicationRecord
   attr_accessor :initial_remaining
+  attr_accessor :barcode
   belongs_to :sale
   belongs_to :pack
   belongs_to :product

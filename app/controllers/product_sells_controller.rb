@@ -92,7 +92,7 @@ class ProductSellsController < ApplicationController
   def product_sell_params
     params.require(:product_sell).permit(
       :sale_from_local_service_id, :sale_id, :combination_of_local_product_id,
-      :sell_price, :product_id, :total_profit, :amount, :payment_type, :sale_from_service_id
+      :sell_price, :product_id, :total_profit, :amount, :payment_type, :pack_id, :barcode
     )
   end
 end
