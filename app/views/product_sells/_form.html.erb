@@ -98,7 +98,8 @@
           var selectedPackOption = packSelect.options[packSelect.selectedIndex];
           var selectedPackText = selectedPackOption ? selectedPackOption.text : '';
           h1Element.textContent = selectedPackText;
-          handleProductChange()
+          handleProductChange();
+          document.querySelector('#product_sell_amount').value = 1;
         }
       });
     });
