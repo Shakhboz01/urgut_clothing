@@ -1,10 +1,10 @@
 module ProductSells
   class FindProductEntriesUntilAmount < ActiveInteraction::Base
     decimal :amount
-    object :product
+    object :pack
 
     def execute
-      unsold_product_entries = product.product_entries.where("amount_sold < amount")
+      unsold_product_entries = pack.product_entries.unsold
       remaining_amount = amount
       product_entry_ids = []
       unsold_product_entries.order(:created_at).each do |product_entry|
@@ -20,7 +20,7 @@ module ProductSells
 
       ProductSells::HandleAmountSold.run!(
         product_entry_ids: product_entry_ids,
-        product: product,
+        pack: pack,
         amount: amount,
       )
     end

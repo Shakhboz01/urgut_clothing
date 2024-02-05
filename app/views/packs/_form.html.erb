@@ -4,49 +4,47 @@
   end
 %>
 
-<div class='container'>
-  <%= simple_form_for(pack, url: packs_path, method: :post) do |f| %>
-    <%= f.error_notification %>
-    <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-    <div class="form-inputs row">
-      <div class='col-sm-3'>
-        <%= f.input :name, label: 'Название пачки', input_html: {autofocus: 'true'} %>
+<div class='m-2'>
+  <%= simple_form_for(pack, html: { multipart: true }) do |f| %>
+    <div class='row'>
+      <div style='box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;' class='form-inputs col-sm-12 col-md-7 m-2 p-4'>
+        <% unless pack.persisted? %>
+          <div class="row mb-2">
+            <div class='col-sm-4 text-center'>размер</div>
+            <div class='col-sm-4 text-center'>цвет</div>
+            <div class='col-sm-4 text-center'>количество</div>
+          </div>
+          <div class="row">
+            <%= f.fields_for :product_size_colors do |ff| %>
+              <div class="col-sm-4 d-flex align-center">
+                <div class=''><%= ff.index + 1 %>-</div>
+                <%= ff.input :size, label: false %>
+              </div>
+              <div class="col-sm-4">
+                <%= ff.association :color, label: false, input_html: {prompt: 'цвет', class: 'color-input'} %>
+              </div>
+              <div class="col-sm-4">
+                <%= ff.input :amount, label: false, input_html: {placeholder: 'количество'} %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
       </div>
-      <div class='col-sm-2'>
+      <div style='box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;' class='form-inputs col-sm-12 col-md-4 m-2'>
+        <%= f.error_notification %>
+        <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+        <%= f.input :name, label: 'Название пачки', input_html: {autofocus: 'true'} %>
         <%= f.input :code, label: 'код', input_html: {value: @random_code} %>
         <%= f.input :delivery_id, input_html: {value: params[:delivery_id] }, as: :hidden  %>
-      </div>
-      <div class='col-sm-3'>
         <%= f.input :barcode, label: 'баркод',  input_html: {value: @random_barcode} %>
-      </div>
-
-      <% unless params[:delivery_id].present? %>
-        <div class='col-sm-3'>
-          <%= f.input :initial_remaining, label: 'остаток'%>
-        </div>
-      <% end %>
-
-      <div class='col-sm-1 align-self-center'>
+        <%= f.input :initial_remaining, label: 'остаток'%>
+        <%= f.label :price_in_usd, 'price in usd' %>
+        <%= f.input :price_in_usd, label: false %>
+        <%= f.input :sell_price, label: 'Sell price' %>
+        <%= f.input :buy_price, label: 'buy price' %>
         <%= f.button :submit %>
       </div>
     </div>
-
-    <% unless pack.persisted? %>
-      <%= f.fields_for :product_size_colors do |ff| %>
-        <div class="row">
-          <div class="col-sm-4 d-flex align-center">
-            <div class=''><%= ff.index + 1 %>-</div>
-            <%= ff.input :size, label: false, input_html: {placeholder: 'размер'} %>
-          </div>
-          <div class="col-sm-4">
-            <%= ff.association :color, label: false, input_html: {prompt: 'цвет', class: 'color-input'} %>
-          </div>
-          <div class="col-sm-4">
-            <%= ff.input :amount, label: false, input_html: {placeholder: 'количество'} %>
-          </div>
-        </div>
-      <% end %>
-    <% end %>
   <% end %>
 </div>
 

@@ -1,13 +1,20 @@
+<% rate = CurrencyRate.last.rate %>
+
 <div class='p-3' style='color: black; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;'>
   <%= simple_form_for(product_sell) do |f| %>
     <div class='form-inputs'>
       <%= f.error_notification %>
       <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
       <%= f.association :sale, as: :hidden %>
-      <%= f.association :pack, label: 'выберите пачку', collection: Pack.all.order('LOWER(name) ASC'), include_blank: true, input_html: { id: 'pack-select' } %>
-      <%= f.input :barcode, label: 'или поиск по кодам:', input_html: {id: 'code-input', autofocus: 'true'} %>
+      <%= f.input :barcode, label: 'поиск по кодам:', input_html: {id: 'code-input', autofocus: 'true'} %>
+      <%= f.association :pack, label: 'или выберите пачку', collection: Pack.all.order('LOWER(name) ASC'), include_blank: true, input_html: { id: 'pack-select' } %>
       <%= f.input :amount, label: 'Количество', input_html: {value: ''} %>
+      <div class='row'>
+        <div class='col-sm-6'><%= f.input :sell_price, label: 'Цена в $' %></div>
+        <div class='col-sm-6'><%= f.input :sell_price_in_uzs, label: 'Цена cум' %></div>
+      </div>
       <%= f.input :initial_remaining, label: 'остаток', input_html: { disabled: true } %>
+      <%= f.input :rate, as: :hidden %>
       <%= f.submit "Создать", class: 'btn btn-primary'%>
     </div>
   <% end %>
@@ -34,6 +41,7 @@
 
     document.querySelector('#product_sell_amount').addEventListener('change', function(e) {
       e.preventDefault();
+      console.log('amount changed')
       calculateSalePrice()
     });
 
@@ -43,7 +51,7 @@
       var amount = document.querySelector('#product_sell_amount').value;
       var customActionURL = '/product_sells/ajax_sell_price_request';
       var data = {
-        product_id: product_id,
+        pack_id: product_id,
         amount: amount
       };
       var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -58,16 +66,19 @@
         })
         .then(function(response) {
           if (response.ok) {
-            return response.text();
+            return response.json();;
           } else {
-            throw new Error('Error: ' + response.status);
+            console.log('error occured: ', response)
+            throw new Error('Error: ' + response.text());
           }
         })
         .then(function(responseText) {
-          var sell_price = document.querySelector('#product_sell_sell_price').value = responseText;
+          document.querySelector('#product_sell_sell_price').value = responseText.average_sell_price_in_usd;
+          document.querySelector('#product_sell_sell_price_in_uzs').value = responseText.average_sell_price_in_uzs;
         })
         .catch(function(error) {
           console.error(error);
+          throw new Error('Error: ' + error);
         });
       }
     }

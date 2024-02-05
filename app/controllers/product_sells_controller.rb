@@ -6,6 +6,7 @@ class ProductSellsController < ApplicationController
     @q = ProductSell.ransack(params[:q])
     @product_sells = @q.result.includes(:product).order(id: :desc)
     @product_sells_data = @product_sells
+    @rate = CurrencyRate.last.rate
     @product_sells = @product_sells.page(params[:page]).per(70)
   end
 
@@ -66,19 +67,23 @@ class ProductSellsController < ApplicationController
   end
 
   def ajax_sell_price_request
-    return render json: ("Please fill forms") if product_sell_params[:product_id].empty? || product_sell_params[:amount].to_i.zero?
-    message = ""
-    product_sell = ProductSell.new(
-      product_id: product_sell_params[:product_id],
-      amount: product_sell_params[:amount],
-    )
+    return render json: ('Please fill forms') if product_sell_params[:pack_id].empty? || product_sell_params[:amount].to_i.zero?
+
+    message = ''
+    product_sell = ProductSell.new(pack_id: product_sell_params[:pack_id],amount: product_sell_params[:amount])
     response = ProductSells::CalculateSellAndBuyPrice.run(product_sell: product_sell)
-    render json: if response.valid?
-             "Цена продажи (1 шт): #{response.result[:average_prices][:average_sell_price].to_f.round(2)}\n" \
-             "Прибыль (1шт): #{(response.result[:average_prices][:average_sell_price] - response.result[:average_prices][:average_buy_price]).to_f.round(2)}"
-           else
-             response.errors.messages.values.flatten[0]
-           end
+    Rails.logger.warn '-----------------------------'
+    Rails.logger.warn response.result
+
+    if response.valid?
+      render json:
+              {
+                average_sell_price_in_usd: response.result[:average_prices][:average_sell_price_in_usd].to_f.round(2),
+                average_sell_price_in_uzs: response.result[:average_prices][:average_sell_price_in_uzs].to_f.round(2)
+              }
+    else
+      render json: { error: response.errors.full_messages.join('. ') }
+    end
   end
 
   private
@@ -92,7 +97,7 @@ class ProductSellsController < ApplicationController
   def product_sell_params
     params.require(:product_sell).permit(
       :sale_from_local_service_id, :sale_id, :combination_of_local_product_id,
-      :sell_price, :product_id, :total_profit, :amount, :payment_type, :pack_id, :barcode
+      :sell_price, :sell_price_in_uzs, :product_id, :total_profit, :amount, :payment_type, :pack_id, :barcode
     )
   end
 end

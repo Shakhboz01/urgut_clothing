@@ -18,10 +18,7 @@ class SalesController < ApplicationController
     @product_sells = @sale.product_sells
     @product_sell = ProductSell.new(sale_id: @sale.id)
     @products = Product.active.order(:name)
-    if (product_sells = @sale.product_sells).exists?
-      price_in_usd = product_sells.last.product.price_in_usd
-      @products = @products.where(price_in_usd: price_in_usd).order(:name)
-    end
+    @rate = CurrencyRate.last.rate
   end
 
   # GET /sales/new

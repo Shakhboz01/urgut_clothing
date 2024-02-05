@@ -19,6 +19,7 @@ class ProductEntry < ApplicationRecord
 
   scope :paid_in_uzs, -> { where('paid_in_usd = ?', false) }
   scope :paid_in_usd, -> { where('paid_in_usd = ?', true) }
+  scope :unsold, -> { where('amount > amount_sold') }
 
   private
 

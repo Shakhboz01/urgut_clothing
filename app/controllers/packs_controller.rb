@@ -26,12 +26,18 @@ class PacksController < ApplicationController
   # POST /packs or /packs.json
   def create
     @pack = Pack.new(pack_params)
-    delivery = DeliveryFromCounterparty.find(pack_params['delivery_id'])
+    delivery = DeliveryFromCounterparty.find_by(pack_params['delivery_id'])
     respond_to do |format|
       if @pack.save
-        format.html { redirect_to delivery_from_counterparty_url(delivery, pack_id: @pack.id), notice: "Pack was successfully created." }
+        if delivery
+          format.html { redirect_to delivery_from_counterparty_url(delivery, pack_id: @pack.id), notice: "Pack was successfully created." }
+        else
+          format.html { redirect_to packs_url, notice: "Pack was successfully created." }
+        end
+
         format.json { render :show, status: :created, location: @pack }
       else
+        byebug
         format.html { redirect_to request.referrer, notice: @pack.errors.messages.values.join(' | ') }
         format.json { render json: @pack.errors, status: :unprocessable_entity }
       end
@@ -83,6 +89,9 @@ class PacksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def pack_params
-      params.require(:pack).permit(:name, :code, :barcode, :delivery_id, product_size_colors_attributes: [:size, :color_id, :amount])
+      params.require(:pack).permit(
+        :name, :code, :barcode, :delivery_id, :buy_price, :sell_price, :price_in_usd, :initial_remaining,
+        product_size_colors_attributes: [:size, :color_id, :amount]
+      )
     end
 end

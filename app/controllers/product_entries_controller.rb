@@ -5,7 +5,7 @@ class ProductEntriesController < ApplicationController
   # GET /product_entries or /product_entries.json
   def index
     @q = ProductEntry.ransack(params[:q])
-    @product_entries = @q.result.includes(:product).order(created_at: :desc)
+    @product_entries = @q.result.includes(:pack).order(created_at: :desc)
     @product_entries_data = @product_entries
     @product_entries = @product_entries.page(params[:page]).per(70)
   end
@@ -37,15 +37,7 @@ class ProductEntriesController < ApplicationController
 
     respond_to do |format|
       if @product_entry.save
-        if @product_entry.delivery_from_counterparty_id.present?
-          format.html { redirect_to delivery_from_counterparty_url(@product_entry.delivery_from_counterparty), notice: "Product entry was successfully created." }
-        end
-
-        if @product_entry.local_entry
-          format.html { redirect_to combination_of_local_product_path(@product_entry.combination_of_local_product), notice: "Пожалуйста, укажите любые расходы, которые используются для производства этого продукта." }
-        else
-          format.html { redirect_to product_entries_url, notice: "Product entry was successfully created." }
-        end
+        format.html { redirect_to request.referrer || product_entries_url, notice: "Product entry was successfully created." }
         format.json { render :show, status: :created, location: @product_entry }
       else
         format.html { redirect_to request.referrer, notice: @product_entry.errors.messages }

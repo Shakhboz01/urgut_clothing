@@ -8,7 +8,6 @@ module HandleSellAndBuyPrice
   private
 
   def set_prices
-    byebug
     rate = CurrencyRate.where(finished_at: nil).last.rate
     self.sell_price = sell_price.to_f
     self.buy_price = buy_price.to_f

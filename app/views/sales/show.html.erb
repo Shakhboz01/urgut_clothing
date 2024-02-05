@@ -5,12 +5,12 @@
   <div class='row'>
     <% unless @sale.closed? %>
       <div class='col-sm-12 col-md-3'>
-        <%= render 'product_sells/form', product_sell: @product_sell, products: @products %>
+        <%= render 'product_sells/form', product_sell: @product_sell, rate: @rate %>
       </div>
     <% end %>
     <div class='col-sm-12 col-md-7'>
       <% unless @product_sells.count.zero? %>
-        <%= render 'product_sells/product_sells', shrink: true, product_sells: @product_sells %>
+        <%= render 'product_sells/product_sells', shrink: true, product_sells: @product_sells, rate: @rate %>
       <% end %>
       <%= render 'total_info' %>
     </div>

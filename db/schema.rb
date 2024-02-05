@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_03_142336) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_04_101056) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -164,6 +164,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_03_142336) do
     t.string "code"
     t.string "barcode"
     t.integer "initial_remaining", default: 0
+    t.decimal "sell_price_in_uzs", precision: 17, scale: 2
+    t.decimal "sell_price", precision: 17, scale: 2
+    t.decimal "buy_price", precision: 17, scale: 2
+    t.boolean "price_in_usd", default: true
   end
 
   create_table "participations", force: :cascade do |t|
@@ -231,6 +235,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_03_142336) do
     t.bigint "sale_from_service_id"
     t.boolean "price_in_usd", default: false
     t.bigint "pack_id"
+    t.decimal "sell_price_in_uzs", precision: 17, scale: 2
     t.index ["combination_of_local_product_id"], name: "index_product_sells_on_combination_of_local_product_id"
     t.index ["pack_id"], name: "index_product_sells_on_pack_id"
     t.index ["product_id"], name: "index_product_sells_on_product_id"

@@ -4,44 +4,43 @@
 # if initial true && sell_price is 0 && (product entry nil || entry's sell price 0) return error so that user can add a sell price
 # prod entry's amount_sold can be greater than its amount, in that case, product oversold and send telegram message
 
+# NOTE: product is accepted as PACK
+
 module ProductSells
   class CalculateSellAndBuyPrice < ActiveInteraction::Base
     object :product_sell
 
     def execute
       amount = product_sell.amount
-      return errors.add(:base, "amount cannot be zero") if amount.nil? || amount.zero?
+      return errors.add(:base, 'amount cannot be zero') if amount.nil? || amount.zero?
 
-      product = product_sell.product
+      pack = product_sell.pack
       response = nil
-      first_available_entry = product.product_entries.where("amount > amount_sold").order(id: :desc).last
-      if product.initial_remaining <= 0
-        return errors.add(:base, "товар #{product.name}, не имеется в складе!") if first_available_entry.nil?
-
-        response = ProductSells::FindProductEntriesUntilAmount.run!(
-          product: product,
-          amount: amount,
-        )
+      first_available_entry = pack.product_entries.unsold.order(id: :desc).last
+      if pack.initial_remaining <= 0 && !first_available_entry.nil?
+        response = ProductSells::FindProductEntriesUntilAmount.run!(pack: pack, amount: amount)
       else
-        if (amount <= product.initial_remaining) || first_available_entry.nil?
-          sell_price = product_sell.sell_price
-          buy_price = product.buy_price.zero? ? first_available_entry&.buy_price : product.buy_price
-          return errors.add(:base, "please set buy_price to #{product.name}") if buy_price.nil?
+        if (amount <= pack.initial_remaining) || first_available_entry.nil?
+          price_in_usd = pack.price_in_usd
+          sell_price = price_in_usd ? pack.sell_price : pack.sell_price * CurrencyRate.last.rate
+          buy_price = pack.buy_price
 
           if sell_price.zero?
-            sell_price = product.sell_price.zero? ? first_available_entry&.sell_price : product.sell_price
-            sell_price = buy_price if sell_price.nil? && !product_sell.combination_of_local_product.present?
-            return errors.add(:base, "please set sell_price to #{product.name}") if sell_price.nil?
+            sell_price = pack.sell_price
+            return errors.add(:base, "please set sell_price to #{pack.name}") if sell_price.nil?
           end
 
-          price_data = { '0': { amount: amount, sell_price: sell_price, buy_price: buy_price, service_price: sell_price } }
-          response = ProductSells::FindAverageSellAndBuyPrice.run(price_data: price_data)
+          buy_price ||= sell_price - (sell_price * 5 / 100)
+          price_data = { '0': { amount: amount, sell_price: sell_price, buy_price: buy_price } }
+          response = ProductSells::FindAverageSellAndBuyPrice.run(
+            price_data: price_data, price_in_usd: price_in_usd
+          )
           return response.result
-        elsif amount > product.initial_remaining
-          remaining_amount = amount - product.initial_remaining
+        elsif amount > pack.initial_remaining
+          remaining_amount = amount - pack.initial_remaining
           response = ProductSells::FindProductEntriesUntilAmount.run(
-            product: product,
-            amount: remaining_amount,
+            pack: pack,
+            amount: remaining_amount
           )
         end
       end

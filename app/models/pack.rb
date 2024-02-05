@@ -1,9 +1,11 @@
 class Pack < ApplicationRecord
   has_many :product_size_colors
   has_many :product_entries
+  validates_presence_of :sell_price
   validates :code, presence: true, uniqueness: { scope: [:name], message: "combination already exists" }
   validates :name, presence: true, uniqueness: { scope: [:code], message: "combination already exists" }
   before_validation :reset_name
+  before_create :set_buy_price
 
   attr_accessor :delivery_id
 
@@ -24,6 +26,12 @@ class Pack < ApplicationRecord
   end
 
   private
+
+  def set_buy_price
+    return unless buy_price.nil?
+
+    self.buy_price = sell_price - (sell_price * 5 / 100)
+  end
 
   def reset_name
     size_names = ''
