@@ -12,7 +12,9 @@
       <% unless @product_sells.count.zero? %>
         <%= render 'product_sells/product_sells', shrink: true, product_sells: @product_sells, rate: @rate %>
       <% end %>
-      <%= render 'total_info' %>
+      <% if @sale.closed? %>
+        <%= render 'total_info' %>
+      <% end %>
     </div>
     <% unless @sale.closed? %>
       <div class='col-sm-12 col-md-2'>

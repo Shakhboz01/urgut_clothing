@@ -5,6 +5,8 @@ class ProductSell < ApplicationRecord
   attr_accessor :initial_remaining
   attr_accessor :barcode
   attr_accessor :rate
+  attr_accessor :min_price_in_usd
+
 
   belongs_to :sale
   belongs_to :pack
@@ -19,7 +21,6 @@ class ProductSell < ApplicationRecord
   before_create :set_prices_and_profit
   before_create :increase_amount_sold
   before_update :set_prices_and_profit
-  after_create :update_sale_currency
   after_create :increase_total_price
   before_destroy :deccrease_amount_sold
   before_destroy :decrease_total_price
@@ -44,7 +45,10 @@ class ProductSell < ApplicationRecord
         pack.increment!(:initial_remaining, data[1]["amount"].to_f) and next
       end
 
-      ProductEntry.find_by(data[0]).decrement!(:amount_sold, data[1]["amount"].to_f)
+      pe = ProductEntry.find_by(id: data[0])
+      return unless pe
+
+      pe.decrement!(:amount_sold, data[1]["amount"].to_f)
     end
   end
 
@@ -75,6 +79,7 @@ class ProductSell < ApplicationRecord
       # NOTE: that delivery's price_in_usd should be true y default
       self.buy_price = average_prices["average_buy_price_in_usd"]
       self.sell_price = sell_price
+      self.price_in_usd = true
     else
       return if price_in_usd == price_in_usd_was
 
@@ -90,11 +95,5 @@ class ProductSell < ApplicationRecord
 
     profit = sell_price - buy_price
     self.total_profit = profit * amount
-  end
-
-  def update_sale_currency
-    return if sale.nil? || sale.price_in_usd == price_in_usd
-
-    sale.update(price_in_usd: price_in_usd)
   end
 end

@@ -1,4 +1,0 @@
-<div class='d-flex justify-content-around'>
-  <b>ИТОГО ЦЕНА: <%= num_to_usd @sale.calculate_total_price %></b>
-  <b>ИТОГО КОЛИЧЕСТВО: <%= @sale.product_sells.sum(:amount) %></b>
-</div>

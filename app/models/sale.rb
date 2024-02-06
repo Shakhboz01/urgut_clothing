@@ -19,6 +19,7 @@ class Sale < ApplicationRecord
             all
           end
         }
+  before_update :update_product_sales_currencies
   after_save :process_status_change, if: :saved_change_to_status?
 
   def calculate_total_price(enable_to_alter = true)
@@ -65,5 +66,13 @@ class Sale < ApplicationRecord
         self.enable_to_send_sms = false
       end
     end
+  end
+
+  def update_product_sales_currencies
+    product_sells.each do |ps|
+      ps.update(price_in_usd: price_in_usd)
+    end
+
+    self.total_price = product_sells.sum(:sell_price)
   end
 end

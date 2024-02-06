@@ -76,10 +76,15 @@ class ProductSellsController < ApplicationController
     Rails.logger.warn response.result
 
     if response.valid?
+      average_sell_price = response.result[:average_prices][:average_sell_price_in_usd].to_f.round(2)
+      average_buy_price = response.result[:average_prices][:average_buy_price_in_usd].to_f.round(2)
+      minimum_buy_price = average_buy_price + (average_buy_price * 2 / 100)
+      minimum_buy_price = average_sell_price if minimum_buy_price >= average_sell_price
       render json:
               {
-                average_sell_price_in_usd: response.result[:average_prices][:average_sell_price_in_usd].to_f.round(2),
-                average_sell_price_in_uzs: response.result[:average_prices][:average_sell_price_in_uzs].to_f.round(2)
+                average_sell_price_in_usd: average_sell_price,
+                average_sell_price_in_uzs: response.result[:average_prices][:average_sell_price_in_uzs].to_f.round(2),
+                minimum_buy_price_in_usd: minimum_buy_price
               }
     else
       render json: { error: response.errors.full_messages.join('. ') }

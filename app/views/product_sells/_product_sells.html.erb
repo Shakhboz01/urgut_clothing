@@ -9,7 +9,6 @@
         <th>Товар/пачка</th>
         <th>Кол.</th>
         <th>Цена</th>
-
         <% if defined?(shrink) %>
           <th>Цена сум</th>
         <% else %>
@@ -46,4 +45,15 @@
         <% end %>
       </tbody>
   </table>
+
+  <% if defined?(shrink) %>
+    <div class='d-flex justify-content-around'>
+    <% rate = CurrencyRate.last.rate %>
+    <% total_in_usd = product_sells.price_in_usd.sum(:sell_price) + (product_sells.price_in_uzs.sum(:sell_price) / rate) %>
+    <% total_in_uzs = product_sells.price_in_uzs.sum(:sell_price) + (product_sells.price_in_usd.sum(:sell_price) * rate) %>
+    <b>ИТОГО ЦЕНА: <%= number_to_currency total_in_usd %></b>
+    <b>ИТОГО ЦЕНА В CУМ: <%= num_to_usd total_in_uzs %></b>
+    <b>ИТОГО КОЛИЧЕСТВО: <%= @sale.product_sells.sum(:amount) %></b>
+  </div>
+  <% end %>
 <% end %>
