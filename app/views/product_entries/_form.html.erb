@@ -13,8 +13,8 @@
       <% end %>
       <%= f.input :barcode, label: 'или поиск по кодам:', input_html: {id: 'code-input', autofocus: 'true'} %>
       <%= f.input :amount, label: 'количество:', id: 'inputs' %>
-      <%= f.input :buy_price, label: 'Цена прихода:', input_html: {id: 'product_entry_buy_price'} %>
-      <%= f.input :sell_price, label: 'Цена продажи:', input_html: {id: 'product_entry_sell_price'} %>
+      <%= f.input :buy_price, label: 'Цена прихода (1 пачки) :', input_html: {id: 'product_entry_buy_price'} %>
+      <%= f.input :sell_price, label: 'Цена продажи (1 пачки) :', input_html: {id: 'product_entry_sell_price'} %>
       <%= f.input :price_in_percentage, label: 'продажа в %', input_html: {id: 'product_entry_price_in_percentage', value: defined?(price_in_percentage) ? price_in_percentage : 0} %>
       <%= f.button :submit, 'Создать', class: 'btn btn-warning' %>
     </div>

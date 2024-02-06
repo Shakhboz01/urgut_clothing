@@ -10,8 +10,8 @@
       <%= f.association :pack, label: 'или выберите пачку', collection: Pack.all.order('LOWER(name) ASC'), include_blank: true, input_html: { id: 'pack-select' } %>
       <%= f.input :amount, label: 'Количество', input_html: {value: ''} %>
       <div class='row'>
-        <div class='col-sm-6'><%= f.input :sell_price, label: 'Цена в $' %></div>
-        <div class='col-sm-6'><%= f.input :sell_price_in_uzs, label: 'Цена cум' %></div>
+        <div class='col-sm-6'><%= f.input :sell_price, label: 'Цена в $ (1 шт.)' %></div>
+        <div class='col-sm-6'><%= f.input :sell_price_in_uzs, label: 'Цена cум (1 шт.)' %></div>
       </div>
 
       <%= f.input :min_price_in_usd, label: 'Минимум цена в $', input_html: { disabled: true } %>
