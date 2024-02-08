@@ -19,10 +19,10 @@ class ProductSell < ApplicationRecord
   scope :price_in_usd, -> { where('price_in_usd = ?', true) }
   before_validation :handle_amount_sold
   before_create :set_prices_and_profit
-  before_create :increase_amount_sold
+  before_create :increase_amount_sold # TASK 1
   before_update :set_prices_and_profit
   after_create :increase_total_price
-  before_destroy :deccrease_amount_sold
+  before_destroy :deccrease_amount_sold # TASK 2
   before_destroy :decrease_total_price
 
   private
@@ -56,7 +56,7 @@ class ProductSell < ApplicationRecord
   end
 
   def handle_amount_sold
-    return if self.persisted? || !new_record? || pack.nil?
+    return if self.persisted? || !new_record?
 
     ps_validation = ProductSells::CalculateSellAndBuyPrice.run(product_sell: self, sell_by_piece: sell_by_piece)
 
@@ -69,14 +69,20 @@ class ProductSell < ApplicationRecord
 
   def increase_amount_sold
     # TODO: consider sell_by piece
-    return if sell_by_piece
+    if sell_by_piece
+      esp = ProductSells::ExecuteSellByPiece.run!(
+        amount: amount,
+        product: product
+      )
+      return errors.add(:base, esp.errors.messages) unless esp.valid?
+    else
+      price_data.each do |data|
+        if data[0].to_i.zero?
+          pack.decrement!(:initial_remaining, data[1]['amount'].to_f) and next
+        end
 
-    price_data.each do |data|
-      if data[0].to_i.zero?
-        pack.decrement!(:initial_remaining, data[1]['amount'].to_f) and next
+        ProductEntry.find(data[0].to_i).increment!(:amount_sold, data[1]["amount"].to_f)
       end
-
-      ProductEntry.find(data[0].to_i).increment!(:amount_sold, data[1]["amount"].to_f)
     end
   end
 

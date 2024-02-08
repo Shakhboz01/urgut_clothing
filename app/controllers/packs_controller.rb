@@ -26,7 +26,7 @@ class PacksController < ApplicationController
   # POST /packs or /packs.json
   def create
     @pack = Pack.new(pack_params)
-    delivery = DeliveryFromCounterparty.find_by(pack_params['delivery_id'])
+    delivery = DeliveryFromCounterparty.where(id: pack_params['delivery_id']).last
 
     respond_to do |format|
       if @pack.save
@@ -38,7 +38,6 @@ class PacksController < ApplicationController
 
         format.json { render :show, status: :created, location: @pack }
       else
-        byebug
         format.html { redirect_to request.referrer, notice: @pack.errors.messages.values.join(' | ') }
         format.json { render json: @pack.errors, status: :unprocessable_entity }
       end

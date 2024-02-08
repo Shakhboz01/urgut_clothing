@@ -1,6 +1,7 @@
 class Pack < ApplicationRecord
   has_many :product_size_colors
   has_many :product_entries
+  has_many :products
   validates_presence_of :sell_price
   validates :code, presence: true, uniqueness: { scope: [:name], message: "combination already exists" }
   validates :name, presence: true, uniqueness: { scope: [:code], message: "combination already exists" }
@@ -23,6 +24,20 @@ class Pack < ApplicationRecord
   def calculate_product_remaining
     remaining_from_entries = product_entries.sum(:amount) - product_entries.sum(:amount_sold)
     remaining_from_entries + initial_remaining
+  end
+
+  def break_packs(amount_of_pack_to_break)
+    amount_of_pack_to_break.times do
+      self.product_size_colors.each do |product_size_color|
+        product_size_color.increase_product
+      end
+    end
+
+    self.decrement!(:initial_remaining, amount_of_pack_to_break)
+  end
+
+  def restore_packs(amount_of_pack_to_restore)
+    # TODO
   end
 
   private
