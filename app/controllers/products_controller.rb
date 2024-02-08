@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :set_product, only: %i[ toggle_active show edit update destroy ]
+  before_action :set_product, only: %i[ toggle_active show edit update destroy calculate_product_remaining]
 
   # GET /products or /products.json
   def index
@@ -63,6 +63,23 @@ class ProductsController < ApplicationController
   def toggle_active
     @product.toggle(:active).save
     redirect_to products_url, notice: "Successfully updated"
+  end
+
+  def filtered_products
+    pack_id = params[:pack_id].downcase.strip
+    @filtered_products = Product.where(pack_id: pack_id)
+    respond_to do |format|
+      format.js # assuming you have a corresponding js.erb file for the response
+    end
+  end
+
+  def calculate_product_remaining
+    calculate_product_remaining_in_pack = @product.calculate_product_remaining_in_pack
+
+    render json: {
+      calculate_product_remaining_in_pack: calculate_product_remaining_in_pack,
+      calculate_product_remaining_out_pack: @product.initial_remaining
+    }
   end
 
   private

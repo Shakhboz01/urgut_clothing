@@ -6,16 +6,24 @@
       <%= f.error_notification %>
       <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
       <%= f.association :sale, as: :hidden %>
+      <%= f.label :sell_by_piece, 'продать по штук:' %>
+      <%= f.input :sell_by_piece, label: false %>
       <%= f.input :barcode, label: 'поиск по кодам:', input_html: {id: 'code-input', autofocus: 'true'} %>
       <%= f.association :pack, label: 'или выберите пачку', collection: Pack.all.order('LOWER(name) ASC'), include_blank: true, input_html: { id: 'pack-select' } %>
+      <div class='product-select-tag'>
+        <%= f.association :product, label: 'выберите размера', collection: Product.all.order('LOWER(name) ASC'), include_blank: false, input_html: { id: 'product-select', placeholder: 'выберите размер' } %>
+      </div>
       <%= f.input :amount, label: 'Количество', input_html: {value: ''} %>
       <div class='row'>
         <div class='col-sm-6'><%= f.input :sell_price, label: 'Цена в $ (1 шт.)' %></div>
         <div class='col-sm-6'><%= f.input :sell_price_in_uzs, label: 'Цена cум (1 шт.)' %></div>
       </div>
-
       <%= f.input :min_price_in_usd, label: 'Минимум цена в $', input_html: { disabled: true } %>
-      <%= f.input :initial_remaining, label: 'остаток', input_html: { disabled: true } %>
+      <%= f.input :initial_remaining, label: 'остаток пачкa', input_html: { disabled: true } %>
+      <div class='product-select-tag'>
+        <%= f.input :remaining_outside_pack, label: 'остаток вне пачки', input_html: { disabled: true } %>
+      </div>
+
       <%= f.input :rate, as: :hidden, input_html: { value: rate } %>
       <%= f.submit "Создать", class: 'btn btn-primary'%>
     </div>
@@ -25,6 +33,7 @@
 
 <script>
   $(document).ready(function() {
+    $('.product-select-tag').hide();
     $('form').on('keypress', e => {
       if (e.keyCode == 13) {
         return false;
@@ -37,24 +46,53 @@
 
     document.querySelector('#pack-select').addEventListener('change', function(e) {
       document.querySelector('#product_sell_amount').value = 1;
-      handleProductChange();
+      handlePackChange();
       calculateSalePrice();
+      filterProducts();
     })
 
     document.querySelector('#product_sell_amount').addEventListener('change', function(e) {
       e.preventDefault();
-      console.log('amount changed')
-      calculateSalePrice()
+      calculateSalePrice();
     });
+
+    document.querySelector('#product_sell_sell_by_piece').addEventListener('change', function(e) {
+      e.preventDefault();
+      $('.product-select-tag').toggle();
+      calculateSalePrice();
+      if (document.querySelector('#pack-select').value != null) {
+        filterProducts();
+      };
+    });
+
+    document.querySelector('#product-select').addEventListener('change', function(e) {
+      e.preventDefault();
+      handleProductChange();
+    });
+
+    function filterProducts(){
+      if (document.querySelector('#product_sell_sell_by_piece').checked) {
+      var pack_id = document.querySelector('#pack-select').value;
+       $.ajax({
+        url: '/products/filtered_products',
+        method: 'GET',
+        data: { pack_id: pack_id },
+        dataType: 'script'
+      });
+      }
+    }
 
     function calculateSalePrice(){
       var product_id = document.querySelector('#pack-select').value;
       var sell_price = document.querySelector('#product_sell_sell_price').value;
+      var sell_by_piece = document.querySelector('#product_sell_sell_by_piece').checked;
+      console.log('sell_by_piece ',sell_by_piece)
       var amount = document.querySelector('#product_sell_amount').value;
       var customActionURL = '/product_sells/ajax_sell_price_request';
       var data = {
         pack_id: product_id,
-        amount: amount
+        amount: amount,
+        sell_by_piece: sell_by_piece
       };
       var csrfToken = $('meta[name="csrf-token"]').attr('content');
       if(sell_price != 0 || sell_price != null){
@@ -112,22 +150,41 @@
           var selectedPackOption = packSelect.options[packSelect.selectedIndex];
           var selectedPackText = selectedPackOption ? selectedPackOption.text : '';
           h1Element.textContent = selectedPackText;
-          handleProductChange();
+          handlePackChange();
           document.querySelector('#product_sell_amount').value = 1;
         }
       });
+      filterProducts();
     });
 
-     function handleProductChange() {
-      var productSelect = document.querySelector("#pack-select");
+
+    function handlePackChange() {
+      var packSelect = document.querySelector("#pack-select");
       var initialRemainingInput = document.querySelector("#product_sell_initial_remaining");
 
-      if (productSelect) {
-        var productId = productSelect.value;
+      if (packSelect) {
+        var productId = packSelect.value;
         fetch('/packs/' + productId + '/calculate_product_remaining')
           .then(response => response.json())
           .then(data => {
             initialRemainingInput.value = data.calculate_product_remaining;
+          })
+          .catch(error => console.error('Error:', error));
+      }
+    }
+
+    function handleProductChange() {
+      var productSelect = document.querySelector("#product-select");
+      var initialRemainingInput = document.querySelector("#product_sell_initial_remaining");
+      var outRemainingInput = document.querySelector("#product_sell_remaining_outside_pack");
+
+      if (productSelect) {
+        var productId = productSelect.value;
+        fetch('/products/' + productId + '/calculate_product_remaining')
+          .then(response => response.json())
+          .then(data => {
+            initialRemainingInput.value = data.calculate_product_remaining_in_pack;
+            outRemainingInput.value = data.calculate_product_remaining_out_pack;
           })
           .catch(error => console.error('Error:', error));
       }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_06_153323) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_06_160725) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -236,6 +236,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_06_153323) do
     t.boolean "price_in_usd", default: false
     t.bigint "pack_id"
     t.decimal "sell_price_in_uzs", precision: 17, scale: 2
+    t.boolean "sell_by_piece", default: false
     t.index ["combination_of_local_product_id"], name: "index_product_sells_on_combination_of_local_product_id"
     t.index ["pack_id"], name: "index_product_sells_on_pack_id"
     t.index ["product_id"], name: "index_product_sells_on_product_id"

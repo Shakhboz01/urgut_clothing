@@ -9,8 +9,10 @@
 module ProductSells
   class CalculateSellAndBuyPrice < ActiveInteraction::Base
     object :product_sell
+    boolean :sell_by_piece, default: false
 
     def execute
+      quantity = product_sell.pack.product_size_colors.sum(:amount)
       amount = product_sell.amount
       return errors.add(:base, 'amount cannot be zero') if amount.nil? || amount.zero?
 
@@ -33,19 +35,34 @@ module ProductSells
           buy_price ||= sell_price - (sell_price * 5 / 100)
           price_data = { '0': { amount: amount, sell_price: sell_price, buy_price: buy_price } }
           response = ProductSells::FindAverageSellAndBuyPrice.run(
-            price_data: price_data, price_in_usd: price_in_usd
+            price_data: price_data, price_in_usd: price_in_usd, sell_by_piece: sell_by_piece
           )
+          return response.result unless sell_by_piece
+
+          response.result[:average_prices].each do |k, v|
+            response.result[:average_prices][k] = v / quantity
+          end
+
           return response.result
         elsif amount > pack.initial_remaining
           remaining_amount = amount - pack.initial_remaining
           response = ProductSells::FindProductEntriesUntilAmount.run(
             pack: pack,
-            amount: remaining_amount
+            amount: remaining_amount,
+            sell_by_piece: sell_by_piece
           )
         end
       end
 
-      response.is_a?(Hash) ? response : response.result
+      result = response.is_a?(Hash) ? response : response.result
+
+      return result unless sell_by_piece
+
+      result[:average_prices].each do |k, v|
+        result[:average_prices][k] = v / quantity
+      end
+
+      return result
     end
   end
 end

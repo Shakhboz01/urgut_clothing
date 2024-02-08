@@ -27,9 +27,10 @@ class PacksController < ApplicationController
   def create
     @pack = Pack.new(pack_params)
     delivery = DeliveryFromCounterparty.find_by(pack_params['delivery_id'])
+
     respond_to do |format|
       if @pack.save
-        if delivery
+        if !pack_params['delivery_id'].empty?
           format.html { redirect_to delivery_from_counterparty_url(delivery, pack_id: @pack.id), notice: "Pack was successfully created." }
         else
           format.html { redirect_to packs_url, notice: "Pack was successfully created." }

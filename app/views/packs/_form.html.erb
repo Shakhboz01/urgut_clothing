@@ -10,18 +10,18 @@
       <div style='box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;' class='form-inputs col-sm-12 col-md-7 m-2 p-4'>
         <% unless pack.persisted? %>
           <div class="row mb-2">
-            <div class='col-sm-4 text-center'>размер</div>
             <div class='col-sm-4 text-center'>цвет</div>
+            <div class='col-sm-4 text-center'>размер</div>
             <div class='col-sm-4 text-center'>количество</div>
           </div>
           <div class="row">
             <%= f.fields_for :product_size_colors do |ff| %>
               <div class="col-sm-4 d-flex align-center">
                 <div class=''><%= ff.index + 1 %>-</div>
-                <%= ff.input :size, label: false %>
-              </div>
-              <div class="col-sm-4">
                 <%= ff.association :color, label: false, input_html: {prompt: 'цвет', class: 'color-input'} %>
+              </div>
+              <div class="col-sm-4 d-flex align-center">
+                <%= ff.input :size, label: false %>
               </div>
               <div class="col-sm-4">
                 <%= ff.input :amount, label: false, input_html: {placeholder: 'количество'} %>

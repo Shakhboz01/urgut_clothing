@@ -1,0 +1,8 @@
+var productSelect = document.getElementById('product-select');
+var options = '';
+
+<% @filtered_products.each do |product| %>
+  options += '<option value="<%= product.id %>"><%= product.name %></option>';
+<% end %>
+
+productSelect.innerHTML = options;

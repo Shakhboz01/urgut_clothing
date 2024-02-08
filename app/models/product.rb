@@ -4,6 +4,7 @@ class Product < ApplicationRecord
   include ProtectDestroyable
 
   belongs_to :color
+  belongs_to :pack
   belongs_to :size, optional: true
   has_many :product_entries
   has_many :product_remaining_inequalities
@@ -13,7 +14,7 @@ class Product < ApplicationRecord
   scope :active, -> { where(:active => true) }
   scope :local, -> { where(:local => true) }
 
-  after_save :process_initial_remaining_change, if: :saved_change_to_initial_remaining?
+  # after_save :process_initial_remaining_change, if: :saved_change_to_initial_remaining?
 
 
   def self.generate_code
@@ -24,9 +25,9 @@ class Product < ApplicationRecord
     rand(100_00000..999_99999).to_s
   end
 
-  def calculate_product_remaining
-    remaining_from_entries = product_entries.sum(:amount) - product_entries.sum(:amount_sold)
-    remaining_from_entries + initial_remaining
+  def calculate_product_remaining_in_pack
+    psc_amount = pack.product_size_colors.where(size: size, color: color).last.amount
+    pack.calculate_product_remaining * psc_amount
   end
 
   private

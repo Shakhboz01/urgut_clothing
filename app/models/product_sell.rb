@@ -3,10 +3,10 @@
 # increase product initial remaining before_destroy if price data contains 0
 class ProductSell < ApplicationRecord
   attr_accessor :initial_remaining
+  attr_accessor :remaining_outside_pack
   attr_accessor :barcode
   attr_accessor :rate
   attr_accessor :min_price_in_usd
-
 
   belongs_to :sale
   belongs_to :pack
@@ -40,6 +40,9 @@ class ProductSell < ApplicationRecord
   def deccrease_amount_sold
     return throw(:abort) if !sale.nil? && sale.closed?
 
+    # TODO: consider sell_by piece
+    return if sell_by_piece
+
     price_data.each do |data|
       if data[0].to_i.zero?
         pack.increment!(:initial_remaining, data[1]["amount"].to_f) and next
@@ -55,7 +58,7 @@ class ProductSell < ApplicationRecord
   def handle_amount_sold
     return if self.persisted? || !new_record? || pack.nil?
 
-    ps_validation = ProductSells::CalculateSellAndBuyPrice.run(product_sell: self)
+    ps_validation = ProductSells::CalculateSellAndBuyPrice.run(product_sell: self, sell_by_piece: sell_by_piece)
 
     return errors.add(:base, ps_validation.errors.messages.values.flatten[0]) unless ps_validation.valid?
 
@@ -65,6 +68,9 @@ class ProductSell < ApplicationRecord
   end
 
   def increase_amount_sold
+    # TODO: consider sell_by piece
+    return if sell_by_piece
+
     price_data.each do |data|
       if data[0].to_i.zero?
         pack.decrement!(:initial_remaining, data[1]['amount'].to_f) and next
