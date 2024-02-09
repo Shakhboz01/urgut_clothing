@@ -26,7 +26,13 @@
               <td><%= product_sell.id %></td>
               <td><%= product_sell.buyer.name %></td>
             <% end %>
-            <td><%= product_sell.pack.name %></td>
+            <td>
+              <% if product_sell.product.nil? %>
+                <%= product_sell.pack.name %>
+              <% else %>
+                <%= product_sell.product.name %>
+              <% end %>
+            </td>
             <td><%= product_sell.amount.to_i %></td>
             <% if defined?(shrink) %>
               <td><%= calculate_sale_price_in_usd(rate, product_sell) %></td>

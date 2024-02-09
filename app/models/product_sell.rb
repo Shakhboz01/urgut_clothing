@@ -41,22 +41,32 @@ class ProductSell < ApplicationRecord
     return throw(:abort) if !sale.nil? && sale.closed?
 
     # TODO: consider sell_by piece
-    return if sell_by_piece
+    if sell_by_piece
+      return errors.add(:base, 'product is nil') if product.nil?
 
-    price_data.each do |data|
-      if data[0].to_i.zero?
-        pack.increment!(:initial_remaining, data[1]["amount"].to_f) and next
+      ps = ProductSells::ExecuteDeleteByPiece.run(
+        amount: amount,
+        product: product
+      )
+      byebug
+      errors.add(:base, ps.errors.messages) unless ps.valid?
+    else
+      price_data.each do |data|
+        if data[0].to_i.zero?
+          pack.increment!(:initial_remaining, data[1]["amount"].to_f) and next
+        end
+
+        pe = ProductEntry.find_by(id: data[0])
+        return unless pe
+
+        pe.decrement!(:amount_sold, data[1]["amount"].to_f)
       end
-
-      pe = ProductEntry.find_by(id: data[0])
-      return unless pe
-
-      pe.decrement!(:amount_sold, data[1]["amount"].to_f)
     end
   end
 
   def handle_amount_sold
     return if self.persisted? || !new_record?
+    return errors.add(:base, 'product is nil') if product.nil? && sell_by_piece
 
     ps_validation = ProductSells::CalculateSellAndBuyPrice.run(product_sell: self, sell_by_piece: sell_by_piece)
 
@@ -70,6 +80,8 @@ class ProductSell < ApplicationRecord
   def increase_amount_sold
     # TODO: consider sell_by piece
     if sell_by_piece
+      return errors.add(:base, 'product is nil') if product.nil?
+
       esp = ProductSells::ExecuteSellByPiece.run!(
         amount: amount,
         product: product
