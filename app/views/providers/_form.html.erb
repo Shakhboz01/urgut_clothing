@@ -6,6 +6,10 @@
   <div class="form-inputs">
     <%= f.input :name, label: 'Имя' %>
     <%= f.input :phone_number, label: 'Номер телефона' %>
+    <% unless provider.persisted? %>
+      <%= f.input :debt_in_uzs, label: 'Наш долг в сум', as: :numeric %>
+      <%= f.input :debt_in_usd, label: 'Наш долг в $', as: :numeric %>
+    <% end %>
     <%= f.input :comment, label: 'Коммент' %>
   </div>
 
