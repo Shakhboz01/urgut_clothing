@@ -82,11 +82,16 @@ class DeliveryFromCounterpartiesController < ApplicationController
 
   def default_create
     provider = Provider.first
-    sfs = DeliveryFromCounterparty.new(provider: provider, user_id: current_user.id)
-    if sfs.save
-      redirect_to delivery_from_counterparty_url(sfs), notice: "Теперь добавьте продажу товаров"
+    last_one = DeliveryFromCounterparty.last
+    if !last_one.nil? && last_one.total_price == 0 && last_one.total_paid.nil? && !last_one.closed?
+      redirect_to delivery_from_counterparty_url(last_one), notice: "Теперь добавьте продажу товаров"
     else
-      redirect_to request.referrer, notice: "Something went wrong"
+      sfs = DeliveryFromCounterparty.new(provider: provider, user_id: current_user.id)
+      if sfs.save
+        redirect_to delivery_from_counterparty_url(sfs), notice: "Теперь добавьте продажу товаров"
+      else
+        redirect_to request.referrer, notice: "Something went wrong"
+      end
     end
   end
 

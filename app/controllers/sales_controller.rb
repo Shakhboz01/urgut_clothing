@@ -73,11 +73,16 @@ class SalesController < ApplicationController
 
   def default_create
     buyer = Buyer.first
-    sfs = Sale.new(buyer: buyer, user: current_user)
-    if sfs.save
-      redirect_to sale_url(sfs), notice: 'Теперь добавьте продажу товаров'
+    last_one = Sale.last
+    if !last_one.nil? && last_one.total_price == 0 && last_one.total_paid == 0 && !last_one.closed?
+      redirect_to sale_url(last_one), notice: "Теперь добавьте продажу товаров"
     else
-      redirect_to request.referrer, notice: "Something went wrong"
+      sfs = Sale.new(buyer: buyer, user: current_user)
+      if sfs.save
+        redirect_to sale_url(sfs), notice: 'Теперь добавьте продажу товаров'
+      else
+        redirect_to request.referrer, notice: "Something went wrong"
+      end
     end
   end
 
