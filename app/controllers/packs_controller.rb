@@ -3,7 +3,7 @@ class PacksController < ApplicationController
 
   # GET /packs or /packs.json
   def index
-    @packs = Pack.all
+    @packs = Pack.all.page(params[:page]).per(40)
   end
 
   # GET /packs/1 or /packs/1.json
