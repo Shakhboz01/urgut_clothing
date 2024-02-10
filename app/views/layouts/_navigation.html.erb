@@ -6,9 +6,6 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <%= link_to 'Продажа товаров', product_sells_path, class: 'nav-link' %>
-      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Посмотреть список
@@ -41,9 +38,6 @@
           <%= link_to 'пачки', packs_path, class: 'dropdown-item' %>
           <%= link_to 'Зарплату/Аванс', new_salary_path, class: 'dropdown-item' %>
           <%= link_to 'Перекличку работников', new_participation_path, class: 'dropdown-item' %>
-          <% if user_signed_in? && current_user.кассир? %>
-            <%= link_to 'ежедневный отчет по кассе', new_daily_transaction_report_path, class: 'dropdown-item' %>
-          <% end %>
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -60,6 +54,15 @@
           <%= link_to 'Приходы/Расходы от руководителей', owners_operations_path, class: 'dropdown-item' %>
           <%= link_to 'ежедневный отчет по кассе', daily_transaction_reports_path, class: 'dropdown-item' %>
           <%= link_to 'Приём/отдача средств', debt_operations_path, class: 'dropdown-item' %>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Выручка
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <%= button_to 'от покупателя', default_create_sales_path(prepayment: true), method: :post, class: 'dropdown-item' %>
+          <%= button_to 'на поставщика', default_create_delivery_from_counterparties_path(prepayment: true), method: :post, class: 'dropdown-item' %>
         </div>
       </li>
       <% if %w[руководитель бухгалтер].include?(current_user.role) %>

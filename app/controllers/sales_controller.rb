@@ -75,11 +75,11 @@ class SalesController < ApplicationController
     buyer = Buyer.first
     last_one = Sale.last
     if !last_one.nil? && last_one.total_price == 0 && last_one.total_paid == 0 && !last_one.closed?
-      redirect_to sale_url(last_one), notice: "Теперь добавьте продажу товаров"
+      redirect_to sale_url(last_one, prepayment: params.dig(:prepayment).present?), notice: "Теперь добавьте продажу товаров"
     else
       sfs = Sale.new(buyer: buyer, user: current_user)
       if sfs.save
-        redirect_to sale_url(sfs), notice: 'Теперь добавьте продажу товаров'
+        redirect_to sale_url(sfs, prepayment: params.dig(:prepayment).present?), notice: 'Теперь добавьте продажу товаров'
       else
         redirect_to request.referrer, notice: "Something went wrong"
       end

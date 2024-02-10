@@ -3,16 +3,17 @@
     <h3 class="card-title text-center font-weight-bold" id='pack-name'></h3>
   </div>
   <div class='row'>
-    <% unless @sale.closed? %>
+    <% unless @sale.closed? || params.dig(:prepayment).present? %>
       <div class='col-sm-12 col-md-3'>
         <%= render 'product_sells/form', product_sell: @product_sell, rate: @rate %>
       </div>
     <% end %>
     <div class='col-sm-12 col-md-7'>
-      <% unless @product_sells.count.zero? %>
+      <% unless @product_sells.count.zero? || params.dig(:prepayment).present? %>
         <%= render 'product_sells/product_sells', shrink: true, product_sells: @product_sells, rate: @rate %>
       <% end %>
-      <% if @sale.closed? %>
+
+      <% if @sale.closed? || !params.dig(:prepayment).present? %>
         <%= render 'total_info' %>
       <% end %>
     </div>

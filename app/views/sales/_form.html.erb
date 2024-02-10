@@ -6,7 +6,7 @@
 
     <div class="form-inputs">
       <%= f.input :total_price, label: false, disabled: true, as: :hidden, input_html: {id: 'total-price'} %>
-      <%= f.input :total_paid, label: 'Итого оплачено' %>
+      <%= f.input :total_paid, label: params.dig(:prepayment).present? ? 'цена выручки' : 'Итого оплачено' %>
       <%= f.association :buyer, label: 'Покупатель', collection: Buyer.active.order(weight: :desc).order(name: :asc), include_blank: false %>
       <%= f.input :payment_type, label: 'Тип оплаты', collection: Sale.payment_types.keys.map { |unit| [Sale.human_attribute_name("unit.#{unit}"), unit] }, include_blank: false %>
       <%= f.label :price_in_usd, 'договор в $' %>
