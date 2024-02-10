@@ -3,6 +3,7 @@ class Provider < ApplicationRecord
 
   attr_accessor :debt_in_usd
   attr_accessor :debt_in_uzs
+
   has_many :delivery_from_counterparties
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -26,7 +27,7 @@ class Provider < ApplicationRecord
 
   def set_debt
     unless debt_in_usd.empty?
-      delivery = DeliveryFromCounterparty.create(
+      DeliveryFromCounterparty.create(
         user_id: User.first.id, status: 1,
         payment_type: 0, total_price: debt_in_usd.to_f,
         total_paid: 0, provider_id: id,
@@ -35,7 +36,7 @@ class Provider < ApplicationRecord
     end
 
     unless debt_in_uzs.empty?
-      delivery = DeliveryFromCounterparty.create(
+      DeliveryFromCounterparty.create(
         user_id: User.first.id, status: 1,
         payment_type: 0, total_price: debt_in_uzs.to_f,
         total_paid: 0, provider_id: id,
