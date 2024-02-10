@@ -1,0 +1,49 @@
+<div>
+  <h3 class='text-center'>ИТОГО</h3>
+  <table class='table shadow card-header table-striped table-hover'>
+    <thead>
+      <tr>
+        <th></th>
+        <th>В сум</th>
+        <th>В $</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Приход от продаж</td>
+        <td><%= num_to_usd @sales_in_uzs %></td>
+        <td><%= number_to_currency @sales_in_usd %></td>
+      </tr>
+      <%# <tr>
+        <td>Прибыль от продаж</td>
+        <td><%= num_to_usd @profit_from_sale_in_uzs</td>
+        <%# <td><%= number_to_currency @profit_from_sale_in_usd</td>  %>
+      <%# </tr> %>
+      <tr>
+        <td>Расходы на покупки товаров</td>
+        <td><%= num_to_usd @delivery_from_counterparties_in_uzs %></td>
+        <td><%= number_to_currency @delivery_from_counterparties_in_usd %></td>
+      </tr>
+      <tr>
+        <td>Расходы на зарплату работников</td>
+        <td><%= num_to_usd @salaries %></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Расходы на аванс работников</td>
+        <td><%= num_to_usd @prepayment %></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Прочие расходы</td>
+        <td><%= num_to_usd @expenditures_in_uzs %></td>
+        <td><%= number_to_currency @expenditures_in_usd %></td>
+      </tr>
+      <tr>
+        <td style='color: green; font-weight: bold'>ИТОГО Прибыль</td>
+        <td><%= num_to_usd @overall_income_in_uzs %></td>
+        <td><%= number_to_currency @overall_income_in_usd %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

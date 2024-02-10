@@ -25,6 +25,9 @@ class ProductSell < ApplicationRecord
   before_destroy :deccrease_amount_sold # TASK 2
   before_destroy :decrease_total_price
 
+  scope :price_in_uzs, -> { where('price_in_usd = ?', false) }
+  scope :price_in_usd, -> { where('price_in_usd = ?', true) }
+
   private
 
   def increase_total_price
