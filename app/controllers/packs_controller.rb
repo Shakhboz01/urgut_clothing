@@ -21,6 +21,7 @@ class PacksController < ApplicationController
   def edit
     @random_code = @pack.code
     @random_barcode = @pack.barcode
+    @initial_remaining = @pack.calculate_product_remaining
   end
 
   # POST /packs or /packs.json
@@ -48,7 +49,7 @@ class PacksController < ApplicationController
   def update
     respond_to do |format|
       if @pack.update(pack_params)
-        format.html { redirect_to pack_url(@pack), notice: "Pack was successfully updated." }
+        format.html { redirect_to packs_url, notice: "Pack was successfully updated." }
         format.json { render :show, status: :ok, location: @pack }
       else
         format.html { render :edit, status: :unprocessable_entity }

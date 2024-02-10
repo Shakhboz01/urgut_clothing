@@ -7,6 +7,7 @@ class Pack < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: [:code], message: "combination already exists" }
   before_validation :reset_name
   before_create :set_buy_price
+  before_update :handle_initial_remaining
 
   attr_accessor :delivery_id
 
@@ -49,6 +50,8 @@ class Pack < ApplicationRecord
   end
 
   def reset_name
+    return unless new_record?
+
     size_names = ''
     product_size_colors.each do |product_size_color|
       size = product_size_color.size.name
@@ -58,5 +61,12 @@ class Pack < ApplicationRecord
     end
 
     self.name = "#{name} | #{size_names}"
+  end
+
+  def handle_initial_remaining
+    remaining_from_entries = product_entries.sum(:amount) - product_entries.sum(:amount_sold)
+    previous_remaining = remaining_from_entries + initial_remaining_was
+    difference = initial_remaining - previous_remaining
+    self.initial_remaining = initial_remaining_was + difference
   end
 end
