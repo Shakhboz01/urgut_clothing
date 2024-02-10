@@ -67,6 +67,14 @@ class Pack < ApplicationRecord
     remaining_from_entries = product_entries.sum(:amount) - product_entries.sum(:amount_sold)
     previous_remaining = remaining_from_entries + initial_remaining_was
     difference = initial_remaining - previous_remaining
+
+    return if difference.zero?
     self.initial_remaining = initial_remaining_was + difference
+    SendMessage.run(
+      message: "Остаток товара изменён вручную \n
+      Товар: #{name} \n
+      Был: #{previous_remaining} \n
+      Сейсчас: #{self.calculate_product_remaining}"
+    )
   end
 end
