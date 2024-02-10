@@ -49,9 +49,6 @@
         <% end %>
         <td>
           <%= clink_to 'Посмотреть', sale_path(sale), 'fa-search' %>
-          <% if sale.closed? %>
-            <%= render 'sales/sale_transaction', sale: sale %>
-          <% end %>
         </td>
       </tr>
     <% end %>

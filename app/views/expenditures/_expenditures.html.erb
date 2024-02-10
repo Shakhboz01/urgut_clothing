@@ -34,9 +34,6 @@
             <% unless expenditure.sale_ids.nil? %>
               <%= clink_to 'Посмотреть от каких продаж взяты деньги', expenditure, 'fa-search' %>
             <% end %>
-
-            <%= cdlink_to 'Удалить', expenditure %>
-            <%= render 'expenditures/expenditures_transaction', expenditure: expenditure %>
           </td>
         </tr>
       <% end %>
