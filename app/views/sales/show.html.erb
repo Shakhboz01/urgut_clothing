@@ -1,19 +1,19 @@
 <div class='mx-2'>
   <div class="text-centerjustify-content-between align-items-center">
-    <h3 class="card-title text-center font-weight-bold" id='pack-name'></h3>
+    <h2 class="card-title text-center font-weight-bold" id='pack-name'>Продажа</h2>
   </div>
   <div class='row'>
-    <% unless @sale.closed? || params.dig(:prepayment).present? %>
+    <% unless @sale.closed?  %>
       <div class='col-sm-12 col-md-3'>
         <%= render 'product_sells/form', product_sell: @product_sell, rate: @rate %>
       </div>
     <% end %>
     <div class='col-sm-12 col-md-7'>
-      <% unless @product_sells.count.zero? || params.dig(:prepayment).present? %>
+      <% unless @product_sells.count.zero?  %>
         <%= render 'product_sells/product_sells', shrink: true, product_sells: @product_sells, rate: @rate %>
       <% end %>
 
-      <% if @sale.closed? || !params.dig(:prepayment).present? %>
+      <% if @sale.closed?  %>
         <%= render 'total_info' %>
       <% end %>
     </div>

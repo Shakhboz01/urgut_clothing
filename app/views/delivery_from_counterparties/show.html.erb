@@ -3,20 +3,18 @@
     <h3 id='pack-name' style=' font-weight:semi-bold' class='font-weight-bold card carb-header'></h3>
   </div>
   <div class='row'>
-    <% unless @delivery_from_counterparty.closed? || params.dig(:prepayment).present? %>
+    <% unless @delivery_from_counterparty.closed? %>
       <div class='col-sm-12 col-md-3'>
         <%= render 'product_entries/form', product_entry: @product_entry, price_in_percentage: @price_in_percentage %>
       </div>
     <% end %>
 
-    <% unless params.dig(:prepayment).present? %>
-      <div class='col-sm-12 col-md-7'>
-        <div style='background: #f5ffe5'>
-          <%= render 'product_entries/product_entries', product_entries: @product_entries, q: @q, deletable: true, shrink: true %>
-        </div>
-        <%= render 'overall_info' %>
+    <div class='col-sm-12 col-md-7'>
+      <div style='background: #f5ffe5'>
+        <%= render 'product_entries/product_entries', product_entries: @product_entries, q: @q, deletable: true, shrink: true %>
       </div>
-    <% end %>
+      <%= render 'overall_info' %>
+    </div>
 
     <div class='col-sm-12 col-md-2'>
       <% unless @delivery_from_counterparty.closed? %>

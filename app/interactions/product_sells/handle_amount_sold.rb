@@ -12,9 +12,11 @@ module ProductSells
       set_prices_in_usd = nil
       # take the last sell and buy price iff product.buy or sell_price is zero
       if pack.initial_remaining > 0
-        set_prices_in_usd = pack.price_in_usd
-        product_sell_price = pack.sell_price.zero? ? product_entries.last.sell_price : pack.sell_price
-        product_buy_price = pack.buy_price.zero? ? product_entries.last.buy_price : pack.buy_price
+        set_prices_in_usd = true
+        product_sell_price =
+          pack.price_in_usd ? pack.sell_price : pack.sell_price / CurrencyRate.last.rate
+        product_buy_price =
+          pack.price_in_usd ? pack.buy_price : pack.buy_price / CurrencyRate.last.rate
         price_data.merge!({ '0': {
           amount: pack.initial_remaining,
           sell_price: product_sell_price,
@@ -23,7 +25,7 @@ module ProductSells
       end
 
       product_entries.each do |product_entry|
-        set_prices_in_usd ||= product_entry.paid_in_usd
+        set_prices_in_usd ||= true
         sell_price = nil
         buy_price = nil
 

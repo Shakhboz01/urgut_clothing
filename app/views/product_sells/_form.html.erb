@@ -8,8 +8,14 @@
       <%= f.association :sale, as: :hidden %>
       <%= f.label :sell_by_piece, 'продать по штук:' %>
       <%= f.input :sell_by_piece, label: false %>
-      <%= f.input :barcode, label: 'поиск по кодам:', input_html: {id: 'code-input', autofocus: 'true'} %>
-      <%= f.association :pack, label: 'или выберите пачку', collection: Pack.all.order('LOWER(name) ASC'), include_blank: true, input_html: { id: 'pack-select' } %>
+      <div class='row'>
+        <div class='col-sm-6'>
+          <%= f.input :barcode, label: 'поиск по кодам:', input_html: {id: 'code-input', autofocus: 'true'} %>
+        </div>
+        <div class='col-sm-6'>
+          <%= f.association :pack, label: 'или выберите пачку', collection: Pack.all.order('LOWER(name) ASC'), include_blank: true, input_html: { id: 'pack-select' } %>
+        </div>
+      </div>
       <div class='product-select-tag'>
         <%= f.association :product, label: 'выберите размера', collection: Product.all.order('LOWER(name) ASC'), include_blank: false, input_html: { id: 'product-select', placeholder: 'выберите размер' } %>
       </div>
@@ -18,14 +24,24 @@
         <div class='col-sm-6'><%= f.input :sell_price, label: 'Цена в $ (1 шт.)' %></div>
         <div class='col-sm-6'><%= f.input :sell_price_in_uzs, label: 'Цена cум (1 шт.)' %></div>
       </div>
-      <%= f.input :min_price_in_usd, label: 'Минимум цена в $', input_html: { disabled: true } %>
-      <%= f.input :initial_remaining, label: 'остаток пачкa', input_html: { disabled: true } %>
-      <div class='product-select-tag'>
-        <%= f.input :remaining_outside_pack, label: 'остаток вне пачки', input_html: { disabled: true } %>
+      <div class='row'>
+        <div class='col-sm-6'>
+          <%= f.input :min_price_in_usd, label: 'Минимум цена в $', input_html: { disabled: true } %>
+        </div>
+        <div class='col-sm-6'>
+          <%= f.input :initial_remaining, label: 'остаток пачкa', input_html: { disabled: true } %>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-sm-6 product-select-tag'>
+          <%= f.input :remaining_outside_pack, label: 'остаток вне пачки', input_html: { disabled: true } %>
+        </div>
+        <div class='col-sm-6 align-self-center'>
+          <%= f.submit 'Добавить', class: 'btn btn-primary'%>
+        </div>
       </div>
 
       <%= f.input :rate, as: :hidden, input_html: { value: rate } %>
-      <%= f.submit "Создать", class: 'btn btn-primary'%>
     </div>
   <% end %>
 </div>

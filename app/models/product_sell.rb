@@ -31,9 +31,7 @@ class ProductSell < ApplicationRecord
   private
 
   def increase_total_price
-    if !sale.nil?
-      sale.increment!(:total_price, (sell_price * amount))
-    end
+    sale.increment!(:total_price, (sell_price * amount))
   end
 
   def decrease_total_price

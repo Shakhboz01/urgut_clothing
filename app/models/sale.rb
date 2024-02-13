@@ -73,6 +73,6 @@ class Sale < ApplicationRecord
       ps.update(price_in_usd: price_in_usd)
     end
 
-    self.total_price = product_sells.sum(:sell_price)
+    self.total_price = product_sells.sum(('sell_price * amount'))
   end
 end

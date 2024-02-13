@@ -56,15 +56,6 @@
           <%= link_to 'Приём/отдача средств', debt_operations_path, class: 'dropdown-item' %>
         </div>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Выручка
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <%= button_to 'от покупателя', default_create_sales_path(prepayment: true), method: :post, class: 'dropdown-item' %>
-          <%= button_to 'на поставщика', default_create_delivery_from_counterparties_path(prepayment: true), method: :post, class: 'dropdown-item' %>
-        </div>
-      </li>
       <% if %w[руководитель бухгалтер].include?(current_user.role) %>
         <li class="nav-item">
           <%= link_to 'Админ', admin_page_path, class: 'nav-link' %>

@@ -23,9 +23,9 @@ module ProductSells
         response = ProductSells::FindProductEntriesUntilAmount.run!(pack: pack, amount: amount)
       else
         if (amount <= pack.initial_remaining) || first_available_entry.nil?
-          price_in_usd = pack.price_in_usd
-          sell_price = price_in_usd ? pack.sell_price : pack.sell_price * CurrencyRate.last.rate
-          buy_price = pack.buy_price
+          price_in_usd = true
+          sell_price = pack.price_in_usd ? pack.sell_price : pack.sell_price / CurrencyRate.last.rate
+          buy_price = pack.price_in_usd ? pack.buy_price : pack.buy_price / CurrencyRate.last.rate
 
           if sell_price.zero?
             sell_price = pack.sell_price
