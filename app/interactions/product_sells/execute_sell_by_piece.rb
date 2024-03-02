@@ -5,7 +5,7 @@ module ProductSells
 
     def execute
       product_total_remaining = (product.calculate_product_remaining_in_pack + product.initial_remaining)
-      return errors.add(:base, 'Amount exceeded') if amount > product_total_remaining
+      return errors.add(:base, 'Ostatok malo') if amount > product_total_remaining
 
       should_break_pack = product.initial_remaining < amount
       if should_break_pack

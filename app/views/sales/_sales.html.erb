@@ -1,4 +1,4 @@
-<table class="table table-hover table-bordered table-striped">
+<table class="table table-hover table-sm table-bordered table-striped">
   <thead>
     <tr>
       <th>ID</th>
@@ -7,9 +7,6 @@
       <% end %>
       <th>Покупатель</th>
       <th>Итого цена</th>
-      <% unless defined?(shrink) %>
-        <th>Итого доход</th>
-      <% end %>
       <th>Оплачено</th>
       <% unless defined?(shrink) %>
         <th>Тип оплаты</th>
@@ -37,9 +34,7 @@
         <% end %>
         <td><%= sale.buyer.name %></td>
         <td><%= currency_convert(sale.price_in_usd, sale.total_price) %></td>
-        <% unless defined?(shrink) %>
-          <td><%= currency_convert(sale.price_in_usd, sale.total_profit) %></td>
-        <% end %>
+
         <td><%= currency_convert(sale.price_in_usd, sale.total_paid) %></td>
         <% unless defined?(shrink) %>
           <td><%= sale.payment_type %></td>

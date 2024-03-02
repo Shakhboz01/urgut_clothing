@@ -47,7 +47,7 @@
 </div>
 
 <script>
-  $(document).ready(function() {
+  $(document).on('turbo:load', function() {
     $("input").focus(function() {
       $(this).select();
     });

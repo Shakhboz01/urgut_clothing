@@ -23,7 +23,7 @@
 </div>
 
 <script>
-  $(document).ready(function() {
+  $(document).on('turbo:load', function() {
     $('#filter-toggle').hide()
     $('#toggle-button').click(function(){
       $('#filter-toggle').toggle()

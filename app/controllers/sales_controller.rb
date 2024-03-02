@@ -48,10 +48,7 @@ class SalesController < ApplicationController
   # PATCH/PUT /sales/1 or /sales/1.json
   def update
     respond_to do |format|
-      if @sale.update(sale_params.merge(
-          status: sale_params[:status].to_i,
-          total_price: @sale.calculate_total_price(false)
-        ))
+      if @sale.update(sale_params.merge(status: sale_params[:status].to_i))
         format.html { redirect_to sales_url, notice: "Sale was successfully updated." }
         format.json { render :show, status: :ok, location: @sale }
       else
@@ -90,7 +87,7 @@ class SalesController < ApplicationController
     authorize Sale, :manage?
 
     @sale.update(status: @sale.closed? ? 0 : 1)
-    redirect_to request.referrer, notice: 'Successfully updated'
+    redirect_to sale_path(@sale), notice: 'Successfully updated'
   end
 
   private

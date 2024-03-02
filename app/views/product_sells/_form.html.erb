@@ -6,9 +6,15 @@
       <%= f.error_notification %>
       <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
       <%= f.association :sale, as: :hidden %>
-      <%= f.label :sell_by_piece, 'продать по штук:' %>
-      <%= f.input :sell_by_piece, label: false %>
+
       <div class='row'>
+        <div class='col-sm-6'>
+          <%= f.label :sell_by_piece, 'продать по штук:' %>
+          <%= f.input :sell_by_piece, label: false %>
+        </div>
+        <div class='col-sm-6 align-self-center'>
+          <%= f.submit 'Добавить', class: 'btn btn-primary'%>
+        </div>
         <div class='col-sm-6'>
           <%= f.input :barcode, label: 'поиск по кодам:', input_html: {id: 'code-input', autofocus: 'true'} %>
         </div>
@@ -36,9 +42,6 @@
         <div class='col-sm-6 product-select-tag'>
           <%= f.input :remaining_outside_pack, label: 'остаток вне пачки', input_html: { disabled: true } %>
         </div>
-        <div class='col-sm-6 align-self-center'>
-          <%= f.submit 'Добавить', class: 'btn btn-primary'%>
-        </div>
       </div>
 
       <%= f.input :rate, as: :hidden, input_html: { value: rate } %>
@@ -48,7 +51,7 @@
 
 
 <script>
-  $(document).ready(function() {
+  $(document).on('turbo:load', function() {
     $('.product-select-tag').hide();
     $('form').on('keypress', e => {
       if (e.keyCode == 13) {
@@ -167,10 +170,12 @@
           var selectedPackText = selectedPackOption ? selectedPackOption.text : '';
           h1Element.textContent = selectedPackText;
           handlePackChange();
+          handleProductChange();
           document.querySelector('#product_sell_amount').value = 1;
         }
       });
       filterProducts();
+      calculateSalePrice();
     });
 
 

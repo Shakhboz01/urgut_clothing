@@ -69,7 +69,7 @@
 </script>
 
 <script>
-  $(document).ready(function() {
+  $(document).on('turbo:load', function() {
     $('form').on('keypress', e => {
         if (e.keyCode == 13) {
             return false;

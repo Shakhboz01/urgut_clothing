@@ -66,6 +66,9 @@ class DeliveryFromCounterparty < ApplicationRecord
   end
 
   def update_product_entries_prices
+    return if product_entries.empty?
+
     product_entries.update_all(paid_in_usd: price_in_usd)
+    self.total_price = product_entries.sum('buy_price * amount')
   end
 end
