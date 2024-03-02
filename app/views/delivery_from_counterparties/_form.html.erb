@@ -4,10 +4,8 @@
     <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
     <%= f.input :status, as: :hidden, input_html: { value: 1 } %>
     <div class='form-inputs'>
-
-      <% if !params.dig(:prepayment).present? %>
-        <%= f.input :total_price, label: 'Итого цена', disabled: true %>
-      <% end %>
+      <% not_disabled = delivery_from_counterparty.persisted? && delivery_from_counterparty.product_entries.empty? %>
+      <%= f.input :total_price, label: 'Итого цена', input_html: { disabled: !not_disabled } %>
       <%= f.input :total_paid, label: params.dig(:prepayment).present? ? 'цена выручки' : 'Итого оплачено' %>
       <%= f.association :provider, label: 'Поставщик', collection: Provider.active.order(weight: :desc).order(name: :asc), include_blank: false %>
       <%= f.input :payment_type, label: 'Тип оплаты', collection: DeliveryFromCounterparty.payment_types.keys.map { |unit| [DeliveryFromCounterparty.human_attribute_name("unit.#{unit}"), unit] }, include_blank: false %>

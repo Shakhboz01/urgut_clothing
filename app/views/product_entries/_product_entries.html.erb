@@ -6,8 +6,6 @@
         <th>Поставщик</th>
       <% end %>
       <th><%= sort_link q, :buy_price, 'Цена прихода' %></th>
-      <th><%= sort_link q, :sell_price, 'Цена продажи' %></th>
-      <th><%= sort_link q, :sell_price, 'Цена %' %></th>
       <th>Пвчка</th>
       <th><%= sort_link q, :amount, 'Кол.' %></th>
       <% unless defined?(shrink) %>
@@ -25,8 +23,6 @@
           <td><%= product_entry.provider.name %></td>
         <% end %>
         <td><%= currency_convert(product_entry.paid_in_usd, product_entry.buy_price) %> (<%= currency_convert(product_entry.paid_in_usd, product_entry.buy_price * product_entry.amount) %>)</td>
-        <td><%= currency_convert(product_entry.paid_in_usd, product_entry.sell_price) %> (<%= currency_convert(product_entry.paid_in_usd, product_entry.sell_price * product_entry.amount) %>)</td>
-        <td><%= product_entry.price_in_percentage %>%</td>
         <td><%= product_entry.pack.name %></td>
         <td><%= product_entry.amount %></td>
         <% unless defined?(shrink) %>

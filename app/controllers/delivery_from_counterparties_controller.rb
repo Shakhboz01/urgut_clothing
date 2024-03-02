@@ -96,7 +96,7 @@ class DeliveryFromCounterpartiesController < ApplicationController
     authorize DeliveryFromCounterparty, :manage?
 
     @delivery_from_counterparty.update(status: @delivery_from_counterparty.closed? ? 0 : 1)
-    redirect_to request.referrer, notice: 'Successfully updated'
+    redirect_to delivery_from_counterparty_url(@delivery_from_counterparty), notice: 'Successfully updated'
   end
 
   private
