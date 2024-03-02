@@ -37,12 +37,14 @@
         <%= f.input :code, label: 'код', input_html: {value: @random_code} %>
         <%= f.input :delivery_id, input_html: {value: params[:delivery_id] }, as: :hidden  %>
         <%= f.input :barcode, label: 'баркод',  input_html: {value: @random_barcode} %>
-        <%= f.input :initial_remaining, label: 'остаток', input_html: { value: defined?(@initial_remaining) ? @initial_remaining : 0 }%>
+        <%= f.input :initial_remaining, label: 'остаток' %>
         <%= f.label :price_in_usd, 'цена в $' %>
         <%= f.input :price_in_usd, label: false %>
         <%= f.input :sell_price, label: 'цена продажи' %>
-        <%= f.input :buy_price, label: 'цена прихода' %>
-        <%= f.submit 'Заверщить' %>
+        <% unless pack.persisted? %>
+          <%= f.input :buy_price, label: 'цена прихода' %>
+        <% end %>
+        <%= f.submit 'Заверщить', class: 'btn btn-primary' %>
       </div>
     </div>
   <% end %>

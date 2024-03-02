@@ -7,7 +7,7 @@ class Pack < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: [:code], message: "combination already exists" }
   before_validation :reset_name
   before_create :set_buy_price
-  before_update :handle_initial_remaining
+  before_update :send_notify_on_remaining_change, if: :saved_change_to_initial_remaining?
 
   attr_accessor :delivery_id
 
@@ -37,10 +37,6 @@ class Pack < ApplicationRecord
     self.decrement!(:initial_remaining, amount_of_pack_to_break)
   end
 
-  def restore_packs(amount_of_pack_to_restore)
-    # TODO
-  end
-
   private
 
   def set_buy_price
@@ -63,18 +59,12 @@ class Pack < ApplicationRecord
     self.name = "#{name} | #{size_names}"
   end
 
-  def handle_initial_remaining
-    remaining_from_entries = product_entries.sum(:amount) - product_entries.sum(:amount_sold)
-    previous_remaining = remaining_from_entries + initial_remaining_was
-    difference = initial_remaining - previous_remaining
-
-    return if difference.zero?
-    self.initial_remaining = initial_remaining_was + difference
+  def send_notify_on_remaining_change
     SendMessage.run(
       message: "Остаток товара изменён вручную \n
       Товар: #{name} \n
-      Был: #{previous_remaining} \n
-      Сейсчас: #{self.calculate_product_remaining}"
+      Был: #{initial_remaining_was} \n
+      Сейсчас: #{initial_remaining}"
     )
   end
 end

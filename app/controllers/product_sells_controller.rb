@@ -69,33 +69,29 @@ class ProductSellsController < ApplicationController
   def ajax_sell_price_request
     return render json: ('Please fill forms') if product_sell_params[:pack_id].empty? || product_sell_params[:amount].to_i.zero?
 
-    message = ''
-    product_sell = ProductSell.new(
-      pack_id: product_sell_params[:pack_id],
-      amount: product_sell_params[:amount]
-    )
+    pack = Pack.find(params[:pack_id])
+    rate = CurrencyRate.last.rate
+    average_sell_price_in_usd = pack.price_in_usd ? pack.sell_price : (pack.sell_price / rate)
+    average_sell_price_in_uzs = pack.price_in_usd ? (pack.sell_price * rate) : pack.sell_price
+    minimum_buy_price_in_uzs =
+      if pack.product_entries.exists?
+        pack.product_entries.last.paid_in_usd ? (pack.product_entries.last.buy_price * rate) : pack.product_entries.last.buy_price
+      else
+        pack.price_in_usd ? (pack.buy_price * rate) : pack.buy_price
+      end
 
-    response = ProductSells::CalculateSellAndBuyPrice.run(
-      product_sell: product_sell,
-      sell_by_piece: product_sell_params[:sell_by_piece]
-    )
-    Rails.logger.warn '-----------------------------'
-    Rails.logger.warn response.result
-
-    if response.valid?
-      average_sell_price = response.result[:average_prices][:average_sell_price_in_usd].to_f.round(2)
-      average_buy_price = response.result[:average_prices][:average_buy_price_in_usd].to_f.round(2)
-      minimum_buy_price = average_buy_price + (average_buy_price * 2 / 100)
-      minimum_buy_price = average_sell_price if minimum_buy_price >= average_sell_price
-      render json:
-              {
-                average_sell_price_in_usd: average_sell_price,
-                average_sell_price_in_uzs: response.result[:average_prices][:average_sell_price_in_uzs].to_f.round(2),
-                minimum_buy_price_in_usd: minimum_buy_price.to_i
-              }
-    else
-      render json: { error: response.errors.full_messages.join('. ') }
+    if product_sell_params[:sell_by_piece]
+      quantity = pack.product_size_colors.sum(:amount)
+      average_sell_price_in_usd /= quantity
+      average_sell_price_in_uzs /= quantity
+      minimum_buy_price_in_uzs /= quantity
     end
+
+    render json: {
+      average_sell_price_in_usd: average_sell_price_in_usd,
+      average_sell_price_in_uzs: average_sell_price_in_uzs.to_i,
+      minimum_buy_price_in_usd: minimum_buy_price_in_uzs.to_i
+    }
   end
 
   private

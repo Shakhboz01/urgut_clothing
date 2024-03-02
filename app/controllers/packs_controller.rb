@@ -21,7 +21,6 @@ class PacksController < ApplicationController
   def edit
     @random_code = @pack.code
     @random_barcode = @pack.barcode
-    @initial_remaining = @pack.calculate_product_remaining
   end
 
   # POST /packs or /packs.json
@@ -77,9 +76,7 @@ class PacksController < ApplicationController
   end
 
   def calculate_product_remaining
-    calculate_product_remaining = @pack.calculate_product_remaining
-
-    render json: { calculate_product_remaining: calculate_product_remaining }
+    render json: { calculate_product_remaining: @pack.initial_remaining }
   end
 
   private

@@ -218,7 +218,7 @@
       console.log('sellPrice: ', this.value)
       var rate = parseFloat(rateInput.value);
       console.log('rate: ', this.value)
-      var result = (sellPrice * rate).toFixed(2)
+      var result = (sellPrice * rate)
       console.log('reult is ', result)
       sellPriceInUzsInput.value = result;
     });
@@ -227,7 +227,8 @@
     sellPriceInUzsInput.addEventListener('input', function() {
       var sellPriceInUzs = parseFloat(this.value);
       var rate = parseFloat(rateInput.value);
-      sellPriceInput.value = (sellPriceInUzs / rate).toFixed(2);
+      var rate_in_uzs = (sellPriceInUzs / rate).toFixed(6)
+        sellPriceInput.value = parseFloat(rate_in_uzs);
     });
 
     // Function to update sell price in uzs when rate changes

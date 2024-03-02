@@ -1,5 +1,4 @@
 class Sale < ApplicationRecord
-  include HandleTransactionHistory
   attr_accessor :discount_price
   belongs_to :buyer
   belongs_to :user
@@ -73,6 +72,5 @@ class Sale < ApplicationRecord
       ps.update(price_in_usd: price_in_usd)
     end
 
-    self.total_price = product_sells.sum(('sell_price * amount'))
   end
 end

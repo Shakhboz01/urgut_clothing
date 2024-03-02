@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_06_160725) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_14_171712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -223,7 +223,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_06_160725) do
     t.bigint "combination_of_local_product_id"
     t.bigint "product_id"
     t.decimal "buy_price", precision: 16, scale: 2, default: "0.0"
-    t.decimal "sell_price", precision: 16, scale: 2, default: "0.0"
+    t.decimal "sell_price", precision: 18, scale: 6, default: "0.0"
     t.decimal "total_profit", default: "0.0"
     t.jsonb "price_data"
     t.datetime "created_at", null: false
@@ -233,7 +233,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_06_160725) do
     t.bigint "sale_from_local_service_id"
     t.bigint "sale_id"
     t.bigint "sale_from_service_id"
-    t.boolean "price_in_usd", default: false
+    t.boolean "price_in_usd", default: true
     t.bigint "pack_id"
     t.decimal "sell_price_in_uzs", precision: 17, scale: 2
     t.boolean "sell_by_piece", default: false
@@ -339,7 +339,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_06_160725) do
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "price_in_usd", default: false
+    t.boolean "price_in_usd", default: true
     t.boolean "enable_to_send_sms", default: true
     t.index ["buyer_id"], name: "index_sales_on_buyer_id"
     t.index ["user_id"], name: "index_sales_on_user_id"
