@@ -9,7 +9,7 @@
     <div class='col-sm-4 main-page-header'>
       <div>
         <h4 class='text-center'>Покупатели</h4>
-        <div style="max-height: 420px; overflow: auto">
+        <div style="max-height: 660px; overflow: auto">
           <%= render 'buyers/buyers', buyers: @buyers, shrink: true %>
         </div>
       </div>
@@ -17,7 +17,7 @@
     <div class='col-sm-4'>
       <div>
         <h4 class='text-center'>Поставщики</h4>
-        <div style="max-height: 420px; overflow: auto">
+        <div style="max-height: 660px; overflow: auto">
           <%= render 'providers/providers', providers: @providers, shrink: true %>
         </div>
       </div>
@@ -25,25 +25,6 @@
     <div class='col-sm-5 main-page-header' style = "max-width: 400px; overflow: auto">
       <div>
         <h4 class='text-center'>Касса</h4>
-        <%= search_form_for @q, url: request.path, html: { class: 'form form-horizontal filter-form'} do |f| %>
-          <div class="container">
-            <div class="row">
-              <div class="form-group col-sm-3">
-                <%= f.label :created_at_gteq, 'Дата от' %>
-                <%= f.text_field :created_at_gteq, value: @q.created_at_gteq.nil? ? '' : @q.created_at_gteq, class: 'datepicker', autocomplete: :off %>
-              </div>
-              <div class="form-group col-sm-3">
-                <%= f.label :created_at_end_of_day_lteq, 'Дата до' %>
-                <%= f.text_field :created_at_end_of_day_lteq, value: @q.created_at_end_of_day_lteq.nil? ? '' : @q.created_at_end_of_day_lteq, class: 'datepicker', autocomplete: :off %>
-              </div>
-              <div class="form-group align-center col-sm-6">
-                <%= f.submit 'Фильтр' %>
-                <%= link_to 'Очистить', request.path, class: "cancel-button" %>
-              </div>
-            </div>
-          </div>
-        <% end %>
-        <br>
         <table class='table'>
           <thead>
             <tr>
@@ -90,24 +71,6 @@
       </div>
     </div>
   </div>
-  <br><br><br><br>
-  <div class='row'>
-    <div class='col-sm-6 main-page-body', style='max-height: 950px; overflow: auto'>
-      <h4 class='text-center'>Продажи</h4>
-      <%= render 'sales/sales', sales: @sales, shrink: true %>
-    </div>
-    <div class='col-sm-12 col-md-6' style='max-height: 950px; overflow: auto'>
-      <h4 class='text-center'>Приход от поставщиков</h4>
-      <%= render 'delivery_from_counterparties/delivery_from_counterparties', delivery_from_counterparties: @delivery_from_counterparties, shrink: true %>
-    </div>
-  </div>
-  <br>
-  <div class='row'>
-    <div class='col-sm-12 col-md-12'>
-      <h4 class='text-center'>Расходы</h4>
-      <%= render 'expenditures/expenditures', expenditures: @expenditures, shrink: true %>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -121,4 +84,3 @@
       }
     }
 </script>
-<script>$(function(){$(".datepicker").datepicker({dateFormat: 'dd-mm-yy'})})</script>
