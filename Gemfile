@@ -16,8 +16,9 @@ gem 'pundit'
 gem 'simple_form'
 gem "bulma-rails", "~> 0.9.4"
 gem 'active_link_to'
-gem 'escpos'
-gem 'escpos-image'
+gem 'escpos', require: false
+gem 'escpos-image', require: false
+gem 'chunky_png'
 gem 'translit'
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
